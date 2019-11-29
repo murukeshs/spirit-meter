@@ -1,0 +1,410 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Data;
+using System.IO;
+using System.Linq;
+using System.Net;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Cors;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using SpiritMeter.Data;
+using SpiritMeter.Models;
+
+namespace SpiritMeter.Controllers
+{
+    [EnableCors("AllowAll")]
+    [Route("api/[controller]")]
+    [ApiController]
+    //[Authorize]
+    public class DisplayController : ControllerBase
+    {
+        #region listCategory
+        [HttpGet, Route("listCategory")]
+        public IActionResult listCategory()
+        {
+            List<dynamic> listCategoryDetails = new List<dynamic>();
+
+            try
+            {
+                DataTable dt = Data.Display.listCategory();
+                if (dt.Rows.Count > 0)
+                {
+                    for (int i = 0; i < dt.Rows.Count; i++)
+                    {
+                        dynamic listCategory = new System.Dynamic.ExpandoObject();
+                        listCategory.categoryId = (int)dt.Rows[i]["categoryId"];
+                        listCategory.categoryName = (dt.Rows[i]["categoryName"] == DBNull.Value ? "" : dt.Rows[i]["categoryName"].ToString());
+                        listCategory.isDeleted = (dt.Rows[i]["isDeleted"] == DBNull.Value ? false : (bool)dt.Rows[i]["isDeleted"]);
+
+                        listCategoryDetails.Add(listCategory);
+                    }
+                    return StatusCode((int)HttpStatusCode.OK, listCategoryDetails);
+                }
+                else
+                {
+                    return StatusCode((int)HttpStatusCode.OK, listCategoryDetails);
+                }
+            }
+            catch (Exception e)
+            {
+                string SaveErrorLog = Data.Common.SaveErrorLog("listUser", e.Message);
+                return StatusCode((int)HttpStatusCode.InternalServerError, new { ErrorMessage = e.Message });
+            }
+        }
+        #endregion
+
+        
+
+        #region createDisplay
+        [HttpPost, Route("createDisplay")]
+        public IActionResult createDisplay(createDisplay createDisplay)
+        {
+            try
+            {
+                List<createDisplay> displayList = new List<createDisplay>();
+
+                if (createDisplay.name == "" || createDisplay.name == null)
+                {
+                    return StatusCode((int)HttpStatusCode.BadRequest, new { ErrorMessage = "Please enter  Name" });
+                }
+                else if (createDisplay.categoryId <= 0 || createDisplay.categoryId == null)
+                {
+                    return StatusCode((int)HttpStatusCode.BadRequest, new { ErrorMessage = "Please enter categoryId" });
+                }
+                else if (createDisplay.notes == "" || createDisplay.notes == null)
+                {
+                    return StatusCode((int)HttpStatusCode.BadRequest, new { ErrorMessage = "Please enter notes" });
+                }
+                
+
+                else if (createDisplay.type == "" || createDisplay.type == null)
+                {
+                    return StatusCode((int)HttpStatusCode.BadRequest, new { ErrorMessage = "Please enter type" });
+                }
+                else if (createDisplay.createdBy <=0 ||  createDisplay.createdBy == null)
+                {
+                    return StatusCode((int)HttpStatusCode.BadRequest, new { ErrorMessage = "Please enter createdBy" });
+                }
+
+                DataSet ds = Data.Display.createDisplay(createDisplay);
+                string Response = ds.Tables[0].Rows[0]["SuccessMessage"].ToString();
+               
+                if (Response == "Success")
+                {
+                    string displayId = ds.Tables[1].Rows[0]["displayId"].ToString();
+                    return StatusCode((int)HttpStatusCode.OK, new { displayId, message = "Display Created successfully" });
+                }
+
+                else
+                {
+                    return StatusCode((int)HttpStatusCode.BadRequest, new { ErrorMessage = "Error while creating the Display" });
+                }
+            }
+            catch (Exception e)
+            {
+                    string SaveErrorLog = Data.Common.SaveErrorLog("createDisplay", e.Message);
+                if (e.Message.Contains("UQ__tblDispl__E0DD8006C302141D") == true)
+                {
+                    return StatusCode((int)HttpStatusCode.InternalServerError, new { ErrorMessage = "Display already created" });
+                }
+                else
+                {
+                    return StatusCode((int)HttpStatusCode.InternalServerError, new { ErrorMessage = e.Message });
+                }
+                
+            }
+        }
+
+        #endregion
+        #region createDisplayFiles
+        [HttpPost, Route("createDisplayFiles")]
+        public IActionResult createDisplayFiles(createDisplayFiles createDisplayFiles)
+        {
+            try
+            {
+                List<createDisplay> displayList = new List<createDisplay>();
+
+                if (createDisplayFiles.displayId <= 0 || createDisplayFiles.displayId== null)
+                {
+                    return StatusCode((int)HttpStatusCode.BadRequest, new { ErrorMessage = "Please enter displayId" });
+                }
+
+
+                int row = Data.Display.createDisplayFiles(createDisplayFiles);
+                if (row > 0)
+                {
+                    return StatusCode((int)HttpStatusCode.OK, "Created DisplayFiles Successfully");
+                }
+                else
+                {
+                    return StatusCode((int)HttpStatusCode.InternalServerError, new { ErrorMessage = "Error while Updating the DisplayFiles" });
+                }
+            }
+            catch (Exception e)
+            {
+                string SaveErrorLog = Data.Common.SaveErrorLog("createDisplayFiles", e.Message);
+                return StatusCode((int)HttpStatusCode.InternalServerError, new { ErrorMessage = e.Message });
+
+            }
+        }
+
+        #endregion
+
+
+        #region updateDisplay
+        [HttpPut, Route("updateDisplay")]
+        public IActionResult updateDisplay(updateDisplay createDisplay)
+        {
+            try
+            {
+                List<createDisplay> displayList = new List<createDisplay>();
+
+                
+                if (createDisplay.displayId <= 0 || createDisplay.displayId == null)
+                {
+                    return StatusCode((int)HttpStatusCode.BadRequest, new { ErrorMessage = "Please enter displayId" });
+                }
+               
+
+
+                int row = Data.Display.updateDisplay(createDisplay);
+                if (row > 0)
+                {
+                    return StatusCode((int)HttpStatusCode.OK, "Updated Successfully");
+                }
+                else
+                {
+                    return StatusCode((int)HttpStatusCode.InternalServerError, new { ErrorMessage = "Error while Updating the Display" });
+                }
+
+            }
+            catch (Exception e)
+            {
+                string SaveErrorLog = Data.Common.SaveErrorLog("updateDisplay", e.Message);
+                return StatusCode((int)HttpStatusCode.InternalServerError, new { ErrorMessage = e.Message });
+
+            }
+        }
+
+        #endregion
+
+        #region deleteDisplayFiles
+        [HttpDelete, Route("deleteDisplayFiles")]
+        public IActionResult deleteDisplayFiles(int displayFileId)
+        {
+            try
+            {
+                if (displayFileId <= 0 || displayFileId == null)
+                {
+                    return StatusCode((int)HttpStatusCode.BadRequest, new { ErrorMessage = "Please enter teamId" });
+                }
+                else
+                {
+
+                    int row = Data.Display.deleteDisplayFiles(displayFileId);
+                    if (row > 0)
+                    {
+                        return StatusCode((int)HttpStatusCode.OK, "Deleted Successfully");
+                    }
+                    else
+                    {
+                        return StatusCode((int)HttpStatusCode.InternalServerError, new { ErrorMessage = "Error while Deleting the DisplayFiles" });
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                string SaveErrorLog = Data.Common.SaveErrorLog("deleteDisplayFiles", e.Message.ToString());
+
+                return StatusCode((int)HttpStatusCode.InternalServerError, new { ErrorMessage = e.Message.ToString() });
+            }
+        }
+        #endregion
+
+        #region selectDisplay
+        [HttpGet, Route("selectDisplay/{displayId}")]
+        public IActionResult selectDisplay(int displayId)
+        {
+            List<dynamic> listDisplayDetails = new List<dynamic>();
+
+            try
+            {
+                DataSet ds = Data.Display.selectDisplay(displayId);
+                 if (ds.Tables.Count > 0)
+                {
+                    
+                    for (int i = 0; i < ds.Tables[0].Rows.Count; i++)
+                    {
+                        dynamic listDisplay = new System.Dynamic.ExpandoObject();
+                        listDisplay.displayId = (int)ds.Tables[0].Rows[i]["displayId"];
+                        listDisplay.name = (ds.Tables[0].Rows[i]["name"] == DBNull.Value ? "" : ds.Tables[0].Rows[i]["name"].ToString());
+                        listDisplay.categoryId = (ds.Tables[0].Rows[i]["categoryId"] == DBNull.Value ? "" : ds.Tables[0].Rows[i]["categoryId"].ToString());
+                        listDisplay.notes = (ds.Tables[0].Rows[i]["notes"] == DBNull.Value ? "" : ds.Tables[0].Rows[i]["notes"].ToString());
+                        listDisplay.latitude = (ds.Tables[0].Rows[i]["latitude"] == DBNull.Value ? "" : ds.Tables[0].Rows[i]["latitude"].ToString());
+                        listDisplay.longitude = (ds.Tables[0].Rows[i]["longitude"] == DBNull.Value ? "" : ds.Tables[0].Rows[i]["longitude"].ToString());
+                        listDisplay.country = (ds.Tables[0].Rows[i]["country"] == DBNull.Value ? "" : ds.Tables[0].Rows[i]["country"].ToString());
+                        listDisplay.state = (ds.Tables[0].Rows[i]["state"] == DBNull.Value ? "" : ds.Tables[0].Rows[i]["state"].ToString());
+                        listDisplay.cityName = (ds.Tables[0].Rows[i]["cityName"] == DBNull.Value ? "" : ds.Tables[0].Rows[i]["cityName"].ToString());
+                        listDisplay.address = (ds.Tables[0].Rows[i]["address"] == DBNull.Value ? "" : ds.Tables[0].Rows[i]["address"].ToString());
+                        listDisplay.type = (ds.Tables[0].Rows[i]["type"] == DBNull.Value ? "" : ds.Tables[0].Rows[i]["type"].ToString());
+                        listDisplay.viewCount = (ds.Tables[0].Rows[i]["viewCount"] == DBNull.Value ? 0 : (int)ds.Tables[0].Rows[i]["viewCount"]);
+                        listDisplay.isPrivate = (ds.Tables[0].Rows[i]["isPrivate"] == DBNull.Value ? "" : ds.Tables[0].Rows[i]["isPrivate"].ToString());
+                        listDisplay.createdDate = (ds.Tables[0].Rows[i]["createdDate"] == DBNull.Value ? "" : ds.Tables[0].Rows[i]["createdDate"].ToString());
+                        listDisplay.createdBy = (ds.Tables[0].Rows[i]["createdBy"] == DBNull.Value ? 0 : (int)ds.Tables[0].Rows[i]["createdBy"]);
+
+                        List<dynamic> listFilePaths = new List<dynamic>();
+                        dynamic filePath = new System.Dynamic.ExpandoObject();
+                        for (int j = 0; j < ds.Tables[1].Rows.Count; j++)
+                        {
+                            filePath.displayFileId = (ds.Tables[1].Rows[j]["displayFileId"] == DBNull.Value ? 0 : (int)ds.Tables[1].Rows[j]["displayFileId"]);
+                            filePath.FilePath = (ds.Tables[1].Rows[j]["filePath"] == DBNull.Value ? "" : ds.Tables[1].Rows[j]["filePath"].ToString());
+                            listFilePaths.Add(filePath);
+                        }
+                        listDisplay.filePath = listFilePaths;
+                        listDisplayDetails.Add(listDisplay);
+                    }
+
+
+                    return StatusCode((int)HttpStatusCode.OK, listDisplayDetails);  
+                }
+                else
+                {
+                    return StatusCode((int)HttpStatusCode.OK, listDisplayDetails);
+                }
+            }
+            catch (Exception e)
+            {
+                string SaveErrorLog = Data.Common.SaveErrorLog("selectDisplay", e.Message);
+                return StatusCode((int)HttpStatusCode.InternalServerError, new { ErrorMessage = e.Message });
+            }
+        }
+        #endregion
+
+        #region deleteDisplay
+        [HttpDelete, Route("deleteDisplay")]
+        public IActionResult deleteDisplay(int displayId)
+        {
+            try
+            {
+                if (displayId <= 0 || displayId == null)
+                {
+                    return StatusCode((int)HttpStatusCode.BadRequest, new { ErrorMessage = "Please enter displayId" });
+                }
+                else
+                {
+
+                    int row = Data.Display.deleteDisplay(displayId);
+                    if (row > 0)
+                    {
+                        return StatusCode((int)HttpStatusCode.OK, "Deleted Successfully");
+                    }
+                    else
+                    {
+                        return StatusCode((int)HttpStatusCode.InternalServerError, new { ErrorMessage = "Error while Deleting the Display" });
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                string SaveErrorLog = Data.Common.SaveErrorLog("deleteDisplay", e.Message.ToString());
+
+                return StatusCode((int)HttpStatusCode.InternalServerError, new { ErrorMessage = e.Message.ToString() });
+            }
+        }
+        #endregion
+
+        #region listDisplay
+        [HttpGet, Route("listDisplay")]
+        public IActionResult listDisplay(string Search)
+        {
+            List<dynamic> listDisplayDetails = new List<dynamic>();
+
+            try
+            {
+                DataTable dt = Data.Display.listDisplay(Search);
+                if (dt.Rows.Count > 0)
+                {
+                    for (int i = 0; i < dt.Rows.Count; i++)
+                    {
+                        dynamic listDisplay = new System.Dynamic.ExpandoObject();
+                        listDisplay.displayId = (int)dt.Rows[i]["displayId"];
+                        listDisplay.name = (dt.Rows[i]["name"] == DBNull.Value ? "" : dt.Rows[i]["name"].ToString());
+                        listDisplay.categoryId = (dt.Rows[i]["categoryId"] == DBNull.Value ? "" : dt.Rows[i]["categoryId"].ToString());
+                        listDisplay.notes = (dt.Rows[i]["notes"] == DBNull.Value ? "" : dt.Rows[i]["notes"].ToString());
+                        listDisplay.latitude = (dt.Rows[i]["latitude"] == DBNull.Value ? "" : dt.Rows[i]["latitude"].ToString());   
+                        listDisplay.longitude = (dt.Rows[i]["longitude"] == DBNull.Value ? "" : dt.Rows[i]["longitude"].ToString());
+                        listDisplay.country = (dt.Rows[i]["country"] == DBNull.Value ? "" : dt.Rows[i]["country"].ToString());
+                        listDisplay.state = (dt.Rows[i]["state"] == DBNull.Value ? "" : dt.Rows[i]["state"].ToString());
+                        listDisplay.cityName = (dt.Rows[i]["cityName"] == DBNull.Value ? "" : dt.Rows[i]["cityName"].ToString());
+                        listDisplay.address = (dt.Rows[i]["address"] == DBNull.Value ? "" : dt.Rows[i]["address"].ToString());
+                        listDisplay.type = (dt.Rows[i]["type"] == DBNull.Value ? "" : dt.Rows[i]["type"].ToString());
+                        listDisplay.viewCount    = (dt.Rows[i]["viewCount"] == DBNull.Value ? "" : dt.Rows[i]["viewCount"].ToString());
+                        listDisplay.isPrivate = (dt.Rows[i]["isPrivate"] == DBNull.Value ? "" : dt.Rows[i]["isPrivate"].ToString());
+                        listDisplay.createdDate = (dt.Rows[i]["createdDate"] == DBNull.Value ? "" : dt.Rows[i]["createdDate"].ToString());
+                        listDisplay.createdBy = (dt.Rows[i]["createdBy"] == DBNull.Value ? 0 : (int)dt.Rows[i]["createdBy"]);
+                        listDisplayDetails.Add(listDisplay);
+                    }
+                    return StatusCode((int)HttpStatusCode.OK, listDisplayDetails);
+                }
+                else
+                {
+                    return StatusCode((int)HttpStatusCode.OK, listDisplayDetails);
+                }
+            }
+            catch (Exception e)
+            {
+                string SaveErrorLog = Data.Common.SaveErrorLog("listDisplay", e.Message);
+                return StatusCode((int)HttpStatusCode.InternalServerError, new { ErrorMessage = e.Message });
+            }
+        }
+        #endregion
+        #region listDisplayByUserId
+        [HttpGet, Route("listDisplayByUserId")]
+        public IActionResult listDisplayByUserId(int userId)
+        {
+            List<dynamic> listDisplayDetails = new List<dynamic>();
+
+            try
+            {
+                DataTable dt = Data.Display.listDisplayByUserId(userId);
+                if (dt.Rows.Count > 0)
+                {
+                    for (int i = 0; i < dt.Rows.Count; i++)
+                    {
+                        dynamic listDisplay = new System.Dynamic.ExpandoObject();
+                        listDisplay.displayId = (int)dt.Rows[i]["displayId"];
+                        listDisplay.name = (dt.Rows[i]["name"] == DBNull.Value ? "" : dt.Rows[i]["name"].ToString());
+                        listDisplay.categoryId = (dt.Rows[i]["categoryId"] == DBNull.Value ? 0 : (int)dt.Rows[i]["categoryId"]);
+                        listDisplay.notes = (dt.Rows[i]["notes"] == DBNull.Value ? "" : dt.Rows[i]["notes"].ToString());
+                        listDisplay.latitude = (dt.Rows[i]["latitude"] == DBNull.Value ? "" : dt.Rows[i]["latitude"].ToString());
+                        listDisplay.longitude = (dt.Rows[i]["longitude"] == DBNull.Value ? "" : dt.Rows[i]["longitude"].ToString());
+                        listDisplay.country = (dt.Rows[i]["country"] == DBNull.Value ? "" : dt.Rows[i]["country"].ToString());
+                        listDisplay.state = (dt.Rows[i]["state"] == DBNull.Value ? "" : dt.Rows[i]["state"].ToString());
+                        listDisplay.cityName = (dt.Rows[i]["cityName"] == DBNull.Value ? "" : dt.Rows[i]["cityName"].ToString());
+                        listDisplay.address = (dt.Rows[i]["address"] == DBNull.Value ? "" : dt.Rows[i]["address"].ToString());
+                        listDisplay.type = (dt.Rows[i]["type"] == DBNull.Value ? "" : dt.Rows[i]["type"].ToString());
+                        listDisplay.viewCount = (dt.Rows[i]["viewCount"] == DBNull.Value ? 0 : (int)dt.Rows[i]["viewCount"]);
+                        listDisplay.isPrivate = (dt.Rows[i]["isPrivate"] == DBNull.Value ? "" : dt.Rows[i]["isPrivate"].ToString());
+                        listDisplay.createdDate = (dt.Rows[i]["createdDate"] == DBNull.Value ? "" : dt.Rows[i]["createdDate"].ToString());
+                        listDisplay.createdBy = (dt.Rows[i]["createdBy"] == DBNull.Value ? 0 : (int)dt.Rows[i]["createdBy"]);
+                        listDisplayDetails.Add(listDisplay);
+                    }
+                    return StatusCode((int)HttpStatusCode.OK, listDisplayDetails);
+                }
+                else
+                {
+                    return StatusCode((int)HttpStatusCode.OK, listDisplayDetails);
+                }
+            }
+            catch (Exception e)
+            {
+                string SaveErrorLog = Data.Common.SaveErrorLog("listDisplayByUserId", e.Message);
+                return StatusCode((int)HttpStatusCode.InternalServerError, new { ErrorMessage = e.Message });
+            }
+        }
+        #endregion
+    }
+
+}

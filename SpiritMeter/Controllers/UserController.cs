@@ -17,7 +17,7 @@ namespace SpiritMeter.Controllers
     [EnableCors("AllowAll")]
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize]
+    //[Authorize]
     public class UserController : ControllerBase
     {
         #region createUser
@@ -182,8 +182,7 @@ namespace SpiritMeter.Controllers
                     {
                         dynamic listUser = new System.Dynamic.ExpandoObject();
                         listUser.userId = (int)dt.Rows[i]["userId"];
-                        listUser.firstName = (dt.Rows[i]["firstName"] == DBNull.Value ? "" : dt.Rows[i]["firstName"].ToString());
-                        listUser.lastName = (dt.Rows[i]["lastName"] == DBNull.Value ? "" : dt.Rows[i]["lastName"].ToString());
+                        listUser.name = (dt.Rows[i]["name"] == DBNull.Value ? "" : dt.Rows[i]["name"].ToString());
                         listUser.phoneNumber = (dt.Rows[i]["phoneNumber"] == DBNull.Value ? "" : dt.Rows[i]["phoneNumber"].ToString());
                         listUser.profileImage = (dt.Rows[i]["profileImage"] == DBNull.Value ? "" : dt.Rows[i]["profileImage"].ToString());
                         listUser.gender = (dt.Rows[i]["gender"] == DBNull.Value ? "" : dt.Rows[i]["gender"].ToString());
@@ -264,6 +263,52 @@ namespace SpiritMeter.Controllers
             catch (Exception e)
             {
                 string SaveErrorLog = Data.Common.SaveErrorLog("selectUserById", e.Message);
+
+                return StatusCode((int)HttpStatusCode.InternalServerError, new { ErrorMessage = e.Message });
+            }
+        }
+        #endregion
+
+        #region ListCharity
+        [HttpGet, Route("ListCharity")]
+        public IActionResult ListCharity()
+        {
+            List<dynamic> userList = new List<dynamic>();
+            try
+            {
+                DataTable dt = Data.User.ListCharity();
+
+                dynamic user = new System.Dynamic.ExpandoObject();
+                if (dt.Rows.Count > 0)
+                {
+                    user.userId = (int)dt.Rows[0]["userId"];
+                    user.name = (dt.Rows[0]["name"] == DBNull.Value ? "" : dt.Rows[0]["name"].ToString());
+                    user.phoneNumber = (dt.Rows[0]["phoneNumber"] == DBNull.Value ? "" : dt.Rows[0]["phoneNumber"].ToString());
+                    user.profileImage = (dt.Rows[0]["profileImage"] == DBNull.Value ? "" : dt.Rows[0]["profileImage"].ToString());
+                    user.gender = (dt.Rows[0]["gender"] == DBNull.Value ? "" : dt.Rows[0]["gender"].ToString());
+                    user.role = (dt.Rows[0]["role"] == DBNull.Value ? "" : dt.Rows[0]["role"].ToString());
+                    user.latitude = (dt.Rows[0]["latitude"] == DBNull.Value ? "" : dt.Rows[0]["latitude"].ToString());
+                    user.longitude = (dt.Rows[0]["longitude"] == DBNull.Value ? "" : dt.Rows[0]["longitude"].ToString());
+                    user.country = (dt.Rows[0]["country"] == DBNull.Value ? "" : dt.Rows[0]["country"].ToString());
+                    user.state = (dt.Rows[0]["state"] == DBNull.Value ? "" : dt.Rows[0]["state"].ToString());
+                    user.cityName = (dt.Rows[0]["cityName"] == DBNull.Value ? "" : dt.Rows[0]["cityName"].ToString());
+                    user.address = (dt.Rows[0]["address"] == DBNull.Value ? "" : dt.Rows[0]["address"].ToString());
+                   
+                    userList.Add(user);
+
+                    return StatusCode((int)HttpStatusCode.OK, user);
+                }
+
+                else
+                {
+                    string[] data = new string[0];
+                    return StatusCode((int)HttpStatusCode.OK, data);
+                }
+
+            }
+            catch (Exception e)
+            {
+                string SaveErrorLog = Data.Common.SaveErrorLog("ListCharity", e.Message);
 
                 return StatusCode((int)HttpStatusCode.InternalServerError, new { ErrorMessage = e.Message });
             }
@@ -362,6 +407,39 @@ namespace SpiritMeter.Controllers
                 string SaveErrorLog = Data.Common.SaveErrorLog("SmsOTP", e.Message.ToString());
 
                 return StatusCode((int)HttpStatusCode.InternalServerError, new { ErrorMessage = e.Message.ToString() });
+            }
+        }
+        #endregion
+
+        #region spiritMeter
+        [HttpGet, Route("spiritMeter/userId")]
+        public IActionResult spiritMeter(int userId)
+        {
+           
+            try
+            {
+                DataTable dt = Data.User.spiritMeter();
+
+                dynamic user = new System.Dynamic.ExpandoObject();
+                if (dt.Rows.Count > 0)
+                {
+                    user.spiritMeter = (int)dt.Rows[0]["spiritMeter"];
+
+                    return StatusCode((int)HttpStatusCode.OK, user);
+                }
+
+                else
+                {
+                    string[] data = new string[0];
+                    return StatusCode((int)HttpStatusCode.OK, data);
+                }
+
+            }
+            catch (Exception e)
+            {
+                string SaveErrorLog = Data.Common.SaveErrorLog("spiritMeter", e.Message);
+
+                return StatusCode((int)HttpStatusCode.InternalServerError, new { ErrorMessage = e.Message });
             }
         }
         #endregion

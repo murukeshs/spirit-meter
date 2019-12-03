@@ -22,7 +22,7 @@ namespace SpiritMeter.Data
                 List<SqlParameter> parameters = new List<SqlParameter>();
                 parameters.Add(new SqlParameter("@routeName", createRoute.routeName));
                 parameters.Add(new SqlParameter("@comments", createRoute.comments));
-                parameters.Add(new SqlParameter("@userId", createRoute.userId));
+                parameters.Add(new SqlParameter("@userId", createRoute.degisgntedCharityId));
                 parameters.Add(new SqlParameter("@isPrivate", createRoute.isPrivate));
 
                 using (DataSet ds = SqlHelper.ExecuteDataset(ConnectionString, CommandType.StoredProcedure, "spcreateRoute", parameters.ToArray()))
@@ -48,7 +48,8 @@ namespace SpiritMeter.Data
                 parameters.Add(new SqlParameter("@routeId", updateRoute.routeId));
                 parameters.Add(new SqlParameter("@routeName", updateRoute.routeName));
                 parameters.Add(new SqlParameter("@comments", updateRoute.comments));
-                parameters.Add(new SqlParameter("@userId", updateRoute.userId));
+                parameters.Add(new SqlParameter("@designatedCharityId", updateRoute.degisgntedCharityId));
+                parameters.Add(new SqlParameter("@startingPoint", updateRoute.startingPoint));
                 parameters.Add(new SqlParameter("@isPrivate", updateRoute.isPrivate));
 
                 using (DataTable dt = SqlHelper.ExecuteDataset(ConnectionString, CommandType.StoredProcedure, "spupdateRoute", parameters.ToArray()).Tables[0])
@@ -209,7 +210,29 @@ namespace SpiritMeter.Data
 
         }
         #endregion
+        #region listRoutesByUserId
+        public static DataTable listRoutesByUserId(int userId)
+        {
+            try
+            {
+                
+                string ConnectionString = Common.GetConnectionString();
+                List<SqlParameter> parameters = new List<SqlParameter>();
+                parameters.Add(new SqlParameter("@userId", userId));
 
+
+                using (DataTable dt = SqlHelper.ExecuteDataset(ConnectionString, CommandType.StoredProcedure, "splistRoutesByUserId", parameters.ToArray()).Tables[0])
+                {
+                    return dt;
+                }
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+
+        }
+        #endregion 
         #region selectRouteById
         public static DataSet selectRouteById(int routeId)
         {
@@ -221,6 +244,28 @@ namespace SpiritMeter.Data
 
 
                 using (DataSet ds = SqlHelper.ExecuteDataset(ConnectionString, CommandType.StoredProcedure, "spselectRouteById", parameters.ToArray()))
+                {
+                    return ds;
+                }
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+
+        }
+        #endregion
+        #region selectRouteByUserId
+        public static DataTable selectRouteByUserId(int userId)
+        {
+            try
+            {
+                string ConnectionString = Common.GetConnectionString();
+                List<SqlParameter> parameters = new List<SqlParameter>();
+                parameters.Add(new SqlParameter("@userId", userId));
+
+
+                using (DataTable ds = SqlHelper.ExecuteDataset(ConnectionString, CommandType.StoredProcedure, "spGetRouteByUserId", parameters.ToArray()).Tables[0])
                 {
                     return ds;
                 }

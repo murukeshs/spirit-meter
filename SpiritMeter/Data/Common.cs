@@ -185,5 +185,17 @@ namespace SpiritMeter.Data
             return apiKey;
         }
         #endregion
+        #region EventToken
+        public static string EventToken()
+        {
+            IConfigurationBuilder builder = new ConfigurationBuilder();
+            builder.AddJsonFile(Path.Combine(Directory.GetCurrentDirectory(), "appsettings.json"));
+
+            IConfigurationRoot configuration = builder.Build();
+            var apiKey = configuration.GetSection("EventToken").GetSection("Key").Value;
+
+            return apiKey;
+        }
+        #endregion
     }
 }

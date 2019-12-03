@@ -239,6 +239,26 @@ namespace SpiritMeter.Data
 
         }
         #endregion
+        #region PopularDisplay
+        public static DataTable PopularDisplay()
+        {
+            try
+            {
+                List<SqlParameter> parameters = new List<SqlParameter>();
+                string ConnectionString = Common.GetConnectionString();
+
+                using (DataTable dt = SqlHelper.ExecuteDataset(ConnectionString, CommandType.StoredProcedure, "spPopularDisplay").Tables[0])
+                {
+                    return dt;
+                }
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+
+        }
+        #endregion
     }
 
-    }
+}

@@ -14,7 +14,8 @@ namespace SpiritMeter.Models
             public int? categoryId { get; set; }
             public string notes { get; set; }
             public string type { get; set; }
-            public bool? isPrivate { get; set; }
+           [DefaultValue(false)]
+           public bool? isPrivate { get; set; }
             public int createdBy { get; set; }
         }
 

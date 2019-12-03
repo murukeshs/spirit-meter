@@ -158,6 +158,27 @@ namespace SpiritMeter.Data
 
         }
         #endregion
+        #region ListCharity
+        public static DataTable ListCharity()
+        {
+            try
+            {
+                string ConnectionString = Common.GetConnectionString();
+                List<SqlParameter> parameters = new List<SqlParameter>();
+
+
+                using (DataTable dt = SqlHelper.ExecuteDataset(ConnectionString, CommandType.StoredProcedure, "spListCharity").Tables[0])
+                {
+                    return dt;
+                }
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+
+        }
+        #endregion
 
         #region selectUserById
         public static DataTable selectUserById(int UserID)
@@ -226,6 +247,28 @@ namespace SpiritMeter.Data
 
         }
         #endregion
+
+        #region spiritMeter
+        public static DataTable spiritMeter()
+        {
+            try
+            {
+                string ConnectionString = Common.GetConnectionString();
+                List<SqlParameter> parameters = new List<SqlParameter>();
+
+
+                using (DataTable dt = SqlHelper.ExecuteDataset(ConnectionString, CommandType.StoredProcedure, "spSpiritMeter").Tables[0])
+                {
+                    return dt;
+                }
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+
+        }
+       #endregion
 
     }
 }

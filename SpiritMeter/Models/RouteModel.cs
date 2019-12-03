@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -11,7 +12,9 @@ namespace SpiritMeter.Models
         public int routeId { get; set; }
         public string routeName { get; set; }
         public string comments { get; set; }
-        public int? userId { get; set; }
+        public int? degisgntedCharityId { get; set; }
+        public int? startingPoint { get; set; }
+        [DefaultValue(false)]
         public bool? isPrivate { get; set; }
     }
    
@@ -34,9 +37,12 @@ namespace SpiritMeter.Models
         public int rideStatusId  { get; set; }
         public int routeId { get; set; }
         public int userId { get; set; }
-        public DateTime rideStartTime { get; set; }
-        public DateTime rideCompleteTime { get; set; }
         public string status { get; set; }
     }
-   
+    public class calculatepath
+    {
+        public string displayId { get; set; }
+        public int startingPoint { get; set; }
+    }
+
 }

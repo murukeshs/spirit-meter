@@ -28,6 +28,7 @@ namespace SpiritMeter.Models
         public string state { get; set; }
         public string cityName { get; set; }
         public string address { get; set; }
+        public string filePath { get; set; }
     }
 
     public class createDisplayFiles

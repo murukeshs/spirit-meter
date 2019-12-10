@@ -22,7 +22,6 @@ namespace SpiritMeter.Data
                 List<SqlParameter> parameters = new List<SqlParameter>();
                 parameters.Add(new SqlParameter("@Phone", userlogin.phoneNo));
                 parameters.Add(new SqlParameter("@Password", encryptPassword));
-                parameters.Add(new SqlParameter("@Role", userlogin.role));
 
                 DataSet ds = new DataSet();
                 using (ds = SqlHelper.ExecuteDataset(ConnectionString, CommandType.StoredProcedure, "spLogin", parameters.ToArray()))
@@ -145,7 +144,7 @@ namespace SpiritMeter.Data
                 List<SqlParameter> parameters = new List<SqlParameter>();
                 parameters.Add(new SqlParameter("@Search", Search));
 
-                
+
                 using (DataTable dt = SqlHelper.ExecuteDataset(ConnectionString, CommandType.StoredProcedure, "spGetUsers", parameters.ToArray()).Tables[0])
                 {
                     return dt;
@@ -216,7 +215,7 @@ namespace SpiritMeter.Data
             }
             catch (Exception e)
             {
-               
+
                 throw e;
             }
         }
@@ -241,7 +240,7 @@ namespace SpiritMeter.Data
             }
             catch (Exception e)
             {
-               
+
                 throw e;
             }
 
@@ -268,7 +267,60 @@ namespace SpiritMeter.Data
             }
 
         }
-       #endregion
+        #endregion
+
+        #region selectBasicUserById
+        public static DataSet selectBasicUserById(int userId)
+        {
+            
+
+            List<SqlParameter> parameters = new List<SqlParameter>();
+            parameters.Add(new SqlParameter("@userId", userId));
+            try
+            {
+                string ConnectionString = Common.GetConnectionString();
+
+                using (DataSet ds = SqlHelper.ExecuteDataset(ConnectionString, CommandType.StoredProcedure, "spGetUserByUserId", parameters.ToArray()))
+                {
+                    return ds;
+                }
+                
+            }
+            catch (Exception e)
+            {
+
+                throw e;
+            }
+
+        }
+        #endregion
+
+
+        #region getProfile
+        public static DataSet getProfile(int userId)
+        {
+
+
+            List<SqlParameter> parameters = new List<SqlParameter>();
+            parameters.Add(new SqlParameter("@userId", userId));
+            try
+            {
+                string ConnectionString = Common.GetConnectionString();
+
+                using (DataSet ds = SqlHelper.ExecuteDataset(ConnectionString, CommandType.StoredProcedure, "spGetProfile", parameters.ToArray()))
+                {
+                    return ds;
+                }
+
+            }
+            catch (Exception e)
+            {
+
+                throw e;
+            }
+
+        }
+        #endregion
 
     }
 }

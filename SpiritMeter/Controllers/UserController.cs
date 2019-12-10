@@ -193,8 +193,8 @@ namespace SpiritMeter.Controllers
                         listUser.state = (dt.Rows[i]["state"] == DBNull.Value ? "" : dt.Rows[i]["state"].ToString());
                         listUser.cityName = (dt.Rows[i]["cityName"] == DBNull.Value ? "" : dt.Rows[i]["cityName"].ToString());
                         listUser.address = (dt.Rows[i]["address"] == DBNull.Value ? "" : dt.Rows[i]["address"].ToString());
-                        listUser.createddate = (dt.Rows[i]["createddate"] == DBNull.Value ? "" : dt.Rows[i]["createddate"].ToString());
-                       
+                        listUser.createdDate = (dt.Rows[i]["createdDate"] == DBNull.Value ? "" : dt.Rows[i]["createdDate"].ToString());
+
                         listUserDetails.Add(listUser);
                     }
                     return StatusCode((int)HttpStatusCode.OK, listUserDetails);
@@ -212,15 +212,18 @@ namespace SpiritMeter.Controllers
         }
         #endregion
 
+
+
+
         #region selectUserById
         [HttpGet, Route("selectUserById/{userId}")]
         public IActionResult selectUserById(int userId)
         {
-            List<dynamic> userList = new List<dynamic>();
+          
             try
             {
                 DataTable dt = Data.User.selectUserById(userId);
-               
+
                 dynamic user = new System.Dynamic.ExpandoObject();
                 if (dt.Rows.Count > 0)
                 {
@@ -234,8 +237,7 @@ namespace SpiritMeter.Controllers
                         DecryptPassword = "";
                     }
                     user.userId = (int)dt.Rows[0]["userId"];
-                    user.firstName = (dt.Rows[0]["firstName"] == DBNull.Value ? "" : dt.Rows[0]["firstName"].ToString());
-                    user.lastName = (dt.Rows[0]["lastName"] == DBNull.Value ? "" : dt.Rows[0]["lastName"].ToString());
+                    user.name = (dt.Rows[0]["name"] == DBNull.Value ? "" : dt.Rows[0]["name"].ToString());
                     user.phoneNumber = (dt.Rows[0]["phoneNumber"] == DBNull.Value ? "" : dt.Rows[0]["phoneNumber"].ToString());
                     user.profileImage = (dt.Rows[0]["profileImage"] == DBNull.Value ? "" : dt.Rows[0]["profileImage"].ToString());
                     user.gender = (dt.Rows[0]["gender"] == DBNull.Value ? "" : dt.Rows[0]["gender"].ToString());
@@ -246,9 +248,8 @@ namespace SpiritMeter.Controllers
                     user.state = (dt.Rows[0]["state"] == DBNull.Value ? "" : dt.Rows[0]["state"].ToString());
                     user.cityName = (dt.Rows[0]["cityName"] == DBNull.Value ? "" : dt.Rows[0]["cityName"].ToString());
                     user.address = (dt.Rows[0]["address"] == DBNull.Value ? "" : dt.Rows[0]["address"].ToString());
+                    user.createdDate = (dt.Rows[0]["createdDate"] == DBNull.Value ? "" : dt.Rows[0]["createdDate"].ToString());
                     user.password = DecryptPassword;
-
-                    userList.Add(user);
 
                     return StatusCode((int)HttpStatusCode.OK, user);
                 }
@@ -256,7 +257,7 @@ namespace SpiritMeter.Controllers
                 else
                 {
                     string[] data = new string[0];
-                    return StatusCode((int)HttpStatusCode.OK, data);
+                    return StatusCode((int)HttpStatusCode.OK, "No Records Found");
                 }
 
             }
@@ -269,34 +270,39 @@ namespace SpiritMeter.Controllers
         }
         #endregion
 
-        #region ListCharity
-        [HttpGet, Route("ListCharity")]
-        public IActionResult ListCharity()
+        #region listCharity
+        [HttpGet, Route("listCharity")]
+        public IActionResult listCharity()
         {
             List<dynamic> userList = new List<dynamic>();
             try
             {
+
                 DataTable dt = Data.User.ListCharity();
 
                 dynamic user = new System.Dynamic.ExpandoObject();
                 if (dt.Rows.Count > 0)
                 {
-                    user.userId = (int)dt.Rows[0]["userId"];
-                    user.name = (dt.Rows[0]["name"] == DBNull.Value ? "" : dt.Rows[0]["name"].ToString());
-                    user.phoneNumber = (dt.Rows[0]["phoneNumber"] == DBNull.Value ? "" : dt.Rows[0]["phoneNumber"].ToString());
-                    user.profileImage = (dt.Rows[0]["profileImage"] == DBNull.Value ? "" : dt.Rows[0]["profileImage"].ToString());
-                    user.gender = (dt.Rows[0]["gender"] == DBNull.Value ? "" : dt.Rows[0]["gender"].ToString());
-                    user.role = (dt.Rows[0]["role"] == DBNull.Value ? "" : dt.Rows[0]["role"].ToString());
-                    user.latitude = (dt.Rows[0]["latitude"] == DBNull.Value ? "" : dt.Rows[0]["latitude"].ToString());
-                    user.longitude = (dt.Rows[0]["longitude"] == DBNull.Value ? "" : dt.Rows[0]["longitude"].ToString());
-                    user.country = (dt.Rows[0]["country"] == DBNull.Value ? "" : dt.Rows[0]["country"].ToString());
-                    user.state = (dt.Rows[0]["state"] == DBNull.Value ? "" : dt.Rows[0]["state"].ToString());
-                    user.cityName = (dt.Rows[0]["cityName"] == DBNull.Value ? "" : dt.Rows[0]["cityName"].ToString());
-                    user.address = (dt.Rows[0]["address"] == DBNull.Value ? "" : dt.Rows[0]["address"].ToString());
-                   
-                    userList.Add(user);
+                    for (int i = 0; i < dt.Rows.Count; i++)
+                    {
 
-                    return StatusCode((int)HttpStatusCode.OK, user);
+                        user.userId = (int)dt.Rows[i]["userId"];
+                        user.name = (dt.Rows[i]["name"] == DBNull.Value ? "" : dt.Rows[i]["name"].ToString());
+                        user.phoneNumber = (dt.Rows[i]["phoneNumber"] == DBNull.Value ? "" : dt.Rows[i]["phoneNumber"].ToString());
+                        user.profileImage = (dt.Rows[i]["profileImage"] == DBNull.Value ? "" : dt.Rows[i]["profileImage"].ToString());
+                        user.gender = (dt.Rows[i]["gender"] == DBNull.Value ? "" : dt.Rows[i]["gender"].ToString());
+                        user.role = (dt.Rows[i]["role"] == DBNull.Value ? "" : dt.Rows[i]["role"].ToString());
+                        user.latitude = (dt.Rows[i]["latitude"] == DBNull.Value ? "" : dt.Rows[i]["latitude"].ToString());
+                        user.longitude = (dt.Rows[i]["longitude"] == DBNull.Value ? "" : dt.Rows[i]["longitude"].ToString());
+                        user.country = (dt.Rows[i]["country"] == DBNull.Value ? "" : dt.Rows[i]["country"].ToString());
+                        user.state = (dt.Rows[i]["state"] == DBNull.Value ? "" : dt.Rows[i]["state"].ToString());
+                        user.cityName = (dt.Rows[i]["cityName"] == DBNull.Value ? "" : dt.Rows[i]["cityName"].ToString());
+                        user.address = (dt.Rows[i]["address"] == DBNull.Value ? "" : dt.Rows[i]["address"].ToString());
+
+                        userList.Add(user);
+                    }
+
+                    return StatusCode((int)HttpStatusCode.OK, userList);
                 }
 
                 else
@@ -308,7 +314,7 @@ namespace SpiritMeter.Controllers
             }
             catch (Exception e)
             {
-                string SaveErrorLog = Data.Common.SaveErrorLog("ListCharity", e.Message);
+                string SaveErrorLog = Data.Common.SaveErrorLog("listCharity", e.Message);
 
                 return StatusCode((int)HttpStatusCode.InternalServerError, new { ErrorMessage = e.Message });
             }
@@ -357,9 +363,9 @@ namespace SpiritMeter.Controllers
             }
         }
         #endregion forgetPassword   
-     
-        #region GenerateOTP
-        [HttpPut, Route("GenerateOTP")]
+
+        #region generateOTP
+        [HttpPut, Route("generateOTP")]
         [AllowAnonymous]
         public IActionResult generateOTP([FromBody]GenerateOTP otp)
         {
@@ -404,7 +410,7 @@ namespace SpiritMeter.Controllers
 
             catch (Exception e)
             {
-                string SaveErrorLog = Data.Common.SaveErrorLog("SmsOTP", e.Message.ToString());
+                string SaveErrorLog = Data.Common.SaveErrorLog("generateOTP", e.Message.ToString());
 
                 return StatusCode((int)HttpStatusCode.InternalServerError, new { ErrorMessage = e.Message.ToString() });
             }
@@ -412,7 +418,7 @@ namespace SpiritMeter.Controllers
         #endregion
 
         #region spiritMeter
-        [HttpGet, Route("spiritMeter/userId")]
+        [HttpGet, Route("spiritMeter/{userId}")]
         public IActionResult spiritMeter(int userId)
         {
            
@@ -443,6 +449,161 @@ namespace SpiritMeter.Controllers
             }
         }
         #endregion
+
+        #region selectUser
+        [HttpGet, Route("selectUser/{userId}")]
+        public IActionResult selectUser(int userId)
+        {
+            List<dynamic> listDisplayDetails = new List<dynamic>();
+
+            try
+            {
+                DataSet ds = Data.User.selectBasicUserById(userId);
+
+                List<displayList> listDisplay = new List<displayList>();
+                displayLists Displays = new displayLists();
+                if(ds.Tables[1].Rows.Count > 0)
+                { 
+                for (int i = 0; i < ds.Tables[1].Rows.Count; i++)
+                {
+                    displayList Display = new displayList();
+
+                    Display.displayId = (int)ds.Tables[1].Rows[i]["displayId"];
+                    Display.name = (ds.Tables[1].Rows[i]["name"] == DBNull.Value ? "" : ds.Tables[1].Rows[i]["name"].ToString());
+                    Display.categoryId = (ds.Tables[1].Rows[i]["categoryId"] == DBNull.Value ? 0 : (int)ds.Tables[1].Rows[i]["categoryId"]);
+                    Display.categoryName = (ds.Tables[1].Rows[i]["categoryName"] == DBNull.Value ? "" : ds.Tables[1].Rows[i]["categoryName"].ToString());
+                    Display.notes = (ds.Tables[1].Rows[i]["notes"] == DBNull.Value ? "" : ds.Tables[1].Rows[i]["notes"].ToString());
+                    Display.latitude = (ds.Tables[1].Rows[i]["latitude"] == DBNull.Value ? "" : ds.Tables[1].Rows[i]["latitude"].ToString());
+                    Display.longitude = (ds.Tables[1].Rows[i]["longitude"] == DBNull.Value ? "" : ds.Tables[1].Rows[i]["longitude"].ToString());
+                    Display.country = (ds.Tables[1].Rows[i]["country"] == DBNull.Value ? "" : ds.Tables[1].Rows[i]["country"].ToString());
+                    Display.state = (ds.Tables[1].Rows[i]["state"] == DBNull.Value ? "" : ds.Tables[1].Rows[i]["state"].ToString());
+                    Display.cityName = (ds.Tables[1].Rows[i]["cityName"] == DBNull.Value ? "" : ds.Tables[1].Rows[i]["cityName"].ToString());
+                    Display.address = (ds.Tables[1].Rows[i]["address"] == DBNull.Value ? "" : ds.Tables[1].Rows[i]["address"].ToString());
+                    Display.type = (ds.Tables[1].Rows[i]["type"] == DBNull.Value ? "" : ds.Tables[1].Rows[i]["type"].ToString());
+                    Display.isPrivate = (ds.Tables[1].Rows[i]["isPrivate"] == DBNull.Value ? false : (bool)ds.Tables[1].Rows[i]["isPrivate"]);
+                    Display.createdDate = (ds.Tables[1].Rows[i]["createdDate"] == DBNull.Value ? "" : ds.Tables[1].Rows[i]["createdDate"].ToString());
+                    Display.createdBy = (ds.Tables[1].Rows[i]["createdBy"] == DBNull.Value ? 0 : (int)ds.Tables[1].Rows[i]["createdBy"]);
+                    Display.createdByName = (ds.Tables[1].Rows[i]["createdName"] == DBNull.Value ? "" : ds.Tables[1].Rows[i]["createdName"].ToString());
+                    Display.filePath = (ds.Tables[1].Rows[i]["filePath"] == DBNull.Value ? "" : ds.Tables[1].Rows[i]["filePath"].ToString());
+                    Display.routes = (ds.Tables[1].Rows[i]["routes"] == DBNull.Value ? "" : ds.Tables[1].Rows[i]["routes"].ToString());
+
+                    listDisplay.Add(Display);
+                }
+
+
+               
+                    dynamic listUser = new System.Dynamic.ExpandoObject();
+                    listUser.userId = (int)ds.Tables[0].Rows[0]["userId"];
+                    listUser.name = (ds.Tables[0].Rows[0]["name"] == DBNull.Value ? "" : ds.Tables[0].Rows[0]["name"].ToString());
+                    listUser.phoneNumber = (ds.Tables[0].Rows[0]["phoneNumber"] == DBNull.Value ? "" : ds.Tables[0].Rows[0]["phoneNumber"].ToString());
+                    listUser.profileImage = (ds.Tables[0].Rows[0]["profileImage"] == DBNull.Value ? "" : ds.Tables[0].Rows[0]["profileImage"].ToString());
+                    listUser.gender = (ds.Tables[0].Rows[0]["gender"] == DBNull.Value ? "" : ds.Tables[0].Rows[0]["gender"].ToString());
+                    listUser.role = (ds.Tables[0].Rows[0]["role"] == DBNull.Value ? "" : ds.Tables[0].Rows[0]["role"].ToString());
+                    listUser.latitude = (ds.Tables[0].Rows[0]["latitude"] == DBNull.Value ? "" : ds.Tables[0].Rows[0]["latitude"].ToString());
+                    listUser.longitude = (ds.Tables[0].Rows[0]["longitude"] == DBNull.Value ? "" : ds.Tables[0].Rows[0]["longitude"].ToString());
+                    listUser.country = (ds.Tables[0].Rows[0]["country"] == DBNull.Value ? "" : ds.Tables[0].Rows[0]["country"].ToString());
+                    listUser.state = (ds.Tables[0].Rows[0]["state"] == DBNull.Value ? "" : ds.Tables[0].Rows[0]["state"].ToString());
+                    listUser.cityName = (ds.Tables[0].Rows[0]["cityName"] == DBNull.Value ? "" : ds.Tables[0].Rows[0]["cityName"].ToString());
+                    listUser.address = (ds.Tables[0].Rows[0]["address"] == DBNull.Value ? "" : ds.Tables[0].Rows[0]["address"].ToString());
+                    listUser.createdDate = (ds.Tables[0].Rows[0]["createdDate"] == DBNull.Value ? "" : ds.Tables[0].Rows[0]["createdDate"].ToString());
+
+                    List<displayList> list = listDisplay.Where(a => a.createdBy == (int)ds.Tables[0].Rows[0]["userId"]).ToList();
+                    if (list.Count > 0)
+                    {
+                        listUser.displayList = list;
+
+                    }
+                    else
+                    {
+                        listUser.displayList = "";
+
+                    }
+
+                    List<dynamic> listRoute = new List<dynamic>();
+                    dynamic route = new System.Dynamic.ExpandoObject();
+                    for (int j = 0; j < ds.Tables[2].Rows.Count; j++)
+                    {
+                        route.routeId = (int)ds.Tables[2].Rows[j]["routeId"];
+                        route.routeName = (ds.Tables[2].Rows[j]["routeName"] == DBNull.Value ? "" : ds.Tables[2].Rows[j]["routeName"].ToString());
+                        route.comments = (ds.Tables[2].Rows[j]["comments"] == DBNull.Value ? "" : ds.Tables[2].Rows[j]["comments"].ToString());
+                        route.designatedCharityId = (ds.Tables[2].Rows[j]["designatedCharityId"] == DBNull.Value ? 0 : (int)ds.Tables[2].Rows[j]["designatedCharityId"]);
+                        route.designatedCharityName = (ds.Tables[2].Rows[j]["designatedCharityName"] == DBNull.Value ? "" : ds.Tables[2].Rows[j]["designatedCharityName"].ToString());
+                        route.isPrivate = (ds.Tables[2].Rows[j]["isPrivate"] == DBNull.Value ? false : (bool)ds.Tables[2].Rows[j]["isPrivate"]);
+                        route.createdDate = (ds.Tables[0].Rows[j]["createdDate"] == DBNull.Value ? "" : ds.Tables[2].Rows[j]["createdDate"].ToString());
+                        route.startingPoint = (ds.Tables[2].Rows[j]["startingPoint"] == DBNull.Value ? 0 : (int)ds.Tables[2].Rows[j]["startingPoint"]);
+                        route.latitude = (ds.Tables[2].Rows[j]["latitude"] == DBNull.Value ? "" : ds.Tables[2].Rows[j]["latitude"].ToString());
+                        route.longitude = (ds.Tables[2].Rows[j]["longitude"] == DBNull.Value ? "" : ds.Tables[2].Rows[j]["longitude"].ToString());
+                        route.country = (ds.Tables[2].Rows[j]["country"] == DBNull.Value ? "" : ds.Tables[2].Rows[j]["country"].ToString());
+                        route.state = (ds.Tables[2].Rows[j]["state"] == DBNull.Value ? "" : ds.Tables[2].Rows[j]["state"].ToString());
+                        route.cityName = (ds.Tables[2].Rows[j]["cityName"] == DBNull.Value ? "" : ds.Tables[2].Rows[j]["cityName"].ToString());
+                        route.address = (ds.Tables[2].Rows[j]["address"] == DBNull.Value ? "" : ds.Tables[2].Rows[j]["address"].ToString());
+                        route.totalMiles = (ds.Tables[2].Rows[j]["totalMiles"] == DBNull.Value ? "" : String.Concat(ds.Tables[2].Rows[j]["totalMiles"], "mi").ToString());
+                        route.path = (ds.Tables[2].Rows[j]["path"] == DBNull.Value ? "" : ds.Tables[2].Rows[j]["path"].ToString());
+                        listRoute.Add(route);
+                    }
+                    listUser.routeList = listRoute;
+
+                
+                return StatusCode((int)HttpStatusCode.OK, listUser);
+                }
+                else
+                {
+                    return StatusCode((int)HttpStatusCode.OK, "No Records Found");
+                }
+
+            }
+            catch (Exception e)
+            {
+                string SaveErrorLog = Data.Common.SaveErrorLog("selectUser", e.Message);
+                return StatusCode((int)HttpStatusCode.InternalServerError, new { ErrorMessage = e.Message });
+            }
+        }
+        #endregion
+
+        #region getProfile
+        [HttpGet, Route("getProfile/{userId}")]
+        public IActionResult getProfile(int userId)
+        {
+            try
+            {
+                DataSet ds = Data.User.getProfile(userId);
+               
+                    dynamic listUser = new System.Dynamic.ExpandoObject();
+                if(ds.Tables[0].Rows.Count > 0)
+                {
+                    listUser.userId = (int)ds.Tables[0].Rows[0]["userId"];
+                    listUser.name = (ds.Tables[0].Rows[0]["name"] == DBNull.Value ? "" : ds.Tables[0].Rows[0]["name"].ToString());
+                    listUser.phoneNumber = (ds.Tables[0].Rows[0]["phoneNumber"] == DBNull.Value ? "" : ds.Tables[0].Rows[0]["phoneNumber"].ToString());
+                    listUser.profileImage = (ds.Tables[0].Rows[0]["profileImage"] == DBNull.Value ? "" : ds.Tables[0].Rows[0]["profileImage"].ToString());
+                    listUser.gender = (ds.Tables[0].Rows[0]["gender"] == DBNull.Value ? "" : ds.Tables[0].Rows[0]["gender"].ToString());
+                    listUser.role = (ds.Tables[0].Rows[0]["role"] == DBNull.Value ? "" : ds.Tables[0].Rows[0]["role"].ToString());
+                    listUser.latitude = (ds.Tables[0].Rows[0]["latitude"] == DBNull.Value ? "" : ds.Tables[0].Rows[0]["latitude"].ToString());
+                    listUser.longitude = (ds.Tables[0].Rows[0]["longitude"] == DBNull.Value ? "" : ds.Tables[0].Rows[0]["longitude"].ToString());
+                    listUser.country = (ds.Tables[0].Rows[0]["country"] == DBNull.Value ? "" : ds.Tables[0].Rows[0]["country"].ToString());
+                    listUser.state = (ds.Tables[0].Rows[0]["state"] == DBNull.Value ? "" : ds.Tables[0].Rows[0]["state"].ToString());
+                    listUser.cityName = (ds.Tables[0].Rows[0]["cityName"] == DBNull.Value ? "" : ds.Tables[0].Rows[0]["cityName"].ToString());
+                    listUser.address = (ds.Tables[0].Rows[0]["address"] == DBNull.Value ? "" : ds.Tables[0].Rows[0]["address"].ToString());
+                    listUser.createdDate = (ds.Tables[0].Rows[0]["createdDate"] == DBNull.Value ? "" : ds.Tables[0].Rows[0]["createdDate"].ToString());
+                    listUser.savedRoutes = (ds.Tables[2].Rows[0]["savedRoutes"] == DBNull.Value ? 0 : (int)ds.Tables[2].Rows[0]["savedRoutes"]);
+                    listUser.savedDisplay = (ds.Tables[1].Rows[0]["savedDisplay"] == DBNull.Value ? 0 : (int)ds.Tables[1].Rows[0]["savedDisplay"]);
+                    listUser.spiritPoints = (ds.Tables[3].Rows[0]["spiritPoints"] == DBNull.Value ? 0 : (int)ds.Tables[3].Rows[0]["spiritPoints"]);
+
+                 return StatusCode((int)HttpStatusCode.OK, listUser);
+                }
+                else
+                {
+                 return StatusCode((int)HttpStatusCode.OK, "No Records Found");
+                }
+
+            }
+            catch (Exception e)
+            {
+                string SaveErrorLog = Data.Common.SaveErrorLog("getProfile", e.Message);
+                return StatusCode((int)HttpStatusCode.InternalServerError, new { ErrorMessage = e.Message });
+            }
+        }
+        #endregion
+
 
     }
 }

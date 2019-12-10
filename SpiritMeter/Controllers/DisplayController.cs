@@ -73,12 +73,7 @@ namespace SpiritMeter.Controllers
                 {
                     return StatusCode((int)HttpStatusCode.BadRequest, new { ErrorMessage = "Please enter categoryId" });
                 }
-                else if (createDisplay.notes == "" || createDisplay.notes == null)
-                {
-                    return StatusCode((int)HttpStatusCode.BadRequest, new { ErrorMessage = "Please enter notes" });
-                }
                 
-
                 else if (createDisplay.type == "" || createDisplay.type == null)
                 {
                     return StatusCode((int)HttpStatusCode.BadRequest, new { ErrorMessage = "Please enter type" });
@@ -130,7 +125,10 @@ namespace SpiritMeter.Controllers
                 {
                     return StatusCode((int)HttpStatusCode.BadRequest, new { ErrorMessage = "Please enter displayId" });
                 }
-
+                else if(createDisplayFiles.filePath == "" || createDisplayFiles.filePath == null)
+                {
+                    return StatusCode((int)HttpStatusCode.BadRequest, new { ErrorMessage = "Please upload filePath" });
+                }
 
                 int row = Data.Display.createDisplayFiles(createDisplayFiles);
                 if (row > 0)
@@ -198,7 +196,7 @@ namespace SpiritMeter.Controllers
             {
                 if (displayFileId <= 0 || displayFileId == null)
                 {
-                    return StatusCode((int)HttpStatusCode.BadRequest, new { ErrorMessage = "Please enter teamId" });
+                    return StatusCode((int)HttpStatusCode.BadRequest, new { ErrorMessage = "Please enter displayFileId" });
                 }
                 else
                 {
@@ -227,34 +225,34 @@ namespace SpiritMeter.Controllers
         [HttpGet, Route("selectDisplay/{displayId}")]
         public IActionResult selectDisplay(int displayId)
         {
-            List<dynamic> listDisplayDetails = new List<dynamic>();
+          
 
             try
             {
                 DataSet ds = Data.Display.selectDisplay(displayId);
-                 if (ds.Tables.Count > 0)
+                dynamic display = new System.Dynamic.ExpandoObject();
+                if (ds.Tables[0].Rows.Count > 0)
                 {
                     
-                    for (int i = 0; i < ds.Tables[0].Rows.Count; i++)
-                    {
-                        dynamic listDisplay = new System.Dynamic.ExpandoObject();
-                        listDisplay.displayId = (int)ds.Tables[0].Rows[i]["displayId"];
-                        listDisplay.name = (ds.Tables[0].Rows[i]["name"] == DBNull.Value ? "" : ds.Tables[0].Rows[i]["name"].ToString());
-                        listDisplay.categoryId = (ds.Tables[0].Rows[i]["categoryId"] == DBNull.Value ? 0 : (int)ds.Tables[0].Rows[i]["categoryId"]);
-                        listDisplay.categoryName = (ds.Tables[0].Rows[i]["categoryName"] == DBNull.Value ? "" : ds.Tables[0].Rows[i]["categoryName"].ToString());
-                        listDisplay.notes = (ds.Tables[0].Rows[i]["notes"] == DBNull.Value ? "" : ds.Tables[0].Rows[i]["notes"].ToString());
-                        listDisplay.latitude = (ds.Tables[0].Rows[i]["latitude"] == DBNull.Value ? "" : ds.Tables[0].Rows[i]["latitude"].ToString());
-                        listDisplay.longitude = (ds.Tables[0].Rows[i]["longitude"] == DBNull.Value ? "" : ds.Tables[0].Rows[i]["longitude"].ToString());
-                        listDisplay.country = (ds.Tables[0].Rows[i]["country"] == DBNull.Value ? "" : ds.Tables[0].Rows[i]["country"].ToString());
-                        listDisplay.state = (ds.Tables[0].Rows[i]["state"] == DBNull.Value ? "" : ds.Tables[0].Rows[i]["state"].ToString());
-                        listDisplay.cityName = (ds.Tables[0].Rows[i]["cityName"] == DBNull.Value ? "" : ds.Tables[0].Rows[i]["cityName"].ToString());
-                        listDisplay.address = (ds.Tables[0].Rows[i]["address"] == DBNull.Value ? "" : ds.Tables[0].Rows[i]["address"].ToString());
-                        listDisplay.type = (ds.Tables[0].Rows[i]["type"] == DBNull.Value ? "" : ds.Tables[0].Rows[i]["type"].ToString());
-                        listDisplay.isPrivate = (ds.Tables[0].Rows[i]["isPrivate"] == DBNull.Value ? "" : ds.Tables[0].Rows[i]["isPrivate"].ToString());
-                        listDisplay.createdDate = (ds.Tables[0].Rows[i]["createdDate"] == DBNull.Value ? "" : ds.Tables[0].Rows[i]["createdDate"].ToString());
-                        listDisplay.createdBy = (ds.Tables[0].Rows[i]["createdBy"] == DBNull.Value ? 0 : (int)ds.Tables[0].Rows[i]["createdBy"]);
-                        listDisplay.createdByName = (ds.Tables[0].Rows[i]["createdByName"] == DBNull.Value ? "" : ds.Tables[0].Rows[i]["createdByName"].ToString());
-                        listDisplay.routes = (ds.Tables[0].Rows[i]["routes"] == DBNull.Value ? "" : ds.Tables[0].Rows[i]["routes"].ToString());
+                   
+                        
+                        display.displayId = (int)ds.Tables[0].Rows[0]["displayId"];
+                        display.name = (ds.Tables[0].Rows[0]["name"] == DBNull.Value ? "" : ds.Tables[0].Rows[0]["name"].ToString());
+                        display.categoryId = (ds.Tables[0].Rows[0]["categoryId"] == DBNull.Value ? 0 : (int)ds.Tables[0].Rows[0]["categoryId"]);
+                        display.categoryName = (ds.Tables[0].Rows[0]["categoryName"] == DBNull.Value ? "" : ds.Tables[0].Rows[0]["categoryName"].ToString());
+                        display.notes = (ds.Tables[0].Rows[0]["notes"] == DBNull.Value ? "" : ds.Tables[0].Rows[0]["notes"].ToString());
+                        display.latitude = (ds.Tables[0].Rows[0]["latitude"] == DBNull.Value ? "" : ds.Tables[0].Rows[0]["latitude"].ToString());
+                        display.longitude = (ds.Tables[0].Rows[0]["longitude"] == DBNull.Value ? "" : ds.Tables[0].Rows[0]["longitude"].ToString());
+                        display.country = (ds.Tables[0].Rows[0]["country"] == DBNull.Value ? "" : ds.Tables[0].Rows[0]["country"].ToString());
+                        display.state = (ds.Tables[0].Rows[0]["state"] == DBNull.Value ? "" : ds.Tables[0].Rows[0]["state"].ToString());
+                        display.cityName = (ds.Tables[0].Rows[0]["cityName"] == DBNull.Value ? "" : ds.Tables[0].Rows[0]["cityName"].ToString());
+                        display.address = (ds.Tables[0].Rows[0]["address"] == DBNull.Value ? "" : ds.Tables[0].Rows[0]["address"].ToString());
+                        display.type = (ds.Tables[0].Rows[0]["type"] == DBNull.Value ?"": ds.Tables[0].Rows[0]["type"].ToString());
+                        display.isPrivate = (ds.Tables[0].Rows[0]["isPrivate"] == DBNull.Value ? false : (bool)ds.Tables[0].Rows[0]["isPrivate"]);
+                        display.createdDate = (ds.Tables[0].Rows[0]["createdDate"] == DBNull.Value ? "" : ds.Tables[0].Rows[0]["createdDate"].ToString());
+                        display.createdBy = (ds.Tables[0].Rows[0]["createdBy"] == DBNull.Value ? 0 : (int)ds.Tables[0].Rows[0]["createdBy"]);
+                        display.createdByName = (ds.Tables[0].Rows[0]["createdByName"] == DBNull.Value ? "" : ds.Tables[0].Rows[0]["createdByName"].ToString());
+                        display.routes = (ds.Tables[0].Rows[0]["routes"] == DBNull.Value ? "" : ds.Tables[0].Rows[0]["routes"].ToString());
                         List<dynamic> listFilePaths = new List<dynamic>();
                         dynamic filePath = new System.Dynamic.ExpandoObject();
                         for (int j = 0; j < ds.Tables[1].Rows.Count; j++)
@@ -263,17 +261,15 @@ namespace SpiritMeter.Controllers
                             filePath.FilePath = (ds.Tables[1].Rows[j]["filePath"] == DBNull.Value ? "" : ds.Tables[1].Rows[j]["filePath"].ToString());
                             listFilePaths.Add(filePath);
                         }
-                        listDisplay.filePath = listFilePaths;
+                        display.filePath = listFilePaths;
                         
-                        listDisplayDetails.Add(listDisplay);
-                    }
+                        
 
-
-                    return StatusCode((int)HttpStatusCode.OK, listDisplayDetails);  
+                    return StatusCode((int)HttpStatusCode.OK, display);  
                 }
                 else
                 {
-                    return StatusCode((int)HttpStatusCode.OK, listDisplayDetails);
+                    return StatusCode((int)HttpStatusCode.OK, "No Records Found");
                 }
             }
             catch (Exception e)
@@ -343,11 +339,11 @@ namespace SpiritMeter.Controllers
                         listDisplay.cityName = (dt.Rows[i]["cityName"] == DBNull.Value ? "" : dt.Rows[i]["cityName"].ToString());
                         listDisplay.address = (dt.Rows[i]["address"] == DBNull.Value ? "" : dt.Rows[i]["address"].ToString());
                         listDisplay.type = (dt.Rows[i]["type"] == DBNull.Value ? "" : dt.Rows[i]["type"].ToString());
-                        listDisplay.viewCount    = (dt.Rows[i]["viewCount"] == DBNull.Value ? "" : dt.Rows[i]["viewCount"].ToString());
-                        listDisplay.isPrivate = (dt.Rows[i]["isPrivate"] == DBNull.Value ? "" : dt.Rows[i]["isPrivate"].ToString());
+                        listDisplay.viewCount    = (dt.Rows[i]["viewCount"] == DBNull.Value ? 0 : (int)dt.Rows[i]["viewCount"]);
+                        listDisplay.isPrivate = (dt.Rows[i]["isPrivate"] == DBNull.Value ? false :(bool) dt.Rows[i]["isPrivate"]);
                         listDisplay.createdDate = (dt.Rows[i]["createdDate"] == DBNull.Value ? "" : dt.Rows[i]["createdDate"].ToString());
                         listDisplay.createdBy = (dt.Rows[i]["createdBy"] == DBNull.Value ? 0 : (int)dt.Rows[i]["createdBy"]);
-                        listDisplay.createdName = (dt.Rows[i]["createdName"] == DBNull.Value ? "" : dt.Rows[i]["createdName"].ToString());
+                        listDisplay.createdByName = (dt.Rows[i]["createdName"] == DBNull.Value ? "" : dt.Rows[i]["createdName"].ToString());
                         listDisplay.filePath = (dt.Rows[i]["filePath"] == DBNull.Value ? "" : dt.Rows[i]["filePath"].ToString());
 
                         listDisplayDetails.Add(listDisplay);
@@ -368,7 +364,7 @@ namespace SpiritMeter.Controllers
         }
         #endregion
         #region listDisplayByUserId
-        [HttpGet, Route("listDisplayByUserId")]
+        [HttpGet, Route("listDisplayByUserId/{userId}")]
         public IActionResult listDisplayByUserId(int userId)
         {
             List<dynamic> listDisplayDetails = new List<dynamic>();
@@ -394,17 +390,18 @@ namespace SpiritMeter.Controllers
                         listDisplay.address = (dt.Rows[i]["address"] == DBNull.Value ? "" : dt.Rows[i]["address"].ToString());
                         listDisplay.type = (dt.Rows[i]["type"] == DBNull.Value ? "" : dt.Rows[i]["type"].ToString());
                         listDisplay.viewCount = (dt.Rows[i]["viewCount"] == DBNull.Value ? 0 : (int)dt.Rows[i]["viewCount"]);
-                        listDisplay.isPrivate = (dt.Rows[i]["isPrivate"] == DBNull.Value ? "" : dt.Rows[i]["isPrivate"].ToString());
+                        listDisplay.isPrivate = (dt.Rows[i]["isPrivate"] == DBNull.Value ? false : (bool)dt.Rows[i]["isPrivate"]);
                         listDisplay.createdDate = (dt.Rows[i]["createdDate"] == DBNull.Value ? "" : dt.Rows[i]["createdDate"].ToString());
                         listDisplay.createdBy = (dt.Rows[i]["createdBy"] == DBNull.Value ? 0 : (int)dt.Rows[i]["createdBy"]);
                         listDisplay.createdByName = (dt.Rows[i]["createdName"] == DBNull.Value ? "" : dt.Rows[i]["createdName"].ToString());
+                        listDisplay.filePath = (dt.Rows[i]["filePath"] == DBNull.Value ? "" : dt.Rows[i]["filePath"].ToString());
                         listDisplayDetails.Add(listDisplay);
                     }
                     return StatusCode((int)HttpStatusCode.OK, listDisplayDetails);
                 }
                 else
                 {
-                    return StatusCode((int)HttpStatusCode.OK, listDisplayDetails);
+                    return StatusCode((int)HttpStatusCode.OK, "No Records Found");
                 }
             }
             catch (Exception e)
@@ -414,6 +411,7 @@ namespace SpiritMeter.Controllers
             }
         }
         #endregion
+
 
         #region popularDisplay
         [HttpGet, Route("popularDisplay")]
@@ -441,7 +439,7 @@ namespace SpiritMeter.Controllers
                         listDisplay.cityName = (dt.Rows[i]["cityName"] == DBNull.Value ? "" : dt.Rows[i]["cityName"].ToString());
                         listDisplay.address = (dt.Rows[i]["address"] == DBNull.Value ? "" : dt.Rows[i]["address"].ToString());
                         listDisplay.type = (dt.Rows[i]["type"] == DBNull.Value ? "" : dt.Rows[i]["type"].ToString());
-                        listDisplay.isPrivate = (dt.Rows[i]["isPrivate"] == DBNull.Value ? "" : dt.Rows[i]["isPrivate"].ToString());
+                        listDisplay.isPrivate = (dt.Rows[i]["isPrivate"] == DBNull.Value ? false : (bool)dt.Rows[i]["isPrivate"]);
                         listDisplay.createdDate = (dt.Rows[i]["createdDate"] == DBNull.Value ? "" : dt.Rows[i]["createdDate"].ToString());
                         listDisplay.createdBy = (dt.Rows[i]["createdBy"] == DBNull.Value ? 0 : (int)dt.Rows[i]["createdBy"]);
                         listDisplay.createdByName = (dt.Rows[i]["createdByName"] == DBNull.Value ? "" : dt.Rows[i]["createdByName"].ToString());

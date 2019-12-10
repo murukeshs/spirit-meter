@@ -53,8 +53,8 @@ namespace SpiritMeter.Controllers
         }
         #region GetUserLogin     
         // GET api/values
-        [HttpPost, Route("Login")]
-        public IActionResult Login([FromBody]Login login)
+        [HttpPost, Route("login")]
+        public IActionResult login([FromBody]Login login)
         {
             IActionResult response = Unauthorized();
             List<dynamic> userdetails = new List<dynamic>();
@@ -94,6 +94,7 @@ namespace SpiritMeter.Controllers
 
             catch (Exception e)
             {
+                string SaveErrorLog = Data.Common.SaveErrorLog("login", e.Message);
                 return StatusCode((int)HttpStatusCode.InternalServerError, new { ErrorMessage = e.Message });
             }
         }

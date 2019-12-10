@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Net;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cors;
@@ -17,10 +18,10 @@ namespace SpiritMeter.Controllers
     [ApiController]
     public class UploadFileController : ControllerBase
     {
-        #region UploadFile
-        [HttpPost, Route("UploadFile")]
+        #region uploadFile
+        [HttpPost, Route("uploadFile")]
         [AllowAnonymous]
-        public async Task<string> UploadFile()
+        public async Task<IActionResult> uploadFile()
         {
             try
             {
@@ -41,12 +42,13 @@ namespace SpiritMeter.Controllers
                     }
                 }
                 Global.fileurl = Common.CreateMediaItem(myFileContent, myFileName);
-                return Global.fileurl;
+                return StatusCode((int)HttpStatusCode.OK, Global.fileurl);
             }
 
             catch (Exception e)
             {
-                return e.Message;
+                string SaveErrorLog = Data.Common.SaveErrorLog("uploadFile", e.Message.ToString());
+                return StatusCode((int)HttpStatusCode.InternalServerError, new { ErrorMessage = e.Message.ToString() });
             }
         }
 

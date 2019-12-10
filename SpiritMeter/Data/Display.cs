@@ -109,7 +109,7 @@ namespace SpiritMeter.Data
                 parameters.Add(new SqlParameter("@state", createDisplay.state));
                 parameters.Add(new SqlParameter("@cityName", createDisplay.cityName));
                 parameters.Add(new SqlParameter("@address", createDisplay.address));
-
+                parameters.Add(new SqlParameter("@filePath", createDisplay.filePath));
 
                 string ConnectionString = Common.GetConnectionString();
 

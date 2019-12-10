@@ -12,7 +12,7 @@ namespace SpiritMeter.Models
         public int routeId { get; set; }
         public string routeName { get; set; }
         public string comments { get; set; }
-        public int? degisgntedCharityId { get; set; }
+        public int? designatedCharityId { get; set; }
         public int? startingPoint { get; set; }
         [DefaultValue(false)]
         public bool? isPrivate { get; set; }
@@ -44,5 +44,10 @@ namespace SpiritMeter.Models
         public string displayId { get; set; }
         public int startingPoint { get; set; }
     }
-
+    public class nearBySearch
+    {
+        public string latitude { get; set; }
+        public string longitude { get; set; }
+        public string category { get; set; }
+    }
 }

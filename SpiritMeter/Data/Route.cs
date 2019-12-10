@@ -22,7 +22,7 @@ namespace SpiritMeter.Data
                 List<SqlParameter> parameters = new List<SqlParameter>();
                 parameters.Add(new SqlParameter("@routeName", createRoute.routeName));
                 parameters.Add(new SqlParameter("@comments", createRoute.comments));
-                parameters.Add(new SqlParameter("@userId", createRoute.degisgntedCharityId));
+                parameters.Add(new SqlParameter("@userId", createRoute.designatedCharityId));
                 parameters.Add(new SqlParameter("@isPrivate", createRoute.isPrivate));
 
                 using (DataSet ds = SqlHelper.ExecuteDataset(ConnectionString, CommandType.StoredProcedure, "spcreateRoute", parameters.ToArray()))
@@ -48,7 +48,7 @@ namespace SpiritMeter.Data
                 parameters.Add(new SqlParameter("@routeId", updateRoute.routeId));
                 parameters.Add(new SqlParameter("@routeName", updateRoute.routeName));
                 parameters.Add(new SqlParameter("@comments", updateRoute.comments));
-                parameters.Add(new SqlParameter("@designatedCharityId", updateRoute.degisgntedCharityId));
+                parameters.Add(new SqlParameter("@designatedCharityId", updateRoute.designatedCharityId));
                 parameters.Add(new SqlParameter("@startingPoint", updateRoute.startingPoint));
                 parameters.Add(new SqlParameter("@isPrivate", updateRoute.isPrivate));
 
@@ -160,7 +160,7 @@ namespace SpiritMeter.Data
         #endregion
 
         #region saveRouteStatus
-        public static DataTable saveRouteStatus([FromBody]rideStatus rideStatus)
+        public static DataSet saveRouteStatus([FromBody]rideStatus rideStatus)
         {
             try
             {
@@ -171,9 +171,9 @@ namespace SpiritMeter.Data
                 parameters.Add(new SqlParameter("@userId", rideStatus.userId));
                 parameters.Add(new SqlParameter("@status", rideStatus.status));
 
-                using (DataTable dt = SqlHelper.ExecuteDataset(ConnectionString, CommandType.StoredProcedure, "spsaveRouteStatus", parameters.ToArray()).Tables[0])
+                using (DataSet ds = SqlHelper.ExecuteDataset(ConnectionString, CommandType.StoredProcedure, "spsaveRouteStatus", parameters.ToArray()))
                 {
-                    return dt;
+                    return ds;
                 }
             }
             catch (Exception e)

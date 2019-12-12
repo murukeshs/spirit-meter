@@ -7,7 +7,7 @@ using System.Data.SqlClient;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace HolidayApp.Data
+namespace SpiritMeter.Data
 {
     public class dbConnections
     {
@@ -59,17 +59,12 @@ namespace HolidayApp.Data
         #endregion
 
         #region GetData By ID
-        public static DataTable GetDataSetByID(string procedureName, List<KeyValuePair<string, dynamic>> myList)
+        public static DataTable GetDataSetByID(string procedureName, List<SqlParameter> parameters)
         {
             try
             {
                 string ConnectionString = Common.GetConnectionString();
-                List<SqlParameter> parameters = new List<SqlParameter>();
-                foreach (dynamic i in myList)
-                {
-                    parameters.Add(new SqlParameter(i.Key, i.Value));
-                }
-
+                
                 //Execute the query
                 using (DataTable dt = SqlHelper.ExecuteDataset(ConnectionString, CommandType.StoredProcedure, procedureName, parameters.ToArray()).Tables[0])
                 {
@@ -85,16 +80,12 @@ namespace HolidayApp.Data
         #endregion
 
         #region Delete 
-        public static string Delete(string procedureName, List<KeyValuePair<string, dynamic>> myList)
+        public static string Delete(string procedureName, List<SqlParameter> parameters)
         {
             try
             {
                 string ConnectionString = Common.GetConnectionString();
-                List<SqlParameter> parameters = new List<SqlParameter>();
-                foreach (dynamic i in myList)
-                {
-                    parameters.Add(new SqlParameter(i.Key, i.Value));
-                }
+               
 
                 using (DataSet dt = SqlHelper.ExecuteDataset(ConnectionString, CommandType.StoredProcedure, procedureName, parameters.ToArray()))
                 {
@@ -110,16 +101,16 @@ namespace HolidayApp.Data
         #endregion
 
         #region Save data
-        public static DataSet save(string procedureName, List<KeyValuePair<string, dynamic>> myList)
+        public static DataSet save(string procedureName, List<SqlParameter> parameters)
         {
             try
             {
                 string connectionstring = Common.GetConnectionString();
-                List<SqlParameter> parameters = new List<SqlParameter>();
-                foreach (dynamic i in myList)
-                {
-                    parameters.Add(new SqlParameter(i.Key, i.Value));
-                }
+                //List<SqlParameter> parameters = new List<SqlParameter>();
+                //foreach (dynamic i in myList)
+                //{
+                //    parameters.Add(new SqlParameter(i.Key, i.Value));
+                //}
 
                 using (DataSet dt = SqlHelper.ExecuteDataset(connectionstring, CommandType.StoredProcedure, procedureName, parameters.ToArray()))
                 {

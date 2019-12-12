@@ -89,7 +89,7 @@ namespace SpiritMeter.Data
         #endregion
 
         #region saveRoutePoints
-        public static DataTable saveRoutePoints([FromBody] routePoints routePoints,string path)
+        public static DataTable saveRoutePoints([FromBody] routePoints routePoints,string path, string routePoint)
         {
             try
             {
@@ -100,7 +100,7 @@ namespace SpiritMeter.Data
                 parameters.Add(new SqlParameter("@displayId", routePoints.displayId));
                 parameters.Add(new SqlParameter("@path", path));
                 parameters.Add(new SqlParameter("@startingPoint", routePoints.startingPoint));
-
+                parameters.Add(new SqlParameter("@mapRequest", routePoint));
                 using (DataTable dt = SqlHelper.ExecuteDataset(ConnectionString, CommandType.StoredProcedure, "spsaveRoutePoints", parameters.ToArray()).Tables[0])
                 {
                     return dt;

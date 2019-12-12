@@ -20,8 +20,7 @@ namespace SpiritMeter.Models
    
 
     public class routePoints
-    {
-        public int routePointId { get; set; }
+    { 
         public int routeId { get; set; }
         public string displayId { get; set; }
         public int startingPoint { get; set; }
@@ -33,8 +32,7 @@ namespace SpiritMeter.Models
     }
 
     public class rideStatus
-    {
-        public int rideStatusId  { get; set; }
+    { 
         public int routeId { get; set; }
         public int userId { get; set; }
         public string status { get; set; }
@@ -50,4 +48,11 @@ namespace SpiritMeter.Models
         public string longitude { get; set; }
         public string category { get; set; }
     }
+    public class direction
+    {
+        public string origin { get; set; }
+        public string destination { get; set; }
+        public string waypoints { get; set; }
+    }
+
 }

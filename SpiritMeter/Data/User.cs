@@ -94,7 +94,7 @@ namespace SpiritMeter.Data
                 parameters.Add(new SqlParameter("@state", updateUser.state));
                 parameters.Add(new SqlParameter("@cityName", updateUser.cityName));
                 parameters.Add(new SqlParameter("@address", updateUser.address));
-                parameters.Add(new SqlParameter("@action", "add"));
+                parameters.Add(new SqlParameter("@action", ""));
                 parameters.Add(new SqlParameter("@password", ""));
 
                 using (DataTable dt = SqlHelper.ExecuteDataset(ConnectionString, CommandType.StoredProcedure, "spsaveuser", parameters.ToArray()).Tables[0])

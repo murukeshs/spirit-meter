@@ -5,8 +5,11 @@ using System.IdentityModel.Tokens.Jwt;
 using System.IO;
 using System.Linq;
 using System.Net;
+using System.Security.Claims;
+using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -51,6 +54,7 @@ namespace SpiritMeter.Controllers
 
             return new JwtSecurityTokenHandler().WriteToken(token);
         }
+        
         #region GetUserLogin     
         // GET api/values
         [HttpPost, Route("login")]
@@ -87,7 +91,7 @@ namespace SpiritMeter.Controllers
                 }
                 else
                 {
-                    return StatusCode((int)HttpStatusCode.BadRequest, new { ErrorMessage = "Email & Password combination not found" });
+                    return StatusCode((int)HttpStatusCode.BadRequest, new { ErrorMessage = "Phone number and password combination not found" });
                 }
 
             }
@@ -99,6 +103,5 @@ namespace SpiritMeter.Controllers
             }
         }
         #endregion
-
     }
 }

@@ -103,5 +103,16 @@ namespace SpiritMeter.Models
         public string path { get; set; }
         public string routes { get; set; }
     }
+    public class RefreshRequest
+    {
+        public string AccessToken { get; set; }
+        public string RefreshToken { get; set; }
+    }
 
+    public class LoginResponse
+    {
+        public string AccessToken { get; set; }
+        public DateTimeOffset AccessTokenExpiration { get; set; }
+        public string RefreshToken { get; set; }
+    }
 }

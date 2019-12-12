@@ -17,7 +17,7 @@ namespace SpiritMeter.Controllers
     [EnableCors("AllowAll")]
     [Route("api/[controller]")]
     [ApiController]
-    //[Authorize]
+    [Authorize]
     public class DisplayController : ControllerBase
     {
         #region listCategory
@@ -232,10 +232,7 @@ namespace SpiritMeter.Controllers
                 DataSet ds = Data.Display.selectDisplay(displayId);
                 dynamic display = new System.Dynamic.ExpandoObject();
                 if (ds.Tables[0].Rows.Count > 0)
-                {
-                    
-                   
-                        
+                {  
                         display.displayId = (int)ds.Tables[0].Rows[0]["displayId"];
                         display.name = (ds.Tables[0].Rows[0]["name"] == DBNull.Value ? "" : ds.Tables[0].Rows[0]["name"].ToString());
                         display.categoryId = (ds.Tables[0].Rows[0]["categoryId"] == DBNull.Value ? 0 : (int)ds.Tables[0].Rows[0]["categoryId"]);
@@ -252,18 +249,20 @@ namespace SpiritMeter.Controllers
                         display.createdDate = (ds.Tables[0].Rows[0]["createdDate"] == DBNull.Value ? "" : ds.Tables[0].Rows[0]["createdDate"].ToString());
                         display.createdBy = (ds.Tables[0].Rows[0]["createdBy"] == DBNull.Value ? 0 : (int)ds.Tables[0].Rows[0]["createdBy"]);
                         display.createdByName = (ds.Tables[0].Rows[0]["createdByName"] == DBNull.Value ? "" : ds.Tables[0].Rows[0]["createdByName"].ToString());
-                        display.routes = (ds.Tables[0].Rows[0]["routes"] == DBNull.Value ? "" : ds.Tables[0].Rows[0]["routes"].ToString());
+                        
                         List<dynamic> listFilePaths = new List<dynamic>();
-                        dynamic filePath = new System.Dynamic.ExpandoObject();
+                       
                         for (int j = 0; j < ds.Tables[1].Rows.Count; j++)
                         {
+                            dynamic filePath = new System.Dynamic.ExpandoObject();
                             filePath.displayFileId = (ds.Tables[1].Rows[j]["displayFileId"] == DBNull.Value ? 0 : (int)ds.Tables[1].Rows[j]["displayFileId"]);
                             filePath.FilePath = (ds.Tables[1].Rows[j]["filePath"] == DBNull.Value ? "" : ds.Tables[1].Rows[j]["filePath"].ToString());
                             listFilePaths.Add(filePath);
                         }
                         display.filePath = listFilePaths;
-                        
-                        
+                        display.routes = (ds.Tables[0].Rows[0]["routes"] == DBNull.Value ? "" : ds.Tables[0].Rows[0]["routes"].ToString());
+
+
 
                     return StatusCode((int)HttpStatusCode.OK, display);  
                 }

@@ -15,13 +15,15 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using SpiritMeter.Data;
 using SpiritMeter.Models;
+ 
+
 
 namespace SpiritMeter.Controllers
 {
     [EnableCors("AllowAll")]
     [Route("api/[controller]")]
     [ApiController]
-    //[Authorize]
+    [Authorize]
     public class RouteController : ControllerBase
     {
         #region createRoute
@@ -67,6 +69,10 @@ namespace SpiritMeter.Controllers
         {
             try
             {
+                if (updateRoute.routeId <= 0)
+                {
+                    return StatusCode((int)HttpStatusCode.BadRequest, new { ErrorMessage = "Please enter routeId" });
+                }
                 DataTable dt = Data.Route.updateRoute(updateRoute);
                 string Response = dt.Rows[0][0].ToString();
                 if (Response == "Success")
@@ -90,20 +96,20 @@ namespace SpiritMeter.Controllers
 
         #region saveRoutePoints
         [HttpPost, Route("saveRoutePoints")]
-        public async Task<IActionResult> saveRoutePoints(routePoints routePoints)
+        public async Task<IActionResult> saveRoutePoints(routePoints route)
         {
             try
             {
 
-                if (routePoints.routeId < 0 || routePoints.routeId == null)
+                if (route.routeId < 0 || route.routeId == null)
                 {
                     return StatusCode((int)HttpStatusCode.BadRequest, new { ErrorMessage = "Please enter routeId" });
                 }
-                else if (routePoints.displayId == "" || routePoints.displayId == null)
+                else if (route.displayId == "" || route.displayId == null)
                 {
                     return StatusCode((int)HttpStatusCode.BadRequest, new { ErrorMessage = "Please enter displayId" });
                 }
-                DataTable dt1 = Data.Route.selectcoordinates(routePoints);
+                DataTable dt1 = Data.Route.selectcoordinates(route);
                 var response = "";
 
                 using (var client = new HttpClient())
@@ -118,29 +124,36 @@ namespace SpiritMeter.Controllers
                 //dynamic obj = JsonConvert.DeserializeObject(response);
 
                 //List<decimal> list = new List<decimal>();
-                //for (var i=0;i< (obj.rows[0].elements).Count; i++)
+                //for (var i = 0; i < (obj.rows[0].elements).Count; i++)
                 //{
-                    
+
                 //    string a = obj.rows[0].elements[i].distance.text;
                 //    decimal b = Decimal.Parse(a.Remove(a.Length - 3).Replace(",", "."));
                 //    list.Add(b);
                 //}
-                //var position= list.IndexOf(list.Max());
+                //var position = list.IndexOf(list.Max());
                 List<string> numbers = (dt1.Rows[0][1].ToString()).Split('|').ToList<string>();
                 string destination = numbers[position];
                  numbers.RemoveAt(position);
-                using (var client = new HttpClient())   
+                using (var client = new HttpClient())
                 {
-                    var a = "https://maps.googleapis.com/maps/api/directions/json?origin=" + dt1.Rows[0][0].ToString() + "&destination=" + destination + "&waypoints=optimize:true|" + string.Join<string>("|", numbers) + "&key=" + Common.Apikey();
-                    string path = await client.GetStringAsync(string.Format(a));
+                    var mapRequest = "https://maps.googleapis.com/maps/api/directions/json?origin=" + dt1.Rows[0][0].ToString() + "&destination=" + destination + "&waypoints=optimize:true|" + string.Join<string>("|", numbers) + "&key=" + Common.Apikey();
+                    string path = await client.GetStringAsync(string.Format(mapRequest));
 
-                DataTable dt = Data.Route.saveRoutePoints(routePoints, path);
+                    //direction direction = new direction();
+                    //direction.origin = dt1.Rows[0][0].ToString();
+                    //direction.destination = destination;
+                    //direction.waypoints = string.Join<string>("|", numbers);
+                    var routePoint = "orgin:'" + dt1.Rows[0][0].ToString() + "',destination:'" + destination + "',waypoints:'" + string.Join<string>("|", numbers) + "'";
 
-                string Response = dt.Rows[0][0].ToString();
+                    List<direction> direction = new List<direction> { new direction { origin = dt1.Rows[0][0].ToString(), destination = destination, waypoints = string.Join<string>("|", numbers) } }; 
+                    string routePoints = JsonConvert.SerializeObject(direction); 
+                    DataTable dt = Data.Route.saveRoutePoints(route, path, routePoints);
+                    string Response = dt.Rows[0][0].ToString();
 
-                if (Response == "Success")
+                if (Response == "Success") 
                 {
-                    return StatusCode((int)HttpStatusCode.OK, "RoutePoints Successfully Created");
+                    return StatusCode((int)HttpStatusCode.OK, new { routePoints, message = "RoutePoints Successfully Created" });
                 }
                 else
                 {
@@ -181,10 +194,10 @@ namespace SpiritMeter.Controllers
             try
             {
 
-                routePoints routePoints = new routePoints();
-                routePoints.startingPoint = calculatepath.startingPoint;
-                routePoints.displayId = calculatepath.displayId;
-                DataTable dt1 = Data.Route.selectcoordinates(routePoints);
+                routePoints route = new routePoints();
+                route.startingPoint = calculatepath.startingPoint;
+                route.displayId = calculatepath.displayId;
+                DataTable dt1 = Data.Route.selectcoordinates(route);
                 var response = "";
 
                 using (var client = new HttpClient())
@@ -193,24 +206,21 @@ namespace SpiritMeter.Controllers
                     response = await client.GetStringAsync(string.Format(a));
                 }
 
-                JObject o = JObject.Parse(@response);
+                //JObject o = JObject.Parse(@response);
 
-                List<JToken> acme = o.SelectTokens("$...['elements'].['distance'].['value']").ToList();
-                var position = acme.IndexOf(acme.Max());
-                //List<JToken> acme1 = o1.SelectToken("$.distance[*].value").ToList();
+                //List<JToken> acme = o.SelectTokens("$...['elements'].['distance'].['value']").ToList();
+                //var position = acme.IndexOf(acme.Max());
+                dynamic obj = JsonConvert.DeserializeObject(response);
 
+                List<decimal> list = new List<decimal>();
+                for (var i = 0; i < (obj.rows[0].elements).Count; i++)
+                {
 
-                //dynamic obj = JsonConvert.DeserializeObject(response);
-
-                //List<decimal> list = new List<decimal>();
-                //for (var i = 0; i < (obj.rows[0].elements).Count; i++)
-                //{
-
-                //    string a = obj.rows[0].elements[i].distance.text;
-                //    decimal b = Decimal.Parse(a.Remove(a.Length - 3).Replace(",", "."));
-                //    list.Add(b);
-                //}
-                //var position = list.IndexOf(list.Max());
+                    string a = obj.rows[0].elements[i].distance.text;
+                    decimal b = Decimal.Parse(a.Remove(a.Length - 3).Replace(",", "."));
+                    list.Add(b);
+                }
+                var position = list.IndexOf(list.Max());
                 List<string> numbers = (dt1.Rows[0][1].ToString()).Split('|').ToList<string>();
                 string destination = numbers[position];
                 numbers.RemoveAt(position);
@@ -218,21 +228,26 @@ namespace SpiritMeter.Controllers
                 {
                     var a = "https://maps.googleapis.com/maps/api/directions/json?origin=" + dt1.Rows[0][0].ToString() + "&destination=" + destination + "&waypoints=optimize:true|" + string.Join<string>("|", numbers) + "&key=" + Common.Apikey();
                     string path = await client.GetStringAsync(string.Format(a));
-                    JObject obj = JObject.Parse(path);
+                    //JObject obj = JObject.Parse(path);
 
-                    List<JToken> acme1 = obj.SelectTokens("$..['routes'].['legs'].['steps'].['distance'].['value']").ToList();
-                    int miles = acme1.Sum(x => Convert.ToInt32(x));
-                    //dynamic obj1 = JsonConvert.DeserializeObject(path);
+                    //List<JToken> acme1 = obj.SelectTokens("$..['routes'].['legs'].['steps'].['distance'].['value']").ToList();
+                    //int miles = acme1.Sum(x => Convert.ToInt32(x));
 
-                    //int miles = 0;
-                    //for (var i = 0; i < (obj1.routes[0].legs).Count; i++)
-                    //{
-                    //    miles = miles + (int)obj1.routes[0].legs[i].distance.value;
-                    //}
+                    dynamic obj1 = JsonConvert.DeserializeObject(path);
+
+                    int miles = 0;
+                    for (var i = 0; i < (obj1.routes[0].legs).Count; i++)
+                    {
+                        miles = miles + (int)obj1.routes[0].legs[i].distance.value;
+                    }
 
                     var totalmiles = String.Concat(String.Format("{0:0.00}", (miles / 1609.344)), " mi");
+                    direction routePoints = new direction();
+                    routePoints.origin = dt1.Rows[0][0].ToString();
+                    routePoints.destination = destination;
+                    routePoints.waypoints = string.Join<string>("|", numbers);
 
-                    return StatusCode((int)HttpStatusCode.OK, new { totalmiles, path, message = "Route Created successfully" });
+                    return StatusCode((int)HttpStatusCode.OK, new { routePoints, totalmiles, path, message = "Route Created successfully" });
 
 
                 }
@@ -439,8 +454,9 @@ namespace SpiritMeter.Controllers
                         listRoutes.state = (dt.Rows[i]["state"] == DBNull.Value ? "" : dt.Rows[i]["state"].ToString());
                         listRoutes.cityName = (dt.Rows[i]["cityName"] == DBNull.Value ? "" : dt.Rows[i]["cityName"].ToString());
                         listRoutes.address = (dt.Rows[i]["address"] == DBNull.Value ? "" : dt.Rows[i]["address"].ToString());
+                        listRoutes.routePoints = (dt.Rows[i]["routePoints"] == DBNull.Value ? "" : dt.Rows[i]["routePoints"].ToString());
                         listRoutes.totalMiles = (dt.Rows[i]["totalMiles"] == DBNull.Value ? "" : String.Concat(dt.Rows[i]["totalMiles"], "mi").ToString());
-                        listRoutes.path = (dt.Rows[i]["path"] == DBNull.Value ? "" : dt.Rows[i]["path"].ToString());
+                        //listRoutes.path = (dt.Rows[i]["path"] == DBNull.Value ? "" : dt.Rows[i]["path"].ToString());
                         listRoutesDetails.Add(listRoutes);
                     }
                     return StatusCode((int)HttpStatusCode.OK, listRoutesDetails);
@@ -461,6 +477,11 @@ namespace SpiritMeter.Controllers
         [HttpGet, Route("listRoutesByUserId")]
         public IActionResult listRoutesByUserId(int userId)
         {
+            if (userId <= 0 || userId == null)
+            {
+                return StatusCode((int)HttpStatusCode.BadRequest, new { ErrorMessage = "Please enter userId" });
+            }
+
             List<dynamic> listRoutesDetails = new List<dynamic>();
 
             try
@@ -485,8 +506,9 @@ namespace SpiritMeter.Controllers
                         listRoutes.state = (dt.Rows[i]["state"] == DBNull.Value ? "" : dt.Rows[i]["state"].ToString());
                         listRoutes.cityName = (dt.Rows[i]["cityName"] == DBNull.Value ? "" : dt.Rows[i]["cityName"].ToString());
                         listRoutes.address = (dt.Rows[i]["address"] == DBNull.Value ? "" : dt.Rows[i]["address"].ToString());
+                        listRoutes.routePoints = (dt.Rows[i]["routePoints"] == DBNull.Value ? "" : dt.Rows[i]["routePoints"].ToString());
                         listRoutes.totalMiles = (dt.Rows[i]["totalMiles"] == DBNull.Value ? "" : String.Concat(dt.Rows[i]["totalMiles"], "mi").ToString());
-                        listRoutes.path = (dt.Rows[i]["path"] == DBNull.Value ? "" : dt.Rows[i]["path"].ToString());
+                        //listRoutes.path = (dt.Rows[i]["path"] == DBNull.Value ? "" : dt.Rows[i]["path"].ToString());
                         listRoutesDetails.Add(listRoutes);
                     }
                     return StatusCode((int)HttpStatusCode.OK, listRoutesDetails);
@@ -567,37 +589,43 @@ namespace SpiritMeter.Controllers
                         listRoutes.designatedCharityName = (ds.Tables[0].Rows[0]["designatedCharityName"] == DBNull.Value ? "" : ds.Tables[0].Rows[0]["designatedCharityName"].ToString());
                         listRoutes.isPrivate = (ds.Tables[0].Rows[0]["isPrivate"] == DBNull.Value ? false : (bool)ds.Tables[0].Rows[0]["isPrivate"]);
                         listRoutes.createdDate = (ds.Tables[0].Rows[0]["createdDate"] == DBNull.Value ? "" : ds.Tables[0].Rows[0]["createdDate"].ToString());
-                        listRoutes.startingPoint = (ds.Tables[0].Rows[0]["startingPoint"] == DBNull.Value ? 0 : (int)ds.Tables[0].Rows[0]["startingPoint"]);
-                        listRoutes.filePath = (ds.Tables[0].Rows[0]["filePath"] == DBNull.Value ? "" : ds.Tables[0].Rows[0]["filePath"].ToString());
-                        listRoutes.displayName = (ds.Tables[0].Rows[0]["displayName"] == DBNull.Value ? "" : ds.Tables[0].Rows[0]["displayName"].ToString());
-                        listRoutes.role = (ds.Tables[0].Rows[0]["role"] == DBNull.Value ? "" : ds.Tables[0].Rows[0]["role"].ToString());
-                        listRoutes.latitude = (ds.Tables[0].Rows[0]["latitude"] == DBNull.Value ? "" : ds.Tables[0].Rows[0]["latitude"].ToString());
-                        listRoutes.longitude = (ds.Tables[0].Rows[0]["longitude"] == DBNull.Value ? "" : ds.Tables[0].Rows[0]["longitude"].ToString());
-                        listRoutes.country = (ds.Tables[0].Rows[0]["country"] == DBNull.Value ? "" : ds.Tables[0].Rows[0]["country"].ToString());
-                        listRoutes.state = (ds.Tables[0].Rows[0]["state"] == DBNull.Value ? "" : ds.Tables[0].Rows[0]["state"].ToString());
-                        listRoutes.cityName = (ds.Tables[0].Rows[0]["cityName"] == DBNull.Value ? "" : ds.Tables[0].Rows[0]["cityName"].ToString());
-                        listRoutes.address = (ds.Tables[0].Rows[0]["address"] == DBNull.Value ? "" : ds.Tables[0].Rows[0]["address"].ToString());
+                        listRoutes.routePoints = (ds.Tables[0].Rows[0]["routePoints"] == DBNull.Value ? "" : ds.Tables[0].Rows[0]["routePoints"].ToString());
+                        listRoutes.totalMiles = (ds.Tables[0].Rows[0]["totalMiles"] == DBNull.Value ? "" : String.Concat(ds.Tables[0].Rows[0]["totalMiles"], "mi").ToString());
+                    //listRoutes.startingPoint = (ds.Tables[0].Rows[0]["startingPoint"] == DBNull.Value ? 0 : (int)ds.Tables[0].Rows[0]["startingPoint"]);
+                    //listRoutes.filePath = (ds.Tables[0].Rows[0]["filePath"] == DBNull.Value ? "" : ds.Tables[0].Rows[0]["filePath"].ToString());
+                    //listRoutes.name = (ds.Tables[0].Rows[0]["displayName"] == DBNull.Value ? "" : ds.Tables[0].Rows[0]["displayName"].ToString());
+                    //listRoutes.type = (ds.Tables[0].Rows[0]["type"] == DBNull.Value ? "" : ds.Tables[0].Rows[0]["type"].ToString());
+                    //listRoutes.latitude = (ds.Tables[0].Rows[0]["latitude"] == DBNull.Value ? "" : ds.Tables[0].Rows[0]["latitude"].ToString());
+                    //listRoutes.longitude = (ds.Tables[0].Rows[0]["longitude"] == DBNull.Value ? "" : ds.Tables[0].Rows[0]["longitude"].ToString());
+                    //listRoutes.country = (ds.Tables[0].Rows[0]["country"] == DBNull.Value ? "" : ds.Tables[0].Rows[0]["country"].ToString());
+                    //listRoutes.state = (ds.Tables[0].Rows[0]["state"] == DBNull.Value ? "" : ds.Tables[0].Rows[0]["state"].ToString());
+                    //listRoutes.cityName = (ds.Tables[0].Rows[0]["cityName"] == DBNull.Value ? "" : ds.Tables[0].Rows[0]["cityName"].ToString());
+                    //listRoutes.address = (ds.Tables[0].Rows[0]["address"] == DBNull.Value ? "" : ds.Tables[0].Rows[0]["address"].ToString());
+
+                    List<dynamic> listRidePoints = new List<dynamic>();
                         
-                        List<dynamic> listRidePoints = new List<dynamic>();
-                        dynamic ridePoints = new System.Dynamic.ExpandoObject();
                         for (int j = 0; j < ds.Tables[1].Rows.Count; j++)
                         {
-                            ridePoints.routePointId  = (ds.Tables[1].Rows[j]["routePointId"] == DBNull.Value ? 0 : (int)ds.Tables[1].Rows[j]["routePointId"]);
+                            dynamic ridePoints = new System.Dynamic.ExpandoObject();
+                            //ridePoints.routePointId  = (ds.Tables[1].Rows[j]["routePointId"] == DBNull.Value ? 0 : (int)ds.Tables[1].Rows[j]["routePointId"]);
                             ridePoints.displayId = (ds.Tables[1].Rows[j]["displayId"] == DBNull.Value ? 0 : (int)ds.Tables[1].Rows[j]["displayId"]);
                             ridePoints.filePath = (ds.Tables[1].Rows[j]["filePath"] == DBNull.Value ? "" : ds.Tables[1].Rows[j]["filePath"].ToString());
-                            ridePoints.displayName = (ds.Tables[1].Rows[j]["displayName"] == DBNull.Value ? "" : ds.Tables[1].Rows[j]["displayName"].ToString());
-                            ridePoints.role = (ds.Tables[1].Rows[j]["role"] == DBNull.Value ? "" : ds.Tables[1].Rows[j]["role"].ToString());
+                            ridePoints.name = (ds.Tables[1].Rows[j]["displayName"] == DBNull.Value ? "" : ds.Tables[1].Rows[j]["displayName"].ToString());
+                            ridePoints.isPrivate = (ds.Tables[1].Rows[j]["isPrivate"] == DBNull.Value ? "" : ds.Tables[1].Rows[j]["isPrivate"].ToString());
+                            ridePoints.type = (ds.Tables[1].Rows[j]["type"] == DBNull.Value ? "" : ds.Tables[1].Rows[j]["type"].ToString());
                             ridePoints.latitude  = (ds.Tables[1].Rows[j]["latitude"] == DBNull.Value ? "" : ds.Tables[1].Rows[j]["latitude"].ToString());
                             ridePoints.longitude = (ds.Tables[1].Rows[j]["longitude"] == DBNull.Value ? "" : ds.Tables[1].Rows[j]["longitude"].ToString());
                             ridePoints.country = (ds.Tables[1].Rows[j]["country"] == DBNull.Value ? "" : ds.Tables[1].Rows[j]["country"].ToString());
                             ridePoints.state = (ds.Tables[1].Rows[j]["state"] == DBNull.Value ? "" : ds.Tables[1].Rows[j]["state"].ToString());
                             ridePoints.cityName = (ds.Tables[1].Rows[j]["cityName"] == DBNull.Value ? "" : ds.Tables[1].Rows[j]["cityName"].ToString());
                             ridePoints.address = (ds.Tables[1].Rows[j]["address"] == DBNull.Value ? "" : ds.Tables[1].Rows[j]["address"].ToString());
+                            ridePoints.createdBy = (ds.Tables[1].Rows[j]["createdBy"] == DBNull.Value ? 0 :(int) ds.Tables[1].Rows[j]["createdBy"]);
+                            ridePoints.createByName = (ds.Tables[1].Rows[j]["createByName"] == DBNull.Value ? "" : ds.Tables[1].Rows[j]["createByName"].ToString());
                             listRidePoints.Add(ridePoints);
-                        }
+                        }   
                         listRoutes.ridePoints = listRidePoints;
-                        listRoutes.totalMiles = (ds.Tables[0].Rows[0]["totalMiles"] == DBNull.Value ? "" : String.Concat(ds.Tables[0].Rows[0]["totalMiles"], "mi").ToString());
-                        listRoutes.path = (ds.Tables[0].Rows[0]["path"] == DBNull.Value ? "" : ds.Tables[0].Rows[0]["path"].ToString());
+                        
+                        //listRoutes.path = (ds.Tables[0].Rows[0]["path"] == DBNull.Value ? "" : ds.Tables[0].Rows[0]["path"].ToString());
                     return StatusCode((int)HttpStatusCode.OK, listRoutes);
 
                 }

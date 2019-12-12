@@ -34,8 +34,8 @@ namespace HolidayApp.Controllers
                 {
                     using (var client = new HttpClient())
                     {
-                        string url = "https://www.eventbriteapi.com/v3/events/search/?location.within=10km&location.longitude=" + longitude + "&location.latitude=" + eventPoints.latitude + "&categories="+ eventPoints.categories.Replace(",", "%2C") + "&date_modified.range_end=" + eventPoints.from.Replace(":", "%3A") +  "&token="+Common.EventToken();
-                        //string url = "https://www.eventbriteapi.com/v3/events/search/?location.within=10km&location.longitude=" + longitude + "&location.latitude=" + eventPoints.latitude + "&categories=" + category + "&start_date.range_start=" + from + "&start_date.range_end=" + eventPoints.to.Replace(":", "%3A") + "&token=" + Common.EventToken();
+                        string url = "https://www.eventbriteapi.com/v3/events/search/?location.within=5km&location.longitude=" + longitude + "&location.latitude=" + eventPoints.latitude + "&categories="+ eventPoints.categories.Replace(",", "%2C") + "&date_modified.range_end=" + eventPoints.from.Replace(":", "%3A") +  "&token="+Common.EventToken();
+                        //string url = "https://www.eventbriteapi.com/v3/events/search/?location.within=5km&location.longitude=" + longitude + "&location.latitude=" + eventPoints.latitude + "&categories=" + category + "&start_date.range_start=" + from + "&start_date.range_end=" + eventPoints.to.Replace(":", "%3A") + "&token=" + Common.EventToken();
                         var response = await client.GetStringAsync(url);
 
                         return Ok(response);

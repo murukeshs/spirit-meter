@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Data.SqlClient;
 using System.Linq;
 using System.Net;
 using System.Text.RegularExpressions;
@@ -17,7 +18,7 @@ namespace SpiritMeter.Controllers
     [EnableCors("AllowAll")]
     [Route("api/[controller]")]
     [ApiController]
-    //[Authorize]
+    [Authorize]
     public class UserController : ControllerBase
     {
         #region createUser
@@ -89,12 +90,24 @@ namespace SpiritMeter.Controllers
         {
             try
             {
-
                 Regex regex = new Regex(@"^\-?\d+\.?\d*$");
-                System.Text.RegularExpressions.Match latitude = regex.Match(updateUser.latitude);
-                System.Text.RegularExpressions.Match longitude = regex.Match(updateUser.latitude);
-                if (latitude.Success & longitude.Success)
-                {
+                    if (updateUser.userId <= 0 | updateUser.userId == null)
+                    {
+                        return StatusCode((int)HttpStatusCode.BadRequest, new { ErrorMessage = "Please enter userId" });
+                    }
+                    if (!String.IsNullOrEmpty(updateUser.latitude ) )
+                    {
+                        System.Text.RegularExpressions.Match latitude = regex.Match(updateUser.latitude);
+                        if(latitude.Success != true)
+                        return StatusCode((int)HttpStatusCode.BadRequest, new { ErrorMessage = "Please enter valid latitude" });
+                    }
+                    if (!String.IsNullOrEmpty(updateUser.longitude ) )
+                    {
+                        System.Text.RegularExpressions.Match longitude = regex.Match(updateUser.latitude);
+                        if (longitude.Success != true)
+                         return StatusCode((int)HttpStatusCode.BadRequest, new { ErrorMessage = "Please enter valid longitude" });
+                    }
+
                     DataTable dt = Data.User.updateUser(updateUser);
                     string Response = dt.Rows[0][0].ToString();
                     if (Response == "Success")
@@ -112,12 +125,7 @@ namespace SpiritMeter.Controllers
                             return StatusCode((int)HttpStatusCode.Forbidden, new { ErrorMessage = Response });
                         }
                     }
-                }
-                else
-                {
-                    return StatusCode((int)HttpStatusCode.InternalServerError, new { ErrorMessage = "Invalid latitude/longitude" });
-                }
-
+               
             }
             catch (Exception e)
             {
@@ -398,7 +406,7 @@ namespace SpiritMeter.Controllers
                     }
 
 
-                    return StatusCode((int)HttpStatusCode.OK, new { SmsStatus });       //results.messages, 
+                    return StatusCode((int)HttpStatusCode.OK, new { SmsStatus });      
                 }
 
                 else
@@ -520,9 +528,10 @@ namespace SpiritMeter.Controllers
                     }
 
                     List<dynamic> listRoute = new List<dynamic>();
-                    dynamic route = new System.Dynamic.ExpandoObject();
+                   
                     for (int j = 0; j < ds.Tables[2].Rows.Count; j++)
                     {
+                        dynamic route = new System.Dynamic.ExpandoObject();
                         route.routeId = (int)ds.Tables[2].Rows[j]["routeId"];
                         route.routeName = (ds.Tables[2].Rows[j]["routeName"] == DBNull.Value ? "" : ds.Tables[2].Rows[j]["routeName"].ToString());
                         route.comments = (ds.Tables[2].Rows[j]["comments"] == DBNull.Value ? "" : ds.Tables[2].Rows[j]["comments"].ToString());
@@ -537,13 +546,13 @@ namespace SpiritMeter.Controllers
                         route.state = (ds.Tables[2].Rows[j]["state"] == DBNull.Value ? "" : ds.Tables[2].Rows[j]["state"].ToString());
                         route.cityName = (ds.Tables[2].Rows[j]["cityName"] == DBNull.Value ? "" : ds.Tables[2].Rows[j]["cityName"].ToString());
                         route.address = (ds.Tables[2].Rows[j]["address"] == DBNull.Value ? "" : ds.Tables[2].Rows[j]["address"].ToString());
+                        route.routePoints = (ds.Tables[2].Rows[j]["routePoints"] == DBNull.Value ? "" : ds.Tables[2].Rows[j]["routePoints"].ToString());
                         route.totalMiles = (ds.Tables[2].Rows[j]["totalMiles"] == DBNull.Value ? "" : String.Concat(ds.Tables[2].Rows[j]["totalMiles"], "mi").ToString());
-                        route.path = (ds.Tables[2].Rows[j]["path"] == DBNull.Value ? "" : ds.Tables[2].Rows[j]["path"].ToString());
+                        //route.path = (ds.Tables[2].Rows[j]["path"] == DBNull.Value ? "" : ds.Tables[2].Rows[j]["path"].ToString());
                         listRoute.Add(route);
                     }
                     listUser.routeList = listRoute;
-
-                
+                    
                 return StatusCode((int)HttpStatusCode.OK, listUser);
                 }
                 else

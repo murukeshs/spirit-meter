@@ -75,7 +75,7 @@ namespace SpiritMeter.Controllers
             catch (Exception e)
             {
                 string SaveErrorLog = Data.Common.SaveErrorLog("createUser", e.Message);
-                if (e.Message.Contains("UQ__tblUser__4849DA01F0AAFB4B"))   // Check Duplicate Key for PhoneNo
+                if (e.Message.Contains("UQ__tblUser__4849DA01F0AAFB4B"))   // Check Duplicate Key for PhoneNumber
                 {
                     return StatusCode((int)HttpStatusCode.InternalServerError, new { ErrorMessage = "PhoneNo is already registered" });
                 }

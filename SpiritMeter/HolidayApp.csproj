@@ -6,8 +6,17 @@
     <UserSecretsId>89b409c7-b291-401e-8a64-2510337835f5</UserSecretsId>
   </PropertyGroup>
 
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <DocumentationFile></DocumentationFile>
+    <OutputPath></OutputPath>
+    <GenerateSerializationAssemblies>Off</GenerateSerializationAssemblies>
+  </PropertyGroup>
+
   <ItemGroup>
-    <Folder Include="wwwroot\" />
+    <Content Include="wwwroot\XmlDescription\netcoreapp2.1\HolidayApp.deps.json" />
+    <Content Include="wwwroot\XmlDescription\netcoreapp2.1\HolidayApp.runtimeconfig.dev.json" />
+    <Content Include="wwwroot\XmlDescription\netcoreapp2.1\HolidayApp.runtimeconfig.json" />
+    <Content Include="wwwroot\XmlDescription\netcoreapp2.1\HolidayApp.xml" />
   </ItemGroup>
 
   <ItemGroup>
@@ -20,6 +29,15 @@
     <PackageReference Include="Nexmo.Csharp.Client" Version="4.2.0" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="4.0.1" />
     <PackageReference Include="WindowsAzure.Storage" Version="9.3.3" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="wwwroot\XmlDescription\netcoreapp2.1\HolidayApp.dll" />
+    <None Include="wwwroot\XmlDescription\netcoreapp2.1\HolidayApp.pdb" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="wwwroot\XmlDescription\netcoreapp2.1\netcoreapp2.1\" />
   </ItemGroup>
 
 </Project>

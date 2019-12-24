@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -15,14 +17,18 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Swashbuckle.AspNetCore.Swagger;
+using static SpiritMeter.Data.Common;
 
 namespace SpiritMeter
 {
     public class Startup
     {
-        public Startup(IConfiguration configuration)
+        private readonly IHostingEnvironment _env;
+
+        public Startup(IConfiguration configuration, IHostingEnvironment env)
         {
             Configuration = configuration;
+            _env = env;
         }
 
         public IConfiguration Configuration { get; }
@@ -38,8 +44,8 @@ namespace SpiritMeter
                 {
                     options.TokenValidationParameters = new TokenValidationParameters
                     {
-                        ValidateIssuer = true,
-                        ValidateAudience = true,
+                        ValidateIssuer = false,
+                        ValidateAudience = false,
                         ValidateLifetime = true,
                         ValidateIssuerSigningKey = true,
                         ValidIssuer = Configuration["Jwt:Issuer"],
@@ -63,7 +69,21 @@ namespace SpiritMeter
                      c.AddSecurityRequirement(new Dictionary<string, IEnumerable<string>> {
                      { "Bearer", Enumerable.Empty<string>() },
                      });
-                    
+
+                     c.OperationFilter<FileUploadOperation>(); //Register File Upload Operation Filter
+
+                     //Set the comments path for the Swagger JSON and UI.
+
+                     //var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+                     //var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
+                     //c.IncludeXmlComments(xmlPath);
+
+                     //var FilePath = _env.WebRootPath + Path.DirectorySeparatorChar.ToString()
+                     //            + "XmlFile"
+                     //            + Path.DirectorySeparatorChar.ToString()
+                     //            + "ApiDescription.xml";
+                     //c.IncludeXmlComments(FilePath);
+
                  });
 
                 //Enablecars for React

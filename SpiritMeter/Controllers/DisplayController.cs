@@ -17,10 +17,13 @@ namespace SpiritMeter.Controllers
     [EnableCors("AllowAll")]
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize]
+    //[Authorize]
     public class DisplayController : ControllerBase
     {
         #region listCategory
+        /// <summary>
+        /// To list category
+        /// </summary>
         [HttpGet, Route("listCategory")]
         public IActionResult listCategory()
         {
@@ -55,9 +58,12 @@ namespace SpiritMeter.Controllers
         }
         #endregion
 
-        
+
 
         #region createDisplay
+        /// <summary>
+        /// To createDisplay
+        /// </summary>
         [HttpPost, Route("createDisplay")]
         public IActionResult createDisplay(createDisplay createDisplay)
         {
@@ -114,6 +120,9 @@ namespace SpiritMeter.Controllers
 
         #endregion
         #region createDisplayFiles
+        /// <summary>
+        /// to createDisplayFiles
+        /// </summary>
         [HttpPost, Route("createDisplayFiles")]
         public IActionResult createDisplayFiles(createDisplayFiles createDisplayFiles)
         {
@@ -152,6 +161,9 @@ namespace SpiritMeter.Controllers
 
 
         #region updateDisplay
+        /// <summary>
+        /// To updateDisplay
+        /// </summary>
         [HttpPut, Route("updateDisplay")]
         public IActionResult updateDisplay(updateDisplay createDisplay)
         {
@@ -189,6 +201,9 @@ namespace SpiritMeter.Controllers
         #endregion
 
         #region deleteDisplayFiles
+        /// <summary>
+        /// To deleteDisplayFiles
+        /// </summary>
         [HttpDelete, Route("deleteDisplayFiles")]
         public IActionResult deleteDisplayFiles(int displayFileId)
         {
@@ -222,6 +237,9 @@ namespace SpiritMeter.Controllers
         #endregion
 
         #region selectDisplay
+        /// <summary>
+        /// To selectDisplay by displayid
+        /// </summary>
         [HttpGet, Route("selectDisplay/{displayId}")]
         public IActionResult selectDisplay(int displayId)
         {
@@ -268,7 +286,7 @@ namespace SpiritMeter.Controllers
                 }
                 else
                 {
-                    return StatusCode((int)HttpStatusCode.OK, "No Records Found");
+                    return StatusCode((int)HttpStatusCode.OK, display);
                 }
             }
             catch (Exception e)
@@ -280,6 +298,9 @@ namespace SpiritMeter.Controllers
         #endregion
 
         #region deleteDisplay
+        /// <summary>
+        /// To deleteDisplay by displayid
+        /// </summary>
         [HttpDelete, Route("deleteDisplay")]
         public IActionResult deleteDisplay(int displayId)
         {
@@ -313,6 +334,9 @@ namespace SpiritMeter.Controllers
         #endregion
 
         #region listDisplay
+        /// <summary>
+        /// To listDisplay
+        /// </summary>
         [HttpGet, Route("listDisplay")]
         public IActionResult listDisplay(string Search)
         {
@@ -363,6 +387,9 @@ namespace SpiritMeter.Controllers
         }
         #endregion
         #region listDisplayByUserId
+        /// <summary>
+        /// To listDisplayByUserId 
+        /// </summary>
         [HttpGet, Route("listDisplayByUserId/{userId}")]
         public IActionResult listDisplayByUserId(int userId)
         {
@@ -400,7 +427,7 @@ namespace SpiritMeter.Controllers
                 }
                 else
                 {
-                    return StatusCode((int)HttpStatusCode.OK, "No Records Found");
+                    return StatusCode((int)HttpStatusCode.OK, listDisplayDetails);
                 }
             }
             catch (Exception e)
@@ -413,14 +440,17 @@ namespace SpiritMeter.Controllers
 
 
         #region popularDisplay
-        [HttpGet, Route("popularDisplay")]
-        public IActionResult popularDisplay()
+        /// <summary>
+        /// To display popularDisplays
+        /// </summary>
+        [HttpGet, Route("popularDisplay")]        
+        public IActionResult popularDisplay(int userId)
         {
             List<dynamic> listDisplayDetails = new List<dynamic>();
 
             try
             {
-                DataTable dt = Data.Display.PopularDisplay();
+                DataTable dt = Data.Display.PopularDisplay(userId);
                 if (dt.Rows.Count > 0)
                 {
                     for (int i = 0; i < dt.Rows.Count; i++)
@@ -442,7 +472,8 @@ namespace SpiritMeter.Controllers
                         listDisplay.createdDate = (dt.Rows[i]["createdDate"] == DBNull.Value ? "" : dt.Rows[i]["createdDate"].ToString());
                         listDisplay.createdBy = (dt.Rows[i]["createdBy"] == DBNull.Value ? 0 : (int)dt.Rows[i]["createdBy"]);
                         listDisplay.createdByName = (dt.Rows[i]["createdByName"] == DBNull.Value ? "" : dt.Rows[i]["createdByName"].ToString());
-                        listDisplay.routes = (dt.Rows[i]["routes"] == DBNull.Value ? "" : dt.Rows[i]["routes"].ToString());
+                        listDisplay.filePath = (dt.Rows[i]["filePath"] == DBNull.Value ? "" : dt.Rows[i]["filePath"].ToString());
+                        //listDisplay.routes = (dt.Rows[i]["routes"] == DBNull.Value ? "" : dt.Rows[i]["routes"].ToString());
                         listDisplayDetails.Add(listDisplay);
                     }
                     return StatusCode((int)HttpStatusCode.OK, listDisplayDetails);

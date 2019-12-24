@@ -8,8 +8,11 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using SpiritMeter.Data;
 using SpiritMeter.Models;
+using static SpiritMeter.Data.Common;
 
 namespace SpiritMeter.Controllers
 {
@@ -19,12 +22,15 @@ namespace SpiritMeter.Controllers
     public class UploadFileController : ControllerBase
     {
         #region uploadFile
+        /// <summary>
+        /// To uploadFile image for mobile
+        /// </summary>
         [HttpPost, Route("uploadFile")]
         [AllowAnonymous]
-        public async Task<IActionResult> uploadFile()
+        public async Task<IActionResult> uploadFile(IFormFile formFile)
         {
             try
-            {
+            { 
                 IFormFile myFile = Request.Form.Files.First();
                 string myFileName = null;
                 byte[] myFileContent = null;
@@ -41,8 +47,10 @@ namespace SpiritMeter.Controllers
                         await memoryStream.ReadAsync(myFileContent, 0, myFileContent.Length);
                     }
                 }
-                Global.fileurl = Common.CreateMediaItem(myFileContent, myFileName);
-                return StatusCode((int)HttpStatusCode.OK, Global.fileurl);
+                string file = Common.CreateMediaItem(myFileContent, myFileName);
+                Global global = new Global();
+                global.fileurl = file;
+                return StatusCode((int)HttpStatusCode.OK, global);
             }
 
             catch (Exception e)
@@ -52,6 +60,34 @@ namespace SpiritMeter.Controllers
             }
         }
 
+        #endregion
+
+        #region UploadFileBase64
+        /// <summary>
+        /// To uploadFile image for web
+        /// </summary>
+        [HttpPost, Route("UploadFileBase64")]
+        [AllowAnonymous]
+        public async Task<IActionResult> UploadFileBase64([FromBody] UploadModel uploadModel)
+        {
+            try
+            {
+                var imageDataByteArray = Convert.FromBase64String(uploadModel.file);
+
+                string myFileName = uploadModel.fileName;
+                byte[] myFileContent = imageDataByteArray;
+
+                string file = Common.CreateMediaItem(myFileContent, myFileName);
+                Global global = new Global();
+                global.fileurl = file;
+                return StatusCode((int)HttpStatusCode.OK, global);
+            }
+            catch (Exception e)
+            {
+                string SaveErrorLog = Data.Common.SaveErrorLog("UploadFileBase64", e.Message.ToString());
+                return StatusCode((int)HttpStatusCode.InternalServerError, new { ErrorMessage = e.Message.ToString() });
+            }
+        }
         #endregion
     }
 }

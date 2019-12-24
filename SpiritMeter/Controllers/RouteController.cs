@@ -23,10 +23,13 @@ namespace SpiritMeter.Controllers
     [EnableCors("AllowAll")]
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize]
+    //[Authorize]
     public class RouteController : ControllerBase
     {
         #region createRoute
+        /// <summary>
+        /// To createUser
+        /// </summary>
         [HttpPost, Route("createRoute")]
         public IActionResult createRoute(createRoute createRoute)
         {
@@ -64,6 +67,9 @@ namespace SpiritMeter.Controllers
         #endregion
 
         #region updateRoute
+        /// <summary>
+        /// To updateRoute
+        /// </summary>
         [HttpPut, Route("updateRoute")]
         public IActionResult updateRoute([FromBody]createRoute updateRoute)
         {
@@ -95,6 +101,9 @@ namespace SpiritMeter.Controllers
         #endregion
 
         #region saveRoutePoints
+        /// <summary>
+        ///To saveRoutePoints
+        /// </summary>
         [HttpPost, Route("saveRoutePoints")]
         public async Task<IActionResult> saveRoutePoints(routePoints route)
         {
@@ -187,6 +196,9 @@ namespace SpiritMeter.Controllers
             }
         }
         #endregion
+        /// <summary>
+        /// To Preview Path
+        /// </summary>
         #region calculatePath
         [HttpPost, Route("calculatePath")]
         public async Task<IActionResult> calculatePath(calculatepath calculatepath)
@@ -264,6 +276,9 @@ namespace SpiritMeter.Controllers
         }
         #endregion
         #region deleteRoute
+        /// <summary>
+        /// To deleteRoute by routeId
+        /// </summary>
         [HttpDelete, Route("deleteRoute")]
         public IActionResult deleteRoute(int routeId)
         {
@@ -297,6 +312,9 @@ namespace SpiritMeter.Controllers
         #endregion
 
         #region saveRoutePointStatus
+        /// <summary>
+        /// To saveRoutePointStatus
+        /// </summary>
         [HttpPost, Route("saveRoutePointStatus")]
         public IActionResult saveRoutePointStatus(routePointStatus routePointStatus)
         {
@@ -358,6 +376,9 @@ namespace SpiritMeter.Controllers
         #endregion
 
         #region saveRouteStatus
+        /// <summary>
+        /// To saveRouteStatus
+        /// </summary>
         [HttpPost, Route("saveRouteStatus")]
         public IActionResult saveRouteStatus(rideStatus rideStatus)
         {
@@ -427,6 +448,9 @@ namespace SpiritMeter.Controllers
         #endregion
 
         #region listRoutes
+        /// <summary>
+        /// To listRoutes
+        /// </summary>
         [HttpGet, Route("listRoutes")]
         public IActionResult listRoutes(string SearchTerm)
         {
@@ -474,6 +498,9 @@ namespace SpiritMeter.Controllers
         }
         #endregion
         #region listRoutesByUserId
+        /// <summary>
+        /// To listRoutesByUserId
+        /// </summary>
         [HttpGet, Route("listRoutesByUserId")]
         public IActionResult listRoutesByUserId(int userId)
         {
@@ -515,7 +542,7 @@ namespace SpiritMeter.Controllers
                 }
                 else
                 {
-                    return StatusCode((int)HttpStatusCode.OK, "No Records Found");
+                    return StatusCode((int)HttpStatusCode.OK, listRoutesDetails);
                 }
             }
             catch (Exception e)
@@ -525,53 +552,11 @@ namespace SpiritMeter.Controllers
             }
         }
         #endregion
-        //#region selectRouteByUserId
-        //[HttpGet, Route("selectRouteByUserId")]
-        //public IActionResult selectRouteByUserId(int userId)
-        //{
-        //    List<dynamic> listRoutesDetails = new List<dynamic>();
 
-        //    try
-        //    {
-        //        DataTable dt = Data.Route.selectRouteByUserId(userId);
-        //        if (dt.Rows.Count > 0)
-        //        {
-        //            for (int i = 0; i < dt.Rows.Count; i++)
-        //            {
-        //                dynamic listRoutes = new System.Dynamic.ExpandoObject();
-        //                listRoutes.routeId = (int)dt.Rows[i]["routeId"];
-        //                listRoutes.routeName = (dt.Rows[i]["routeName"] == DBNull.Value ? "" : dt.Rows[i]["routeName"].ToString());
-        //                listRoutes.comments = (dt.Rows[i]["comments"] == DBNull.Value ? "" : dt.Rows[i]["comments"].ToString());
-        //                listRoutes.designatedCharityId = (dt.Rows[i]["designatedCharityId"] == DBNull.Value ? 0 : (int)dt.Rows[i]["designatedCharityId"]);
-        //                listRoutes.designatedCharityName = (dt.Rows[i]["designatedCharityName"] == DBNull.Value ? "" : dt.Rows[i]["designatedCharityName"].ToString());
-        //                listRoutes.isPrivate = (dt.Rows[i]["isPrivate"] == DBNull.Value ? false : (bool)dt.Rows[i]["isPrivate"]);
-        //                listRoutes.createdDate = (dt.Rows[i]["createdDate"] == DBNull.Value ? "" : dt.Rows[i]["createdDate"].ToString());
-        //                listRoutes.startingPoint = (dt.Rows[i]["startingPoint"] == DBNull.Value ? 0 : (int)dt.Rows[i]["startingPoint"]);
-        //                listRoutes.latitude = (dt.Rows[i]["latitude"] == DBNull.Value ? "" : dt.Rows[i]["latitude"].ToString());
-        //                listRoutes.longitude = (dt.Rows[i]["longitude"] == DBNull.Value ? "" : dt.Rows[i]["longitude"].ToString());
-        //                listRoutes.country = (dt.Rows[i]["country"] == DBNull.Value ? "" : dt.Rows[i]["country"].ToString());
-        //                listRoutes.state = (dt.Rows[i]["state"] == DBNull.Value ? "" : dt.Rows[i]["state"].ToString());
-        //                listRoutes.cityName = (dt.Rows[i]["cityName"] == DBNull.Value ? "" : dt.Rows[i]["cityName"].ToString());
-        //                listRoutes.address = (dt.Rows[i]["address"] == DBNull.Value ? "" : dt.Rows[i]["address"].ToString());
-        //                listRoutes.totalMiles = (dt.Rows[i]["totalMiles"] == DBNull.Value ? "" : dt.Rows[i]["totalMiles"].ToString());
-        //                listRoutes.path = (dt.Rows[i]["path"] == DBNull.Value ? "" : dt.Rows[i]["path"].ToString());
-        //                listRoutesDetails.Add(listRoutes);
-        //            }
-        //            return StatusCode((int)HttpStatusCode.OK, listRoutesDetails);
-        //        }
-        //        else
-        //        {
-        //            return StatusCode((int)HttpStatusCode.OK, listRoutesDetails);
-        //        }
-        //    }
-        //    catch (Exception e)
-        //    {
-        //        string SaveErrorLog = Data.Common.SaveErrorLog("selectRouteByUserId", e.Message);
-        //        return StatusCode((int)HttpStatusCode.InternalServerError, new { ErrorMessage = e.Message });
-        //    }
-        //}
-        //#endregion
         #region selectRouteById
+        /// <summary>
+        /// To selectRouteById
+        /// </summary>
         [HttpGet, Route("selectRouteById")]
         public IActionResult selectRouteById(int routeId)
         {
@@ -611,7 +596,9 @@ namespace SpiritMeter.Controllers
                             ridePoints.displayId = (ds.Tables[1].Rows[j]["displayId"] == DBNull.Value ? 0 : (int)ds.Tables[1].Rows[j]["displayId"]);
                             ridePoints.filePath = (ds.Tables[1].Rows[j]["filePath"] == DBNull.Value ? "" : ds.Tables[1].Rows[j]["filePath"].ToString());
                             ridePoints.name = (ds.Tables[1].Rows[j]["displayName"] == DBNull.Value ? "" : ds.Tables[1].Rows[j]["displayName"].ToString());
-                            ridePoints.isPrivate = (ds.Tables[1].Rows[j]["isPrivate"] == DBNull.Value ? "" : ds.Tables[1].Rows[j]["isPrivate"].ToString());
+                            ridePoints.isPrivate = (ds.Tables[1].Rows[j]["isPrivate"] == DBNull.Value ? false : (bool)ds.Tables[1].Rows[j]["isPrivate"]);
+                            ridePoints.categoryId = (ds.Tables[1].Rows[j]["categoryId"] == DBNull.Value ? 0 : (int)ds.Tables[1].Rows[j]["categoryId"]);
+                            ridePoints.categoryName = (ds.Tables[1].Rows[j]["categoryName"] == DBNull.Value ? "" : ds.Tables[1].Rows[j]["categoryName"].ToString());
                             ridePoints.type = (ds.Tables[1].Rows[j]["type"] == DBNull.Value ? "" : ds.Tables[1].Rows[j]["type"].ToString());
                             ridePoints.latitude  = (ds.Tables[1].Rows[j]["latitude"] == DBNull.Value ? "" : ds.Tables[1].Rows[j]["latitude"].ToString());
                             ridePoints.longitude = (ds.Tables[1].Rows[j]["longitude"] == DBNull.Value ? "" : ds.Tables[1].Rows[j]["longitude"].ToString());
@@ -620,7 +607,7 @@ namespace SpiritMeter.Controllers
                             ridePoints.cityName = (ds.Tables[1].Rows[j]["cityName"] == DBNull.Value ? "" : ds.Tables[1].Rows[j]["cityName"].ToString());
                             ridePoints.address = (ds.Tables[1].Rows[j]["address"] == DBNull.Value ? "" : ds.Tables[1].Rows[j]["address"].ToString());
                             ridePoints.createdBy = (ds.Tables[1].Rows[j]["createdBy"] == DBNull.Value ? 0 :(int) ds.Tables[1].Rows[j]["createdBy"]);
-                            ridePoints.createByName = (ds.Tables[1].Rows[j]["createByName"] == DBNull.Value ? "" : ds.Tables[1].Rows[j]["createByName"].ToString());
+                            ridePoints.createdByName = (ds.Tables[1].Rows[j]["createByName"] == DBNull.Value ? "" : ds.Tables[1].Rows[j]["createByName"].ToString());
                             listRidePoints.Add(ridePoints);
                         }   
                         listRoutes.ridePoints = listRidePoints;
@@ -631,7 +618,7 @@ namespace SpiritMeter.Controllers
                 }
                 else
                 {
-                    return StatusCode((int)HttpStatusCode.OK, "No Records Found");
+                    return StatusCode((int)HttpStatusCode.OK, listRoutes);
                 }
             }
             catch (Exception e)
@@ -642,6 +629,9 @@ namespace SpiritMeter.Controllers
         }
         #endregion
         #region nearBySearch
+        /// <summary>
+        /// To search nearBy place
+        /// </summary>
         [HttpPost, Route("nearBySearch")]
         public async Task<IActionResult> nearBySearch(nearBySearch nearBySearch)
         { 

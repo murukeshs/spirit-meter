@@ -18,10 +18,13 @@ namespace SpiritMeter.Controllers
     [EnableCors("AllowAll")]
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize]
+    //[Authorize]
     public class UserController : ControllerBase
     {
         #region createUser
+        /// <summary>
+        /// To createUser
+        /// </summary>
         [HttpPost, Route("createUser")]
         [AllowAnonymous]
         public IActionResult createUser(createUser createUser)
@@ -39,7 +42,7 @@ namespace SpiritMeter.Controllers
                 else if (createUser.lastName == "" ||  createUser.lastName == null)
                 {
                     return StatusCode((int)HttpStatusCode.BadRequest, new { ErrorMessage = "Please enter lastName" });
-                }
+                }   
                 else if (createUser.phoneNumber == "" || createUser.phoneNumber == null)
                 {
                     return StatusCode((int)HttpStatusCode.BadRequest, new { ErrorMessage = "Please enter phonenumber" });
@@ -85,6 +88,9 @@ namespace SpiritMeter.Controllers
         #endregion createUser
 
         #region updateUser
+        /// <summary>
+        /// To updateUser
+        /// </summary>
         [HttpPut, Route("updateUser")]
         public IActionResult updateUser([FromBody]createUser updateUser)
         {
@@ -143,6 +149,9 @@ namespace SpiritMeter.Controllers
         #endregion
 
         #region deleteTeam
+        /// <summary>
+        /// To deleteUser
+        /// </summary>
         [HttpDelete, Route("deleteUser")]
         public IActionResult deleteUser(int UserID)
         {
@@ -176,6 +185,9 @@ namespace SpiritMeter.Controllers
         #endregion
 
         #region listUser
+        /// <summary>
+        /// To listUser
+        /// </summary>
         [HttpGet, Route("listUser")]
         public IActionResult listUser(string SearchTerm)
         {
@@ -202,7 +214,8 @@ namespace SpiritMeter.Controllers
                         listUser.cityName = (dt.Rows[i]["cityName"] == DBNull.Value ? "" : dt.Rows[i]["cityName"].ToString());
                         listUser.address = (dt.Rows[i]["address"] == DBNull.Value ? "" : dt.Rows[i]["address"].ToString());
                         listUser.createdDate = (dt.Rows[i]["createdDate"] == DBNull.Value ? "" : dt.Rows[i]["createdDate"].ToString());
-
+                        listUser.savedDisplay = (dt.Rows[i]["savedDisplay"] == DBNull.Value ? 0 : (int)dt.Rows[i]["savedDisplay"]);
+                        listUser.savedRoutes = (dt.Rows[i]["savedRoutes"] == DBNull.Value ? 0 : (int)dt.Rows[i]["savedRoutes"]);
                         listUserDetails.Add(listUser);
                     }
                     return StatusCode((int)HttpStatusCode.OK, listUserDetails);
@@ -224,6 +237,9 @@ namespace SpiritMeter.Controllers
 
 
         #region selectUserById
+        /// <summary>
+        /// To  select UserById
+        /// </summary>
         [HttpGet, Route("selectUserById/{userId}")]
         public IActionResult selectUserById(int userId)
         {
@@ -246,6 +262,8 @@ namespace SpiritMeter.Controllers
                     }
                     user.userId = (int)dt.Rows[0]["userId"];
                     user.name = (dt.Rows[0]["name"] == DBNull.Value ? "" : dt.Rows[0]["name"].ToString());
+                    user.firstName = (dt.Rows[0]["firstName"] == DBNull.Value ? "" : dt.Rows[0]["firstName"].ToString());
+                    user.lastName = (dt.Rows[0]["lastName"] == DBNull.Value ? "" : dt.Rows[0]["lastName"].ToString());
                     user.phoneNumber = (dt.Rows[0]["phoneNumber"] == DBNull.Value ? "" : dt.Rows[0]["phoneNumber"].ToString());
                     user.profileImage = (dt.Rows[0]["profileImage"] == DBNull.Value ? "" : dt.Rows[0]["profileImage"].ToString());
                     user.gender = (dt.Rows[0]["gender"] == DBNull.Value ? "" : dt.Rows[0]["gender"].ToString());
@@ -265,7 +283,7 @@ namespace SpiritMeter.Controllers
                 else
                 {
                     string[] data = new string[0];
-                    return StatusCode((int)HttpStatusCode.OK, "No Records Found");
+                    return StatusCode((int)HttpStatusCode.OK, user);
                 }
 
             }
@@ -279,6 +297,9 @@ namespace SpiritMeter.Controllers
         #endregion
 
         #region listCharity
+        /// <summary>
+        /// To listCharity
+        /// </summary>
         [HttpGet, Route("listCharity")]
         public IActionResult listCharity()
         {
@@ -316,7 +337,7 @@ namespace SpiritMeter.Controllers
                 else
                 {
                     string[] data = new string[0];
-                    return StatusCode((int)HttpStatusCode.OK, data);
+                    return StatusCode((int)HttpStatusCode.OK, userList);
                 }
 
             }
@@ -330,6 +351,9 @@ namespace SpiritMeter.Controllers
         #endregion
 
         #region forgetPassword
+        /// <summary>
+        /// To update forgetPassword
+        /// </summary>
         [HttpPut, Route("forgetPassword")]
         [AllowAnonymous]
         public IActionResult forgetPassword(forgotPassword forgotPassword)
@@ -355,7 +379,15 @@ namespace SpiritMeter.Controllers
 
                     if (row == "Success")
                     {
-                        return StatusCode((int)HttpStatusCode.OK, "Updated Successfully");
+                        return StatusCode((int)HttpStatusCode.OK, new { message = "Updated Successfully" });
+                    }
+                    else if (row == "Invalid OTP")
+                    {
+                        return StatusCode((int)HttpStatusCode.Forbidden, new { errorMessage = "Invalid OTP" });
+                    }
+                    else if (row == "Invalid PhoneNumber")
+                    {
+                        return StatusCode((int)HttpStatusCode.Forbidden, new { errorMessage = "Invalid PhoneNumber" });
                     }
                     else
                     {
@@ -372,7 +404,56 @@ namespace SpiritMeter.Controllers
         }
         #endregion forgetPassword   
 
+        #region phoneVerify
+        /// <summary>
+        /// To verify phone using OTP
+        /// </summary>
+        [HttpPut, Route("phoneVerify")]
+        [AllowAnonymous]
+        public IActionResult phoneVerify(phoneVerify phoneVerify)
+        {
+            try
+            {
+                if (phoneVerify.phone == "" || phoneVerify.phone == null)
+                {
+                    return StatusCode((int)HttpStatusCode.BadRequest, new { ErrorMessage = "Please enter Phone" });
+                }
+                else if (phoneVerify.OTPValue == "" || phoneVerify.OTPValue == null)
+                {
+                    return StatusCode((int)HttpStatusCode.BadRequest, new { ErrorMessage = "Please enter OTPValue" });
+                }
+
+
+
+                string row = Data.User.phoneVerify(phoneVerify);
+
+                if (row == "Success")
+                {
+                    return StatusCode((int)HttpStatusCode.OK, new { message = "Phone Number Verified Successfully" });
+                }
+                else if (row == "Invalid PhoneNumber")
+                {
+                    return StatusCode((int)HttpStatusCode.Forbidden, new { errorMessage = "Invalid PhoneNumber" });
+                }
+                else
+                {
+                    return StatusCode((int)HttpStatusCode.Forbidden, new { ErrorMessage = row });
+                }
+            }
+
+            catch (Exception e)
+            {
+                string SaveErrorLog = Data.Common.SaveErrorLog("phoneVerify", e.Message);
+
+                return StatusCode((int)HttpStatusCode.InternalServerError, new { ErrorMessage = e.Message });
+            }
+        }
+        #endregion phoneVerify   
+
         #region generateOTP
+        /// <summary>
+        /// To generateOTP for forgotpassword and registration
+        /// </summary>
         [HttpPut, Route("generateOTP")]
         [AllowAnonymous]
         public IActionResult generateOTP([FromBody]GenerateOTP otp)
@@ -383,7 +464,7 @@ namespace SpiritMeter.Controllers
 
                 SMSResponse results = new SMSResponse();
 
-                var SmsStatus = "";
+                var message = "";
 
                 //otp.emailorPhone = "+14087224019";
 
@@ -397,16 +478,16 @@ namespace SpiritMeter.Controllers
 
                     if (status == "0")
                     {
-                        SmsStatus = "Message sent successfully.";
+                        message = "Message sent successfully.";
                     }
                     else
                     {
                         string err = results.messages[0].error_text.ToString();
-                        SmsStatus = err;
+                        message = err;
                     }
 
 
-                    return StatusCode((int)HttpStatusCode.OK, new { SmsStatus });      
+                    return StatusCode((int)HttpStatusCode.OK, new { message });      
                 }
 
                 else
@@ -426,6 +507,9 @@ namespace SpiritMeter.Controllers
         #endregion
 
         #region spiritMeter
+        /// <summary>
+        /// To show spiritMeter Status
+        /// </summary>
         [HttpGet, Route("spiritMeter/{userId}")]
         public IActionResult spiritMeter(int userId)
         {
@@ -459,11 +543,14 @@ namespace SpiritMeter.Controllers
         #endregion
 
         #region selectUser
+        /// <summary>
+        /// To selectUser by userId
+        /// </summary>
         [HttpGet, Route("selectUser/{userId}")]
         public IActionResult selectUser(int userId)
         {
             List<dynamic> listDisplayDetails = new List<dynamic>();
-
+            dynamic listUser = new System.Dynamic.ExpandoObject();
             try
             {
                 DataSet ds = Data.User.selectBasicUserById(userId);
@@ -496,11 +583,7 @@ namespace SpiritMeter.Controllers
                     Display.routes = (ds.Tables[1].Rows[i]["routes"] == DBNull.Value ? "" : ds.Tables[1].Rows[i]["routes"].ToString());
 
                     listDisplay.Add(Display);
-                }
-
-
-               
-                    dynamic listUser = new System.Dynamic.ExpandoObject();
+                }                    
                     listUser.userId = (int)ds.Tables[0].Rows[0]["userId"];
                     listUser.name = (ds.Tables[0].Rows[0]["name"] == DBNull.Value ? "" : ds.Tables[0].Rows[0]["name"].ToString());
                     listUser.phoneNumber = (ds.Tables[0].Rows[0]["phoneNumber"] == DBNull.Value ? "" : ds.Tables[0].Rows[0]["phoneNumber"].ToString());
@@ -557,7 +640,7 @@ namespace SpiritMeter.Controllers
                 }
                 else
                 {
-                    return StatusCode((int)HttpStatusCode.OK, "No Records Found");
+                    return StatusCode((int)HttpStatusCode.OK, listUser);
                 }
 
             }
@@ -570,6 +653,9 @@ namespace SpiritMeter.Controllers
         #endregion
 
         #region getProfile
+        /// <summary>
+        /// To getProfile by userId
+        /// </summary>
         [HttpGet, Route("getProfile/{userId}")]
         public IActionResult getProfile(int userId)
         {
@@ -577,31 +663,31 @@ namespace SpiritMeter.Controllers
             {
                 DataSet ds = Data.User.getProfile(userId);
                
-                    dynamic listUser = new System.Dynamic.ExpandoObject();
+                    dynamic user = new System.Dynamic.ExpandoObject();
                 if(ds.Tables[0].Rows.Count > 0)
                 {
-                    listUser.userId = (int)ds.Tables[0].Rows[0]["userId"];
-                    listUser.name = (ds.Tables[0].Rows[0]["name"] == DBNull.Value ? "" : ds.Tables[0].Rows[0]["name"].ToString());
-                    listUser.phoneNumber = (ds.Tables[0].Rows[0]["phoneNumber"] == DBNull.Value ? "" : ds.Tables[0].Rows[0]["phoneNumber"].ToString());
-                    listUser.profileImage = (ds.Tables[0].Rows[0]["profileImage"] == DBNull.Value ? "" : ds.Tables[0].Rows[0]["profileImage"].ToString());
-                    listUser.gender = (ds.Tables[0].Rows[0]["gender"] == DBNull.Value ? "" : ds.Tables[0].Rows[0]["gender"].ToString());
-                    listUser.role = (ds.Tables[0].Rows[0]["role"] == DBNull.Value ? "" : ds.Tables[0].Rows[0]["role"].ToString());
-                    listUser.latitude = (ds.Tables[0].Rows[0]["latitude"] == DBNull.Value ? "" : ds.Tables[0].Rows[0]["latitude"].ToString());
-                    listUser.longitude = (ds.Tables[0].Rows[0]["longitude"] == DBNull.Value ? "" : ds.Tables[0].Rows[0]["longitude"].ToString());
-                    listUser.country = (ds.Tables[0].Rows[0]["country"] == DBNull.Value ? "" : ds.Tables[0].Rows[0]["country"].ToString());
-                    listUser.state = (ds.Tables[0].Rows[0]["state"] == DBNull.Value ? "" : ds.Tables[0].Rows[0]["state"].ToString());
-                    listUser.cityName = (ds.Tables[0].Rows[0]["cityName"] == DBNull.Value ? "" : ds.Tables[0].Rows[0]["cityName"].ToString());
-                    listUser.address = (ds.Tables[0].Rows[0]["address"] == DBNull.Value ? "" : ds.Tables[0].Rows[0]["address"].ToString());
-                    listUser.createdDate = (ds.Tables[0].Rows[0]["createdDate"] == DBNull.Value ? "" : ds.Tables[0].Rows[0]["createdDate"].ToString());
-                    listUser.savedRoutes = (ds.Tables[2].Rows[0]["savedRoutes"] == DBNull.Value ? 0 : (int)ds.Tables[2].Rows[0]["savedRoutes"]);
-                    listUser.savedDisplay = (ds.Tables[1].Rows[0]["savedDisplay"] == DBNull.Value ? 0 : (int)ds.Tables[1].Rows[0]["savedDisplay"]);
-                    listUser.spiritPoints = (ds.Tables[3].Rows[0]["spiritPoints"] == DBNull.Value ? 0 : (int)ds.Tables[3].Rows[0]["spiritPoints"]);
+                    user.userId = (int)ds.Tables[0].Rows[0]["userId"];
+                    user.name = (ds.Tables[0].Rows[0]["name"] == DBNull.Value ? "" : ds.Tables[0].Rows[0]["name"].ToString());
+                    user.phoneNumber = (ds.Tables[0].Rows[0]["phoneNumber"] == DBNull.Value ? "" : ds.Tables[0].Rows[0]["phoneNumber"].ToString());
+                    user.profileImage = (ds.Tables[0].Rows[0]["profileImage"] == DBNull.Value ? "" : ds.Tables[0].Rows[0]["profileImage"].ToString());
+                    user.gender = (ds.Tables[0].Rows[0]["gender"] == DBNull.Value ? "" : ds.Tables[0].Rows[0]["gender"].ToString());
+                    user.role = (ds.Tables[0].Rows[0]["role"] == DBNull.Value ? "" : ds.Tables[0].Rows[0]["role"].ToString());
+                    user.latitude = (ds.Tables[0].Rows[0]["latitude"] == DBNull.Value ? "" : ds.Tables[0].Rows[0]["latitude"].ToString());
+                    user.longitude = (ds.Tables[0].Rows[0]["longitude"] == DBNull.Value ? "" : ds.Tables[0].Rows[0]["longitude"].ToString());
+                    user.country = (ds.Tables[0].Rows[0]["country"] == DBNull.Value ? "" : ds.Tables[0].Rows[0]["country"].ToString());
+                    user.state = (ds.Tables[0].Rows[0]["state"] == DBNull.Value ? "" : ds.Tables[0].Rows[0]["state"].ToString());
+                    user.cityName = (ds.Tables[0].Rows[0]["cityName"] == DBNull.Value ? "" : ds.Tables[0].Rows[0]["cityName"].ToString());
+                    user.address = (ds.Tables[0].Rows[0]["address"] == DBNull.Value ? "" : ds.Tables[0].Rows[0]["address"].ToString());
+                    user.createdDate = (ds.Tables[0].Rows[0]["createdDate"] == DBNull.Value ? "" : ds.Tables[0].Rows[0]["createdDate"].ToString());
+                    user.savedRoutes = (ds.Tables[2].Rows[0]["savedRoutes"] == DBNull.Value ? 0 : (int)ds.Tables[2].Rows[0]["savedRoutes"]);
+                    user.savedDisplay = (ds.Tables[1].Rows[0]["savedDisplay"] == DBNull.Value ? 0 : (int)ds.Tables[1].Rows[0]["savedDisplay"]);
+                    user.spiritPoints = (ds.Tables[3].Rows[0]["spiritPoints"] == DBNull.Value ? 0 : (int)ds.Tables[3].Rows[0]["spiritPoints"]);
 
-                 return StatusCode((int)HttpStatusCode.OK, listUser);
+                 return StatusCode((int)HttpStatusCode.OK, user);
                 }
                 else
                 {
-                 return StatusCode((int)HttpStatusCode.OK, "No Records Found");
+                 return StatusCode((int)HttpStatusCode.OK, user);
                 }
 
             }

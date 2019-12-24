@@ -1,0 +1,203 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>HolidayApp</name>
+    </assembly>
+    <members>
+        <member name="M:SpiritMeter.Controllers.DashBoardController.dashBoardData">
+            <summary>
+            To list dashBoard data
+            </summary>
+        </member>
+        <member name="M:SpiritMeter.Controllers.DisplayController.listCategory">
+            <summary>
+            To list category
+            </summary>
+        </member>
+        <member name="M:SpiritMeter.Controllers.DisplayController.createDisplay(SpiritMeter.Models.createDisplay)">
+            <summary>
+            To createDisplay
+            </summary>
+        </member>
+        <member name="M:SpiritMeter.Controllers.DisplayController.createDisplayFiles(SpiritMeter.Models.createDisplayFiles)">
+            <summary>
+            to createDisplayFiles
+            </summary>
+        </member>
+        <member name="M:SpiritMeter.Controllers.DisplayController.updateDisplay(SpiritMeter.Models.updateDisplay)">
+            <summary>
+            To updateDisplay
+            </summary>
+        </member>
+        <member name="M:SpiritMeter.Controllers.DisplayController.deleteDisplayFiles(System.Int32)">
+            <summary>
+            To deleteDisplayFiles
+            </summary>
+        </member>
+        <member name="M:SpiritMeter.Controllers.DisplayController.selectDisplay(System.Int32)">
+            <summary>
+            To selectDisplay by displayid
+            </summary>
+        </member>
+        <member name="M:SpiritMeter.Controllers.DisplayController.deleteDisplay(System.Int32)">
+            <summary>
+            To deleteDisplay by displayid
+            </summary>
+        </member>
+        <member name="M:SpiritMeter.Controllers.DisplayController.listDisplay(System.String)">
+            <summary>
+            To listDisplay
+            </summary>
+        </member>
+        <member name="M:SpiritMeter.Controllers.DisplayController.listDisplayByUserId(System.Int32)">
+            <summary>
+            To listDisplayByUserId 
+            </summary>
+        </member>
+        <member name="M:SpiritMeter.Controllers.DisplayController.popularDisplay">
+            <summary>
+            To display popularDisplays
+            </summary>
+        </member>
+        <member name="M:SpiritMeter.Controllers.LoginController.login(SpiritMeter.Models.Login)">
+            <summary>
+            Save createUser
+            </summary>
+        </member>
+        <member name="M:SpiritMeter.Controllers.LoginController.refreshToken(SpiritMeter.Models.RefreshRequest)">
+            <summary>
+            Save createUser
+            </summary>
+        </member>
+        <member name="M:SpiritMeter.Controllers.RouteController.createRoute(SpiritMeter.Models.createRoute)">
+            <summary>
+            To createUser
+            </summary>
+        </member>
+        <member name="M:SpiritMeter.Controllers.RouteController.updateRoute(SpiritMeter.Models.createRoute)">
+            <summary>
+            To updateRoute
+            </summary>
+        </member>
+        <member name="M:SpiritMeter.Controllers.RouteController.saveRoutePoints(SpiritMeter.Models.routePoints)">
+             <summary>
+            To saveRoutePoints
+             </summary>
+        </member>
+        <member name="M:SpiritMeter.Controllers.RouteController.calculatePath(SpiritMeter.Models.calculatepath)">
+            <summary>
+            To Preview Path
+            </summary>
+        </member>
+        <member name="M:SpiritMeter.Controllers.RouteController.deleteRoute(System.Int32)">
+            <summary>
+            To deleteRoute by routeId
+            </summary>
+        </member>
+        <member name="M:SpiritMeter.Controllers.RouteController.saveRoutePointStatus(SpiritMeter.Models.routePointStatus)">
+            <summary>
+            To saveRoutePointStatus
+            </summary>
+        </member>
+        <member name="M:SpiritMeter.Controllers.RouteController.saveRouteStatus(SpiritMeter.Models.rideStatus)">
+            <summary>
+            To saveRouteStatus
+            </summary>
+        </member>
+        <member name="M:SpiritMeter.Controllers.RouteController.listRoutes(System.String)">
+            <summary>
+            To listRoutes
+            </summary>
+        </member>
+        <member name="M:SpiritMeter.Controllers.RouteController.listRoutesByUserId(System.Int32)">
+            <summary>
+            To listRoutesByUserId
+            </summary>
+        </member>
+        <member name="M:SpiritMeter.Controllers.RouteController.selectRouteById(System.Int32)">
+            <summary>
+            To selectRouteById
+            </summary>
+        </member>
+        <member name="M:SpiritMeter.Controllers.RouteController.nearBySearch(SpiritMeter.Models.nearBySearch)">
+            <summary>
+            To search nearBy place
+            </summary>
+        </member>
+        <member name="M:SpiritMeter.Controllers.UploadFileController.uploadFile">
+            <summary>
+            To uploadFile image for mobile
+            </summary>
+        </member>
+        <member name="M:SpiritMeter.Controllers.UploadFileController.UploadFileBase64(SpiritMeter.Data.Common.UploadModel)">
+            <summary>
+            To uploadFile image for web
+            </summary>
+        </member>
+        <member name="M:SpiritMeter.Controllers.UserController.createUser(SpiritMeter.Models.createUser)">
+            <summary>
+            To createUser
+            </summary>
+        </member>
+        <member name="M:SpiritMeter.Controllers.UserController.updateUser(SpiritMeter.Models.createUser)">
+            <summary>
+            To updateUser
+            </summary>
+        </member>
+        <member name="M:SpiritMeter.Controllers.UserController.deleteUser(System.Int32)">
+            <summary>
+            To deleteUser
+            </summary>
+        </member>
+        <member name="M:SpiritMeter.Controllers.UserController.listUser(System.String)">
+            <summary>
+            To listUser
+            </summary>
+        </member>
+        <member name="M:SpiritMeter.Controllers.UserController.selectUserById(System.Int32)">
+            <summary>
+            To  select UserById
+            </summary>
+        </member>
+        <member name="M:SpiritMeter.Controllers.UserController.listCharity">
+            <summary>
+            To listCharity
+            </summary>
+        </member>
+        <member name="M:SpiritMeter.Controllers.UserController.forgetPassword(SpiritMeter.Models.forgotPassword)">
+            <summary>
+            To update forgetPassword
+            </summary>
+        </member>
+        <member name="M:SpiritMeter.Controllers.UserController.phoneVerify(SpiritMeter.Models.phoneVerify)">
+            <summary>
+            To verify phone using OTP
+            </summary>
+        </member>
+        <member name="M:SpiritMeter.Controllers.UserController.generateOTP(SpiritMeter.Models.GenerateOTP)">
+            <summary>
+            To generateOTP for forgotpassword and registration
+            </summary>
+        </member>
+        <member name="M:SpiritMeter.Controllers.UserController.spiritMeter(System.Int32)">
+            <summary>
+            To show spiritMeter Status
+            </summary>
+        </member>
+        <member name="M:SpiritMeter.Controllers.UserController.selectUser(System.Int32)">
+            <summary>
+            To selectUser by userid
+            </summary>
+        </member>
+        <member name="M:SpiritMeter.Controllers.UserController.getProfile(System.Int32)">
+            <summary>
+            To getProfile by userId
+            </summary>
+        </member>
+        <member name="M:HolidayApp.Controllers.EventController.searchEvents(HolidayApp.Models.eventPoints)">
+            <summary>
+            To search Events 
+            </summary>
+        </member>
+    </members>
+</doc>

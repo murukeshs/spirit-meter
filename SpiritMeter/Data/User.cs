@@ -136,13 +136,10 @@ namespace SpiritMeter.Data
         {
             try
             {
-                if (Search == "" || Search == null)
-                {
-                    Search = "";
-                }
+               
                 string ConnectionString = Common.GetConnectionString();
                 List<SqlParameter> parameters = new List<SqlParameter>();
-                parameters.Add(new SqlParameter("@Search", Search));
+                parameters.Add(new SqlParameter("@Search", Search == null ? "" : Search));
 
 
                 using (DataTable dt = SqlHelper.ExecuteDataset(ConnectionString, CommandType.StoredProcedure, "spGetUsers", parameters.ToArray()).Tables[0])
@@ -206,7 +203,7 @@ namespace SpiritMeter.Data
             List<SqlParameter> parameters = new List<SqlParameter>();
             parameters.Add(new SqlParameter("@OTPValue", OTPValue));
             parameters.Add(new SqlParameter("@phone", otp.phone));
-            try
+            parameters.Add(new SqlParameter("@otpType", otp.otpType)); try
             {
                 string ConnectionString = Common.GetConnectionString();
 
@@ -236,6 +233,29 @@ namespace SpiritMeter.Data
                 string ConnectionString = Common.GetConnectionString();
 
                 string rowsAffected = SqlHelper.ExecuteScalar(ConnectionString, CommandType.StoredProcedure, "spForgetPassword", parameters.ToArray()).ToString();
+                return rowsAffected;
+            }
+            catch (Exception e)
+            {
+
+                throw e;
+            }
+
+        }
+        #endregion
+        #region forgotPassword
+        public static string phoneVerify([FromBody]phoneVerify phoneVerify)
+        {
+
+            List<SqlParameter> parameters = new List<SqlParameter>();
+            parameters.Add(new SqlParameter("@OTPValue", phoneVerify.OTPValue));
+            parameters.Add(new SqlParameter("@phoneNumber", phoneVerify.phone));
+
+            try
+            {
+                string ConnectionString = Common.GetConnectionString();
+
+                string rowsAffected = SqlHelper.ExecuteScalar(ConnectionString, CommandType.StoredProcedure, "spPhoneVerify", parameters.ToArray()).ToString();
                 return rowsAffected;
             }
             catch (Exception e)
@@ -308,6 +328,27 @@ namespace SpiritMeter.Data
                 string ConnectionString = Common.GetConnectionString();
 
                 using (DataSet ds = SqlHelper.ExecuteDataset(ConnectionString, CommandType.StoredProcedure, "spGetProfile", parameters.ToArray()))
+                {
+                    return ds;
+                }
+
+            }
+            catch (Exception e)
+            {
+
+                throw e;
+            }
+
+        }
+        #endregion
+        #region dashBoardData
+        public static DataSet dashBoardData()
+        {
+            try
+            {
+                string ConnectionString = Common.GetConnectionString();
+
+                using (DataSet ds = SqlHelper.ExecuteDataset(ConnectionString, CommandType.StoredProcedure, "spDashBoard"))
                 {
                     return ds;
                 }

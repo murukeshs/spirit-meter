@@ -32,15 +32,18 @@ namespace SpiritMeter.Models
     public class GenerateOTP
     {
         public string phone { get; set; }
+        public string otpType { get; set; }
     }
 
-    public class forgotPassword
+    public class forgotPassword : phoneVerify
+    {  
+        public string password { get; set; }
+    }
+    public class phoneVerify
     {
         public string phone { get; set; }
-        public string password { get; set; }
         public string OTPValue { get; set; }
     }
-
     public class displayList
     {
         public int displayId { get; set; }
@@ -103,16 +106,23 @@ namespace SpiritMeter.Models
         public string path { get; set; }
         public string routes { get; set; }
     }
-    public class RefreshRequest
-    {
-        public string AccessToken { get; set; }
-        public string RefreshToken { get; set; }
-    }
 
     public class LoginResponse
     {
         public string AccessToken { get; set; }
         public DateTimeOffset AccessTokenExpiration { get; set; }
         public string RefreshToken { get; set; }
+    }
+
+    public class accessToken
+    {
+        public string token { get; set; }
+        public string expireIn { get; set; }
+        public string refreshToken { get; set; }
+    }
+    public class RefreshRequest
+{
+        public string token { get; set; }
+        public string refreshToken { get; set; }
     }
 }

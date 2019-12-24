@@ -45,7 +45,7 @@ namespace SpiritMeter.Models
         }
         public class Global
         {
-            public static string fileurl;
+            public  string fileurl { get; set; }
         }
    
 }

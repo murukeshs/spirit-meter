@@ -148,7 +148,7 @@ namespace SpiritMeter.Controllers
         }
         #endregion
 
-        #region deleteTeam
+        #region deleteUser
         /// <summary>
         /// To deleteUser
         /// </summary>
@@ -309,11 +309,12 @@ namespace SpiritMeter.Controllers
 
                 DataTable dt = Data.User.ListCharity();
 
-                dynamic user = new System.Dynamic.ExpandoObject();
+                
                 if (dt.Rows.Count > 0)
                 {
                     for (int i = 0; i < dt.Rows.Count; i++)
                     {
+                        dynamic user = new System.Dynamic.ExpandoObject();
 
                         user.userId = (int)dt.Rows[i]["userId"];
                         user.name = (dt.Rows[i]["name"] == DBNull.Value ? "" : dt.Rows[i]["name"].ToString());

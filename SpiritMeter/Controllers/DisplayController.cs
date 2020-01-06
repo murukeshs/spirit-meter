@@ -278,7 +278,8 @@ namespace SpiritMeter.Controllers
                             listFilePaths.Add(filePath);
                         }
                         display.filePath = listFilePaths;
-                        display.routes = (ds.Tables[0].Rows[0]["routes"] == DBNull.Value ? "" : ds.Tables[0].Rows[0]["routes"].ToString());
+                    //display.path = (ds.Tables[0].Rows[0]["path"] == DBNull.Value ? "" : ds.Tables[0].Rows[0]["path"].ToString());
+                    display.routes = (ds.Tables[0].Rows[0]["routes"] == DBNull.Value ? "" : ds.Tables[0].Rows[0]["routes"].ToString());
 
 
 

@@ -9,7 +9,7 @@ namespace SpiritMeter.Models
 
     public class createRoute
     {
-        public int routeId { get; set; }
+        public int? routeId { get; set; }
         public string routeName { get; set; }
         public string comments { get; set; }
         public int? designatedCharityId { get; set; }
@@ -21,9 +21,12 @@ namespace SpiritMeter.Models
 
     public class routePoints
     { 
-        public int routeId { get; set; }
+        public int? routeId { get; set; }
         public string displayId { get; set; }
         public int startingPoint { get; set; }
+        public string image { get; set; }
+        public string routePointNames { get; set; }
+
     }
     public class routePointStatus
     {

@@ -134,9 +134,6 @@ namespace SpiritMeter.Controllers
                 dynamic obj = JsonConvert.DeserializeObject(response);
 
                 List<decimal> list = new List<decimal>();
-                var val = (obj.rows[0].elements).Count;
-                var value = obj.rows[0].elements[1].distance.value;
-                
                 for (var i = 0; i < (obj.rows[0].elements).Count ; i++)
                 {
                     int a = obj.rows[0].elements[i].distance.value;
@@ -148,8 +145,8 @@ namespace SpiritMeter.Controllers
                 numbers.RemoveAt(position);
                 using (var client = new HttpClient())
                 {
-                    var mapRequest = "https://maps.googleapis.com/maps/api/directions/json?origin=" + dt1.Rows[0][0].ToString() + "&destination=" + destination + "&waypoints=optimize:true|" + string.Join<string>("|", numbers) + "&key=" + Common.Apikey();
-                    string path = await client.GetStringAsync(string.Format(mapRequest));
+                    //var mapRequest = "https://maps.googleapis.com/maps/api/directions/json?origin=" + dt1.Rows[0][0].ToString() + "&destination=" + destination + "&waypoints=optimize:true|" + string.Join<string>("|", numbers) + "&key=" + Common.Apikey();
+                    //string path = await client.GetStringAsync(string.Format(mapRequest));
 
                     //direction direction = new direction();
                     //direction.origin = dt1.Rows[0][0].ToString();
@@ -228,11 +225,10 @@ namespace SpiritMeter.Controllers
                 List<decimal> list = new List<decimal>();
                 for (var i = 0; i < (obj.rows[0].elements).Count; i++)
                 {
-
-                    string a = obj.rows[0].elements[i].distance.text;
-                    decimal b = Decimal.Parse(a.Remove(a.Length - 3).Replace(",", "."));
-                    list.Add(b);
+                    int a = obj.rows[0].elements[i].distance.value;
+                    list.Add(a);
                 }
+               
                 var position = list.IndexOf(list.Max());
                 List<string> numbers = (dt1.Rows[0][1].ToString()).Split('|').ToList<string>();
                 string destination = numbers[position];
@@ -650,6 +646,7 @@ namespace SpiritMeter.Controllers
                             ridePoints.displayId = (ds.Tables[1].Rows[j]["displayId"] == DBNull.Value ? 0 : (int)ds.Tables[1].Rows[j]["displayId"]);
                             ridePoints.filePath = (ds.Tables[1].Rows[j]["filePath"] == DBNull.Value ? "" : ds.Tables[1].Rows[j]["filePath"].ToString());
                             ridePoints.name = (ds.Tables[1].Rows[j]["displayName"] == DBNull.Value ? "" : ds.Tables[1].Rows[j]["displayName"].ToString());
+                            ridePoints.notes = (ds.Tables[1].Rows[j]["notes"] == DBNull.Value ? "" : ds.Tables[1].Rows[j]["notes"].ToString());
                             ridePoints.isPrivate = (ds.Tables[1].Rows[j]["isPrivate"] == DBNull.Value ? false : (bool)ds.Tables[1].Rows[j]["isPrivate"]);
                             ridePoints.categoryId = (ds.Tables[1].Rows[j]["categoryId"] == DBNull.Value ? 0 : (int)ds.Tables[1].Rows[j]["categoryId"]);
                             ridePoints.categoryName = (ds.Tables[1].Rows[j]["categoryName"] == DBNull.Value ? "" : ds.Tables[1].Rows[j]["categoryName"].ToString());

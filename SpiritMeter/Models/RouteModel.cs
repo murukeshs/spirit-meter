@@ -26,6 +26,8 @@ namespace SpiritMeter.Models
         public int startingPoint { get; set; }
         public string image { get; set; }
         public string routePointNames { get; set; }
+        public string totalMiles { get; set; }
+
 
     }
     public class routePointStatus

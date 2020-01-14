@@ -102,6 +102,8 @@ namespace SpiritMeter.Data
                 parameters.Add(new SqlParameter("@startingPoint", routePoints.startingPoint));
                 parameters.Add(new SqlParameter("@mapRequest", routePoint));
                 parameters.Add(new SqlParameter("@routePointNames", routePoints.routePointNames));
+                parameters.Add(new SqlParameter("@totalMiles", routePoints.totalMiles));
+
                 using (DataTable dt = SqlHelper.ExecuteDataset(ConnectionString, CommandType.StoredProcedure, "spsaveRoutePoints", parameters.ToArray()).Tables[0])
                 {
                     return dt;

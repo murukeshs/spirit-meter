@@ -11,9 +11,8 @@ namespace SpiritMeter.Models
         {
             public int displayId { get; set; }
             public string name { get; set; }
-            public int? categoryId { get; set; }
             public string notes { get; set; }
-            public string type { get; set; }
+            public string markerType { get; set; }
            [DefaultValue(false)]
            public bool? isPrivate { get; set; }
             public int createdBy { get; set; }
@@ -47,5 +46,14 @@ namespace SpiritMeter.Models
         {
             public  string fileurl { get; set; }
         }
-   
+
+    public class CreatelDisplayCharity
+    {
+        public int displayId { get; set; }
+        public int charityId { get; set; }
+    }
+    public class UpdateDisplayCharity: CreatelDisplayCharity
+    {
+        public int displayCharityId { get; set; }
+    }
 }

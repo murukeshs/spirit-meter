@@ -48,8 +48,8 @@ namespace SpiritMeter.Models
     {
         public int displayId { get; set; }
         public string name { get; set; }
-        public int categoryId { get; set; }
-        public string categoryName { get; set; }
+        public int charityId { get; set; }
+        public string charityName { get; set; }
         public string notes { get; set; }
         public string latitude { get; set; }
         public string longitude { get; set; }
@@ -57,7 +57,7 @@ namespace SpiritMeter.Models
         public string state { get; set; }
         public string cityName { get; set; }
         public string address { get; set; }
-        public string type { get; set; }
+        public string markerType { get; set; }
         public bool isPrivate { get; set; }
         public string createdDate { get; set; }
         public int createdBy { get; set; }
@@ -78,7 +78,7 @@ namespace SpiritMeter.Models
         public string state { get; set; }
         public string cityName { get; set; }
         public string address { get; set; }
-        public string type { get; set; }
+        public string markerType { get; set; }
         public bool isPrivate { get; set; }
         public string createdDate { get; set; }
         public int createdBy { get; set; }

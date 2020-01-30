@@ -234,8 +234,6 @@ namespace SpiritMeter.Controllers
         #endregion
 
 
-
-
         #region selectUserById
         /// <summary>
         /// To  select UserById
@@ -566,8 +564,8 @@ namespace SpiritMeter.Controllers
 
                     Display.displayId = (int)ds.Tables[1].Rows[i]["displayId"];
                     Display.name = (ds.Tables[1].Rows[i]["name"] == DBNull.Value ? "" : ds.Tables[1].Rows[i]["name"].ToString());
-                    Display.categoryId = (ds.Tables[1].Rows[i]["categoryId"] == DBNull.Value ? 0 : (int)ds.Tables[1].Rows[i]["categoryId"]);
-                    Display.categoryName = (ds.Tables[1].Rows[i]["categoryName"] == DBNull.Value ? "" : ds.Tables[1].Rows[i]["categoryName"].ToString());
+                    Display.charityId = (ds.Tables[1].Rows[i]["charityId"] == DBNull.Value ? 0 : (int)ds.Tables[1].Rows[i]["charityId"]);
+                    Display.charityName = (ds.Tables[1].Rows[i]["charityName"] == DBNull.Value ? "" : ds.Tables[1].Rows[i]["charityName"].ToString());
                     Display.notes = (ds.Tables[1].Rows[i]["notes"] == DBNull.Value ? "" : ds.Tables[1].Rows[i]["notes"].ToString());
                     Display.latitude = (ds.Tables[1].Rows[i]["latitude"] == DBNull.Value ? "" : ds.Tables[1].Rows[i]["latitude"].ToString());
                     Display.longitude = (ds.Tables[1].Rows[i]["longitude"] == DBNull.Value ? "" : ds.Tables[1].Rows[i]["longitude"].ToString());
@@ -575,7 +573,7 @@ namespace SpiritMeter.Controllers
                     Display.state = (ds.Tables[1].Rows[i]["state"] == DBNull.Value ? "" : ds.Tables[1].Rows[i]["state"].ToString());
                     Display.cityName = (ds.Tables[1].Rows[i]["cityName"] == DBNull.Value ? "" : ds.Tables[1].Rows[i]["cityName"].ToString());
                     Display.address = (ds.Tables[1].Rows[i]["address"] == DBNull.Value ? "" : ds.Tables[1].Rows[i]["address"].ToString());
-                    Display.type = (ds.Tables[1].Rows[i]["type"] == DBNull.Value ? "" : ds.Tables[1].Rows[i]["type"].ToString());
+                    Display.markerType = (ds.Tables[1].Rows[i]["markerType"] == DBNull.Value ? "" : ds.Tables[1].Rows[i]["markerType"].ToString());
                     Display.isPrivate = (ds.Tables[1].Rows[i]["isPrivate"] == DBNull.Value ? false : (bool)ds.Tables[1].Rows[i]["isPrivate"]);
                     Display.createdDate = (ds.Tables[1].Rows[i]["createdDate"] == DBNull.Value ? "" : ds.Tables[1].Rows[i]["createdDate"].ToString());
                     Display.createdBy = (ds.Tables[1].Rows[i]["createdBy"] == DBNull.Value ? 0 : (int)ds.Tables[1].Rows[i]["createdBy"]);
@@ -622,7 +620,7 @@ namespace SpiritMeter.Controllers
                         route.designatedCharityId = (ds.Tables[2].Rows[j]["designatedCharityId"] == DBNull.Value ? 0 : (int)ds.Tables[2].Rows[j]["designatedCharityId"]);
                         route.designatedCharityName = (ds.Tables[2].Rows[j]["designatedCharityName"] == DBNull.Value ? "" : ds.Tables[2].Rows[j]["designatedCharityName"].ToString());
                         route.isPrivate = (ds.Tables[2].Rows[j]["isPrivate"] == DBNull.Value ? false : (bool)ds.Tables[2].Rows[j]["isPrivate"]);
-                        route.createdDate = (ds.Tables[0].Rows[j]["createdDate"] == DBNull.Value ? "" : ds.Tables[2].Rows[j]["createdDate"].ToString());
+                        route.createdDate = (ds.Tables[2].Rows[j]["createdDate"] == DBNull.Value ? "" : ds.Tables[2].Rows[j]["createdDate"].ToString());
                         route.startingPoint = (ds.Tables[2].Rows[j]["startingPoint"] == DBNull.Value ? 0 : (int)ds.Tables[2].Rows[j]["startingPoint"]);
                         route.latitude = (ds.Tables[2].Rows[j]["latitude"] == DBNull.Value ? "" : ds.Tables[2].Rows[j]["latitude"].ToString());
                         route.longitude = (ds.Tables[2].Rows[j]["longitude"] == DBNull.Value ? "" : ds.Tables[2].Rows[j]["longitude"].ToString());

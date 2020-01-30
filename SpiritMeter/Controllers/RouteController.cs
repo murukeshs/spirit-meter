@@ -622,10 +622,10 @@ namespace SpiritMeter.Controllers
                         listRoutes.designatedCharityName = (ds.Tables[0].Rows[0]["designatedCharityName"] == DBNull.Value ? "" : ds.Tables[0].Rows[0]["designatedCharityName"].ToString());
                         listRoutes.isPrivate = (ds.Tables[0].Rows[0]["isPrivate"] == DBNull.Value ? false : (bool)ds.Tables[0].Rows[0]["isPrivate"]);
                         listRoutes.createdDate = (ds.Tables[0].Rows[0]["createdDate"] == DBNull.Value ? "" : ds.Tables[0].Rows[0]["createdDate"].ToString());
-                        listRoutes.routePoints = (ds.Tables[0].Rows[0]["routePoints"] == DBNull.Value ? "" : ds.Tables[0].Rows[0]["routePoints"].ToString());
                         listRoutes.image = (ds.Tables[0].Rows[0]["path"] == DBNull.Value ? "" : ds.Tables[0].Rows[0]["path"].ToString());
-                        listRoutes.routePointNames = (ds.Tables[0].Rows[0]["routePointNames"] == DBNull.Value ? "" : ds.Tables[0].Rows[0]["routePointNames"].ToString());
-                        listRoutes.totalMiles = (ds.Tables[0].Rows[0]["totalMiles"] == DBNull.Value ? "" : String.Concat(ds.Tables[0].Rows[0]["totalMiles"], "mi").ToString());
+                        listRoutes.routePoints = (ds.Tables[0].Rows[0]["routePoints"] == DBNull.Value ? "" : ds.Tables[0].Rows[0]["routePoints"].ToString());
+                    listRoutes.routePointNames = (ds.Tables[0].Rows[0]["routePointNames"] == DBNull.Value ? "" : ds.Tables[0].Rows[0]["routePointNames"].ToString());
+                    listRoutes.totalMiles = (ds.Tables[0].Rows[0]["totalMiles"] == DBNull.Value ? "" : String.Concat(ds.Tables[0].Rows[0]["totalMiles"], "mi").ToString());
                     //listRoutes.startingPoint = (ds.Tables[0].Rows[0]["startingPoint"] == DBNull.Value ? 0 : (int)ds.Tables[0].Rows[0]["startingPoint"]);
                     //listRoutes.filePath = (ds.Tables[0].Rows[0]["filePath"] == DBNull.Value ? "" : ds.Tables[0].Rows[0]["filePath"].ToString());
                     //listRoutes.name = (ds.Tables[0].Rows[0]["displayName"] == DBNull.Value ? "" : ds.Tables[0].Rows[0]["displayName"].ToString());
@@ -646,11 +646,11 @@ namespace SpiritMeter.Controllers
                             ridePoints.displayId = (ds.Tables[1].Rows[j]["displayId"] == DBNull.Value ? 0 : (int)ds.Tables[1].Rows[j]["displayId"]);
                             ridePoints.filePath = (ds.Tables[1].Rows[j]["filePath"] == DBNull.Value ? "" : ds.Tables[1].Rows[j]["filePath"].ToString());
                             ridePoints.name = (ds.Tables[1].Rows[j]["displayName"] == DBNull.Value ? "" : ds.Tables[1].Rows[j]["displayName"].ToString());
+                            ridePoints.charityId = (ds.Tables[1].Rows[j]["charityId"] == DBNull.Value ? 0 : (int)ds.Tables[1].Rows[j]["charityId"]);
+                            ridePoints.charityName = (ds.Tables[1].Rows[j]["charityName"] == DBNull.Value ? "" : ds.Tables[1].Rows[j]["charityName"].ToString());
                             ridePoints.notes = (ds.Tables[1].Rows[j]["notes"] == DBNull.Value ? "" : ds.Tables[1].Rows[j]["notes"].ToString());
                             ridePoints.isPrivate = (ds.Tables[1].Rows[j]["isPrivate"] == DBNull.Value ? false : (bool)ds.Tables[1].Rows[j]["isPrivate"]);
-                            ridePoints.categoryId = (ds.Tables[1].Rows[j]["categoryId"] == DBNull.Value ? 0 : (int)ds.Tables[1].Rows[j]["categoryId"]);
-                            ridePoints.categoryName = (ds.Tables[1].Rows[j]["categoryName"] == DBNull.Value ? "" : ds.Tables[1].Rows[j]["categoryName"].ToString());
-                            ridePoints.type = (ds.Tables[1].Rows[j]["type"] == DBNull.Value ? "" : ds.Tables[1].Rows[j]["type"].ToString());
+                            ridePoints.markerType = (ds.Tables[1].Rows[j]["markerType"] == DBNull.Value ? "" : ds.Tables[1].Rows[j]["markerType"].ToString());
                             ridePoints.latitude  = (ds.Tables[1].Rows[j]["latitude"] == DBNull.Value ? "" : ds.Tables[1].Rows[j]["latitude"].ToString());
                             ridePoints.longitude = (ds.Tables[1].Rows[j]["longitude"] == DBNull.Value ? "" : ds.Tables[1].Rows[j]["longitude"].ToString());
                             ridePoints.country = (ds.Tables[1].Rows[j]["country"] == DBNull.Value ? "" : ds.Tables[1].Rows[j]["country"].ToString());

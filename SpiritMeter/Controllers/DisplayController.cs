@@ -75,14 +75,10 @@ namespace SpiritMeter.Controllers
                 {
                     return StatusCode((int)HttpStatusCode.BadRequest, new { ErrorMessage = "Please enter  Name" });
                 }
-                else if (createDisplay.categoryId <= 0 || createDisplay.categoryId == null)
+               
+                else if (createDisplay.markerType == "" || createDisplay.markerType == null)
                 {
-                    return StatusCode((int)HttpStatusCode.BadRequest, new { ErrorMessage = "Please enter categoryId" });
-                }
-                
-                else if (createDisplay.type == "" || createDisplay.type == null)
-                {
-                    return StatusCode((int)HttpStatusCode.BadRequest, new { ErrorMessage = "Please enter type" });
+                    return StatusCode((int)HttpStatusCode.BadRequest, new { ErrorMessage = "Please enter markerType" });
                 }
                 else if (createDisplay.createdBy <=0 ||  createDisplay.createdBy == null)
                 {
@@ -253,8 +249,8 @@ namespace SpiritMeter.Controllers
                 {  
                         display.displayId = (int)ds.Tables[0].Rows[0]["displayId"];
                         display.name = (ds.Tables[0].Rows[0]["name"] == DBNull.Value ? "" : ds.Tables[0].Rows[0]["name"].ToString());
-                        display.categoryId = (ds.Tables[0].Rows[0]["categoryId"] == DBNull.Value ? 0 : (int)ds.Tables[0].Rows[0]["categoryId"]);
-                        display.categoryName = (ds.Tables[0].Rows[0]["categoryName"] == DBNull.Value ? "" : ds.Tables[0].Rows[0]["categoryName"].ToString());
+                        display.charityId =(ds.Tables[0].Rows[0]["charityId"] == DBNull.Value ? 0 : (int)ds.Tables[0].Rows[0]["charityId"]);
+                        display.charityName = (ds.Tables[0].Rows[0]["charityName"] == DBNull.Value ? "" : ds.Tables[0].Rows[0]["charityName"].ToString());
                         display.notes = (ds.Tables[0].Rows[0]["notes"] == DBNull.Value ? "" : ds.Tables[0].Rows[0]["notes"].ToString());
                         display.latitude = (ds.Tables[0].Rows[0]["latitude"] == DBNull.Value ? "" : ds.Tables[0].Rows[0]["latitude"].ToString());
                         display.longitude = (ds.Tables[0].Rows[0]["longitude"] == DBNull.Value ? "" : ds.Tables[0].Rows[0]["longitude"].ToString());
@@ -262,7 +258,7 @@ namespace SpiritMeter.Controllers
                         display.state = (ds.Tables[0].Rows[0]["state"] == DBNull.Value ? "" : ds.Tables[0].Rows[0]["state"].ToString());
                         display.cityName = (ds.Tables[0].Rows[0]["cityName"] == DBNull.Value ? "" : ds.Tables[0].Rows[0]["cityName"].ToString());
                         display.address = (ds.Tables[0].Rows[0]["address"] == DBNull.Value ? "" : ds.Tables[0].Rows[0]["address"].ToString());
-                        display.type = (ds.Tables[0].Rows[0]["type"] == DBNull.Value ?"": ds.Tables[0].Rows[0]["type"].ToString());
+                        display.markerType = (ds.Tables[0].Rows[0]["markerType"] == DBNull.Value ?"": ds.Tables[0].Rows[0]["markerType"].ToString());
                         display.isPrivate = (ds.Tables[0].Rows[0]["isPrivate"] == DBNull.Value ? false : (bool)ds.Tables[0].Rows[0]["isPrivate"]);
                         display.createdDate = (ds.Tables[0].Rows[0]["createdDate"] == DBNull.Value ? "" : ds.Tables[0].Rows[0]["createdDate"].ToString());
                         display.createdBy = (ds.Tables[0].Rows[0]["createdBy"] == DBNull.Value ? 0 : (int)ds.Tables[0].Rows[0]["createdBy"]);
@@ -353,8 +349,8 @@ namespace SpiritMeter.Controllers
                         dynamic listDisplay = new System.Dynamic.ExpandoObject();
                         listDisplay.displayId = (int)dt.Rows[i]["displayId"];
                         listDisplay.name = (dt.Rows[i]["name"] == DBNull.Value ? "" : dt.Rows[i]["name"].ToString());
-                        listDisplay.categoryId = (dt.Rows[i]["categoryId"] == DBNull.Value ? "" : dt.Rows[i]["categoryId"].ToString());
-                        listDisplay.categoryName = (dt.Rows[i]["categoryName"] == DBNull.Value ? "" : dt.Rows[i]["categoryName"].ToString());
+                        listDisplay.charityId = (dt.Rows[i]["charityId"] == DBNull.Value ? 0 : (int)dt.Rows[i]["charityId"]); 
+                        listDisplay.charityName = (dt.Rows[i]["charityName"] == DBNull.Value ? "" : dt.Rows[i]["charityName"].ToString());
                         listDisplay.notes = (dt.Rows[i]["notes"] == DBNull.Value ? "" : dt.Rows[i]["notes"].ToString());
                         listDisplay.latitude = (dt.Rows[i]["latitude"] == DBNull.Value ? "" : dt.Rows[i]["latitude"].ToString());   
                         listDisplay.longitude = (dt.Rows[i]["longitude"] == DBNull.Value ? "" : dt.Rows[i]["longitude"].ToString());
@@ -362,7 +358,7 @@ namespace SpiritMeter.Controllers
                         listDisplay.state = (dt.Rows[i]["state"] == DBNull.Value ? "" : dt.Rows[i]["state"].ToString());
                         listDisplay.cityName = (dt.Rows[i]["cityName"] == DBNull.Value ? "" : dt.Rows[i]["cityName"].ToString());
                         listDisplay.address = (dt.Rows[i]["address"] == DBNull.Value ? "" : dt.Rows[i]["address"].ToString());
-                        listDisplay.type = (dt.Rows[i]["type"] == DBNull.Value ? "" : dt.Rows[i]["type"].ToString());
+                        listDisplay.markerType = (dt.Rows[i]["markerType"] == DBNull.Value ? "" : dt.Rows[i]["markerType"].ToString());
                         listDisplay.viewCount    = (dt.Rows[i]["viewCount"] == DBNull.Value ? 0 : (int)dt.Rows[i]["viewCount"]);
                         listDisplay.isPrivate = (dt.Rows[i]["isPrivate"] == DBNull.Value ? false :(bool) dt.Rows[i]["isPrivate"]);
                         listDisplay.createdDate = (dt.Rows[i]["createdDate"] == DBNull.Value ? "" : dt.Rows[i]["createdDate"].ToString());
@@ -406,8 +402,8 @@ namespace SpiritMeter.Controllers
                         dynamic listDisplay = new System.Dynamic.ExpandoObject();
                         listDisplay.displayId = (int)dt.Rows[i]["displayId"];
                         listDisplay.name = (dt.Rows[i]["name"] == DBNull.Value ? "" : dt.Rows[i]["name"].ToString());
-                        listDisplay.categoryId = (dt.Rows[i]["categoryId"] == DBNull.Value ? 0 : (int)dt.Rows[i]["categoryId"]);
-                        listDisplay.categoryName = (dt.Rows[i]["categoryName"] == DBNull.Value ? "" : dt.Rows[i]["categoryName"].ToString());
+                        listDisplay.charityId = (dt.Rows[i]["charityId"] == DBNull.Value ? 0 : (int)dt.Rows[i]["charityId"]);
+                        listDisplay.charityName = (dt.Rows[i]["charityName"] == DBNull.Value ? "" : dt.Rows[i]["charityName"].ToString());
                         listDisplay.notes = (dt.Rows[i]["notes"] == DBNull.Value ? "" : dt.Rows[i]["notes"].ToString());
                         listDisplay.latitude = (dt.Rows[i]["latitude"] == DBNull.Value ? "" : dt.Rows[i]["latitude"].ToString());
                         listDisplay.longitude = (dt.Rows[i]["longitude"] == DBNull.Value ? "" : dt.Rows[i]["longitude"].ToString());
@@ -415,7 +411,7 @@ namespace SpiritMeter.Controllers
                         listDisplay.state = (dt.Rows[i]["state"] == DBNull.Value ? "" : dt.Rows[i]["state"].ToString());
                         listDisplay.cityName = (dt.Rows[i]["cityName"] == DBNull.Value ? "" : dt.Rows[i]["cityName"].ToString());
                         listDisplay.address = (dt.Rows[i]["address"] == DBNull.Value ? "" : dt.Rows[i]["address"].ToString());
-                        listDisplay.type = (dt.Rows[i]["type"] == DBNull.Value ? "" : dt.Rows[i]["type"].ToString());
+                        listDisplay.markerType = (dt.Rows[i]["markerType"] == DBNull.Value ? "" : dt.Rows[i]["markerType"].ToString());
                         listDisplay.viewCount = (dt.Rows[i]["viewCount"] == DBNull.Value ? 0 : (int)dt.Rows[i]["viewCount"]);
                         listDisplay.isPrivate = (dt.Rows[i]["isPrivate"] == DBNull.Value ? false : (bool)dt.Rows[i]["isPrivate"]);
                         listDisplay.createdDate = (dt.Rows[i]["createdDate"] == DBNull.Value ? "" : dt.Rows[i]["createdDate"].ToString());
@@ -459,16 +455,16 @@ namespace SpiritMeter.Controllers
                         dynamic listDisplay = new System.Dynamic.ExpandoObject();
                         listDisplay.displayId = (int)dt.Rows[i]["displayId"];
                         listDisplay.name = (dt.Rows[i]["name"] == DBNull.Value ? "" : dt.Rows[i]["name"].ToString());
-                        listDisplay.categoryId = (dt.Rows[i]["categoryId"] == DBNull.Value ? 0: (int)dt.Rows[i]["categoryId"]);
-                        listDisplay.categoryName = (dt.Rows[i]["categoryName"] == DBNull.Value ? "" : dt.Rows[i]["categoryName"].ToString());
                         listDisplay.notes = (dt.Rows[i]["notes"] == DBNull.Value ? "" : dt.Rows[i]["notes"].ToString());
+                        listDisplay.charityId = (dt.Rows[i]["charityId"] == DBNull.Value ? 0 : (int)dt.Rows[i]["charityId"]); 
+                        listDisplay.charityName = (dt.Rows[i]["charityName"] == DBNull.Value ? "" : dt.Rows[i]["charityName"].ToString());
                         listDisplay.latitude = (dt.Rows[i]["latitude"] == DBNull.Value ? "" : dt.Rows[i]["latitude"].ToString());
                         listDisplay.longitude = (dt.Rows[i]["longitude"] == DBNull.Value ? "" : dt.Rows[i]["longitude"].ToString());
                         listDisplay.country = (dt.Rows[i]["country"] == DBNull.Value ? "" : dt.Rows[i]["country"].ToString());
                         listDisplay.state = (dt.Rows[i]["state"] == DBNull.Value ? "" : dt.Rows[i]["state"].ToString());
                         listDisplay.cityName = (dt.Rows[i]["cityName"] == DBNull.Value ? "" : dt.Rows[i]["cityName"].ToString());
                         listDisplay.address = (dt.Rows[i]["address"] == DBNull.Value ? "" : dt.Rows[i]["address"].ToString());
-                        listDisplay.type = (dt.Rows[i]["type"] == DBNull.Value ? "" : dt.Rows[i]["type"].ToString());
+                        listDisplay.markerType = (dt.Rows[i]["markerType"] == DBNull.Value ? "" : dt.Rows[i]["markerType"].ToString());
                         listDisplay.isPrivate = (dt.Rows[i]["isPrivate"] == DBNull.Value ? false : (bool)dt.Rows[i]["isPrivate"]);
                         listDisplay.createdDate = (dt.Rows[i]["createdDate"] == DBNull.Value ? "" : dt.Rows[i]["createdDate"].ToString());
                         listDisplay.createdBy = (dt.Rows[i]["createdBy"] == DBNull.Value ? 0 : (int)dt.Rows[i]["createdBy"]);
@@ -487,6 +483,82 @@ namespace SpiritMeter.Controllers
             catch (Exception e)
             {
                 string SaveErrorLog = Data.Common.SaveErrorLog("popularDisplay", e.Message);
+                return StatusCode((int)HttpStatusCode.InternalServerError, new { ErrorMessage = e.Message });
+            }
+        }
+        #endregion
+
+
+        #region createDisplayCharity  
+        /// <summary>
+        /// To createDisplayCharity
+        /// </summary>
+        [HttpPost, Route("createDisplayCharity")]
+        public IActionResult createDisplayCharity(CreatelDisplayCharity createDisplayCharity)
+        {
+            try
+            {
+                if (createDisplayCharity.displayId == 0 && createDisplayCharity.displayId == null)
+                {
+                    return StatusCode((int)HttpStatusCode.BadRequest, new { ErrorMessage = "Please enter displayId" });
+                }
+                else if (createDisplayCharity.charityId == 0 && createDisplayCharity.charityId == null)
+                {
+                    return StatusCode((int)HttpStatusCode.BadRequest, new { ErrorMessage = "Please enter charityId" });
+                }
+            
+                DataTable dt = Data.Display.createDisplayCharity(createDisplayCharity);
+
+
+                string Response = dt.Rows[0][0].ToString();
+
+                if (Response == "Success")
+                {
+                    return StatusCode((int)HttpStatusCode.OK, "Saved Successfully");
+                }
+                else
+                {
+                    return StatusCode((int)HttpStatusCode.Forbidden, new { ErrorMessage = Response });
+                }
+
+            }
+            catch (Exception e)
+            {
+                string SaveErrorLog = Data.Common.SaveErrorLog("createDisplayCharity", e.Message);
+
+                return StatusCode((int)HttpStatusCode.InternalServerError, new { ErrorMessage = e.Message });
+
+            }
+        }
+        #endregion 
+
+        #region updateDisplayCharity
+        /// <summary>
+        /// To updateDisplayCharity
+        /// </summary>
+        [HttpPut, Route("updateDisplayCharity")]
+        public IActionResult updateDisplayCharity([FromBody]UpdateDisplayCharity updateDisplayCharity)
+        {
+            try
+            {
+
+                DataTable dt = Data.Display.updateDisplayCharity(updateDisplayCharity);
+                string Response = dt.Rows[0][0].ToString();
+                if (Response == "Success")
+                {
+                    return StatusCode((int)HttpStatusCode.OK, "Updated Successfully");
+                }
+                else
+                {
+                    return StatusCode((int)HttpStatusCode.Forbidden, new { ErrorMessage = Response });
+
+                }
+
+            }
+            catch (Exception e)
+            {
+                string SaveErrorLog = Data.Common.SaveErrorLog("updateDisplayCharity", e.Message);
+
                 return StatusCode((int)HttpStatusCode.InternalServerError, new { ErrorMessage = e.Message });
             }
         }

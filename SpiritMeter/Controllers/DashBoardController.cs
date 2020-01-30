@@ -61,8 +61,8 @@ namespace SpiritMeter.Controllers
                     {
                         dynamic populardis = new System.Dynamic.ExpandoObject();
                         populardis.displayId = (int)ds.Tables[5].Rows[i]["displayId"];
-                        populardis.name = (ds.Tables[5].Rows[i]["name"] == DBNull.Value ? "" : ds.Tables[5].Rows[i]["name"].ToString());
-                        populardis.categoryName = (ds.Tables[5].Rows[i]["categoryName"] == DBNull.Value ? "" : ds.Tables[5].Rows[i]["categoryName"].ToString());
+                        populardis.displayName = (ds.Tables[5].Rows[i]["name"] == DBNull.Value ? "" : ds.Tables[5].Rows[i]["name"].ToString());
+                        populardis.charityName = (ds.Tables[5].Rows[i]["charityName"] == DBNull.Value ? "" : ds.Tables[5].Rows[i]["charityName"].ToString());
                         populardis.count = (int)ds.Tables[5].Rows[i]["counts"];
                         popularDisplay.Add(populardis);
                     }

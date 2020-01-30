@@ -1,4 +1,5 @@
 ﻿using Microsoft.ApplicationBlocks.Data;
+using Microsoft.AspNetCore.Mvc;
 using SpiritMeter.Models;
 using System;
 using System.Collections.Generic;
@@ -40,9 +41,8 @@ namespace SpiritMeter.Data
 
                 List<SqlParameter> parameters = new List<SqlParameter>();
                 parameters.Add(new SqlParameter("@name", createDisplay.name));
-                parameters.Add(new SqlParameter("@categoryId", createDisplay.categoryId));
                 parameters.Add(new SqlParameter("@notes", createDisplay.notes));
-                parameters.Add(new SqlParameter("@type", createDisplay.type));
+                parameters.Add(new SqlParameter("@markerType", createDisplay.markerType));
                 parameters.Add(new SqlParameter("@isPrivate", createDisplay.isPrivate));
                 parameters.Add(new SqlParameter("@createdBy", createDisplay.createdBy));
                 parameters.Add(new SqlParameter("@action", "add"));
@@ -99,9 +99,8 @@ namespace SpiritMeter.Data
                 List<SqlParameter> parameters = new List<SqlParameter>();
                 parameters.Add(new SqlParameter("@displayId", createDisplay.displayId));
                 parameters.Add(new SqlParameter("@name", createDisplay.name));
-                parameters.Add(new SqlParameter("@categoryId", createDisplay.categoryId));
                 parameters.Add(new SqlParameter("@notes", createDisplay.notes));
-                parameters.Add(new SqlParameter("@type", createDisplay.type));
+                parameters.Add(new SqlParameter("markerType", createDisplay.markerType));
                 parameters.Add(new SqlParameter("@isPrivate", createDisplay.isPrivate));
                 parameters.Add(new SqlParameter("@longitude", createDisplay.longitude));
                 parameters.Add(new SqlParameter("@latitude", createDisplay.latitude));
@@ -248,7 +247,7 @@ namespace SpiritMeter.Data
                 parameters.Add(new SqlParameter("@userId", userId));
                 string ConnectionString = Common.GetConnectionString();
 
-                using (DataTable dt = SqlHelper.ExecuteDataset(ConnectionString, CommandType.StoredProcedure, "spPopularDisplay", parameters.ToArray()).Tables[0])
+                using (DataTable dt = SqlHelper.ExecuteDataset(ConnectionString, CommandType.StoredProcedure, "spPopularDisplayUser", parameters.ToArray()).Tables[0])
                 {
                     return dt;
                 }
@@ -259,6 +258,56 @@ namespace SpiritMeter.Data
                 throw e;
             }
 
+        }
+        #endregion
+
+        #region createDisplayCharity
+        public static DataTable createDisplayCharity([FromBody]CreatelDisplayCharity createDisplayCharity)
+        {
+            try
+            {
+                string ConnectionString = Common.GetConnectionString();
+
+                //var encryptPassword = Common.EncryptData(createCharity.password);
+                List<SqlParameter> parameters = new List<SqlParameter>();
+                parameters.Add(new SqlParameter("@displayId", createDisplayCharity.displayId));
+                parameters.Add(new SqlParameter("@charityId", createDisplayCharity.charityId));
+                parameters.Add(new SqlParameter("@action", "add"));
+
+                using (DataTable dt = SqlHelper.ExecuteDataset(ConnectionString, CommandType.StoredProcedure, "spSaveDisplayCharity", parameters.ToArray()).Tables[0])
+                {
+                    return dt;
+                }
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+
+        }
+        #endregion
+
+        #region updateDisplayCharity
+        public static DataTable updateDisplayCharity([FromBody]UpdateDisplayCharity updateDisplayCharity)
+        {
+            try
+            {
+                string ConnectionString = Common.GetConnectionString();
+                List<SqlParameter> parameters = new List<SqlParameter>();
+                parameters.Add(new SqlParameter("@displayCharityId", updateDisplayCharity.displayCharityId));
+                parameters.Add(new SqlParameter("@displayId", updateDisplayCharity.displayId));
+                parameters.Add(new SqlParameter("@charityId", updateDisplayCharity.charityId));
+                parameters.Add(new SqlParameter("@action", null));
+
+                using (DataTable dt = SqlHelper.ExecuteDataset(ConnectionString, CommandType.StoredProcedure, "spSaveDisplayCharity", parameters.ToArray()).Tables[0])
+                {
+                    return dt;
+                }
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
         }
         #endregion
     }

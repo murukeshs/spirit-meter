@@ -119,47 +119,17 @@ namespace SpiritMeter.Controllers
                     return StatusCode((int)HttpStatusCode.BadRequest, new { ErrorMessage = "Please enter displayId" });
                 }
 
+
                 DataTable dt1 = Data.Route.selectcoordinates(route);
-                var response = "";
+                List<direction> direction = new List<direction> { new direction { origin = dt1.Rows[0][0].ToString(), destination = dt1.Rows[0][1].ToString(), waypoints = dt1.Rows[0][2].ToString() } };
+                string routePoints = JsonConvert.SerializeObject(direction);
+              
 
-                using (var client = new HttpClient())
-                {
-                    var a = "https://maps.googleapis.com/maps/api/distancematrix/json?origins=" + dt1.Rows[0][0].ToString() + "&destinations=" + dt1.Rows[0][1].ToString() + "&mode=train|tram|subway&language=fr-FR&key= " + Common.Apikey();
-                    response = await client.GetStringAsync(string.Format(a));
-                }
-                JObject o = JObject.Parse(@response);
-                //List<JToken> acme = o.SelectTokens("$...['elements'].['distance'].['value']").ToList();
-                //var position = acme.IndexOf(acme.Max());
+                DataTable dt = Data.Route.saveRoutePoints(route, routePoints);
 
-                dynamic obj = JsonConvert.DeserializeObject(response);
+                string Response = dt.Rows[0][0].ToString();
 
-                List<decimal> list = new List<decimal>();
-                for (var i = 0; i < (obj.rows[0].elements).Count ; i++)
-                {
-                    int a = obj.rows[0].elements[i].distance.value;
-                    list.Add(a);
-                }
-                var position = list.IndexOf(list.Max());
-                List<string> numbers = (dt1.Rows[0][1].ToString()).Split('|').ToList<string>();
-                string destination = numbers[position];
-                numbers.RemoveAt(position);
-                using (var client = new HttpClient())
-                {
-                    //var mapRequest = "https://maps.googleapis.com/maps/api/directions/json?origin=" + dt1.Rows[0][0].ToString() + "&destination=" + destination + "&waypoints=optimize:true|" + string.Join<string>("|", numbers) + "&key=" + Common.Apikey();
-                    //string path = await client.GetStringAsync(string.Format(mapRequest));
-
-                    //direction direction = new direction();
-                    //direction.origin = dt1.Rows[0][0].ToString();
-                    //direction.destination = destination;
-                    //direction.waypoints = string.Join<string>("|", numbers);
-                    var routePoint = "orgin:'" + dt1.Rows[0][0].ToString() + "',destination:'" + destination + "',waypoints:'" + string.Join<string>("|", numbers) + "'";
-
-                    List<direction> direction = new List<direction> { new direction { origin = dt1.Rows[0][0].ToString(), destination = destination, waypoints = string.Join<string>("|", numbers) } }; 
-                    string routePoints = JsonConvert.SerializeObject(direction); 
-                    DataTable dt = Data.Route.saveRoutePoints(route, routePoints);
-                    string Response = dt.Rows[0][0].ToString();
-
-                if (Response == "Success") 
+                if (Response == "Success")
                 {
                     return StatusCode((int)HttpStatusCode.OK, new { routePoints, message = "RoutePoints Successfully Created" });
                 }
@@ -175,7 +145,62 @@ namespace SpiritMeter.Controllers
                     }
 
                 }
-                }
+
+                //using (var client = new HttpClient())
+                //{
+                //    var a = "https://maps.googleapis.com/maps/api/distancematrix/json?origins=" + dt1.Rows[0][0].ToString() + "&destinations=" + dt1.Rows[0][1].ToString() + "&mode=train|tram|subway&language=fr-FR&key= " + Common.Apikey();
+                //    response = await client.GetStringAsync(string.Format(a));
+                //}
+                //JObject o = JObject.Parse(@response);
+                ////List<JToken> acme = o.SelectTokens("$...['elements'].['distance'].['value']").ToList();
+                ////var position = acme.IndexOf(acme.Max());
+
+                //dynamic obj = JsonConvert.DeserializeObject(response);
+
+                //List<decimal> list = new List<decimal>();
+                //for (var i = 0; i < (obj.rows[0].elements).Count ; i++)
+                //{
+                //    int a = obj.rows[0].elements[i].distance.value;
+                //    list.Add(a);
+                //}
+                //var position = list.IndexOf(list.Max());
+                //List<string> numbers = (dt1.Rows[0][1].ToString()).Split('|').ToList<string>();
+                //string destination = numbers[position];
+                //numbers.RemoveAt(position);
+                //using (var client = new HttpClient())
+                //{
+                //    //var mapRequest = "https://maps.googleapis.com/maps/api/directions/json?origin=" + dt1.Rows[0][0].ToString() + "&destination=" + destination + "&waypoints=optimize:true|" + string.Join<string>("|", numbers) + "&key=" + Common.Apikey();
+                //    //string path = await client.GetStringAsync(string.Format(mapRequest));
+
+                //    //direction direction = new direction();
+                //    //direction.origin = dt1.Rows[0][0].ToString();
+                //    //direction.destination = destination;
+                //    //direction.waypoints = string.Join<string>("|", numbers);
+
+                //    var routePoint = "orgin:'" + dt1.Rows[0][0].ToString() + "',destination:'" + destination + "',waypoints:'" + string.Join<string>("|", numbers) + "'";
+
+                //    List<direction> direction = new List<direction> { new direction { origin = dt1.Rows[0][0].ToString(), destination = destination, waypoints = string.Join<string>("|", numbers) } }; 
+                //    string routePoints = JsonConvert.SerializeObject(direction); 
+                //    DataTable dt = Data.Route.saveRoutePoints(route, routePoints);
+                //    string Response = dt.Rows[0][0].ToString();
+
+                //if (Response == "Success") 
+                //{
+                //    return StatusCode((int)HttpStatusCode.OK, new { routePoints, message = "RoutePoints Successfully Created" });
+                //}
+                //else
+                //{
+                //    if (Response.Contains("UQ__tblRoute__179688842B0C597E") == true)
+                //    {
+                //        return StatusCode((int)HttpStatusCode.InternalServerError, new { ErrorMessage = "routeId/displayId are already taken" });
+                //    }
+                //    else
+                //    {
+                //        return StatusCode((int)HttpStatusCode.Forbidden, new { ErrorMessage = Response });
+                //    }
+
+                //}
+                //}
 
             }
 
@@ -206,36 +231,36 @@ namespace SpiritMeter.Controllers
 
                 routePoints route = new routePoints();
                 route.startingPoint = calculatepath.startingPoint;
+                route.endPoint = calculatepath.endPoint;
                 route.displayId = calculatepath.displayId;
                 DataTable dt1 = Data.Route.selectcoordinates(route);
-                var response = "";
 
-                using (var client = new HttpClient())
-                {
-                    var a = "https://maps.googleapis.com/maps/api/distancematrix/json?origins=" + dt1.Rows[0][0].ToString() + "&destinations=" + dt1.Rows[0][1].ToString() + "&mode=train|tram|subway&language=fr-FR&key= " + Common.Apikey();
-                    response = await client.GetStringAsync(string.Format(a));
-                }
+                //using (var client = new HttpClient())
+                //{
+                //    var a = "https://maps.googleapis.com/maps/api/distancematrix/json?origins=" + dt1.Rows[0][0].ToString() + "&destinations=" + dt1.Rows[0][1].ToString() + "&mode=train|tram|subway&language=fr-FR&key= " + Common.Apikey();
+                //    response = await client.GetStringAsync(string.Format(a));
+                //}
 
-                //JObject o = JObject.Parse(@response);
+                ////JObject o = JObject.Parse(@response);
 
-                //List<JToken> acme = o.SelectTokens("$...['elements'].['distance'].['value']").ToList();
-                //var position = acme.IndexOf(acme.Max());
-                dynamic obj = JsonConvert.DeserializeObject(response);
+                ////List<JToken> acme = o.SelectTokens("$...['elements'].['distance'].['value']").ToList();
+                ////var position = acme.IndexOf(acme.Max());
+                //dynamic obj = JsonConvert.DeserializeObject(response);
 
-                List<decimal> list = new List<decimal>();
-                for (var i = 0; i < (obj.rows[0].elements).Count; i++)
-                {
-                    int a = obj.rows[0].elements[i].distance.value;
-                    list.Add(a);
-                }
+                //List<decimal> list = new List<decimal>();
+                //for (var i = 0; i < (obj.rows[0].elements).Count; i++)
+                //{
+                //    int a = obj.rows[0].elements[i].distance.value;
+                //    list.Add(a);
+                //}
                
-                var position = list.IndexOf(list.Max());
-                List<string> numbers = (dt1.Rows[0][1].ToString()).Split('|').ToList<string>();
-                string destination = numbers[position];
-                numbers.RemoveAt(position);
+                //var position = list.IndexOf(list.Max());
+                //List<string> numbers = (dt1.Rows[0][1].ToString()).Split('|').ToList<string>();
+                //string destination = numbers[position];
+                //numbers.RemoveAt(position);
                 using (var client = new HttpClient())
                 {
-                    var a = "https://maps.googleapis.com/maps/api/directions/json?origin=" + dt1.Rows[0][0].ToString() + "&destination=" + destination + "&waypoints=optimize:true|" + string.Join<string>("|", numbers) + "&key=" + Common.Apikey();
+                    var a = "https://maps.googleapis.com/maps/api/directions/json?origin=" + dt1.Rows[0][0].ToString() + "&destination=" + dt1.Rows[0][1].ToString() + "&waypoints=optimize:true|" + dt1.Rows[0][2].ToString() + "&key=" + Common.Apikey();
                     string path = await client.GetStringAsync(string.Format(a));
                     //JObject obj = JObject.Parse(path);
 
@@ -253,8 +278,8 @@ namespace SpiritMeter.Controllers
                     var totalmiles = String.Concat(String.Format("{0:0.00}", (miles / 1609.344)), " mi");
                     direction routePoints = new direction();
                     routePoints.origin = dt1.Rows[0][0].ToString();
-                    routePoints.destination = destination;
-                    routePoints.waypoints = string.Join<string>("|", numbers);
+                    routePoints.destination = dt1.Rows[0][1].ToString();
+                    routePoints.waypoints = dt1.Rows[0][2].ToString();
 
                     return StatusCode((int)HttpStatusCode.OK, new { routePoints, totalmiles, path, message = "Route Created successfully" });
 
@@ -517,13 +542,20 @@ namespace SpiritMeter.Controllers
                         listRoutes.designatedCharityName = (dt.Rows[i]["designatedCharityName"] == DBNull.Value ? "" : dt.Rows[i]["designatedCharityName"].ToString());
                         listRoutes.isPrivate = (dt.Rows[i]["isPrivate"] == DBNull.Value ? false : (bool)dt.Rows[i]["isPrivate"]);
                         listRoutes.createdDate = (dt.Rows[i]["createdDate"] == DBNull.Value ? "" : dt.Rows[i]["createdDate"].ToString());
-                        listRoutes.startingPoint = (dt.Rows[i]["startingPoint"] == DBNull.Value ? 0 : (int)dt.Rows[i]["startingPoint"]);
-                        listRoutes.latitude = (dt.Rows[i]["latitude"] == DBNull.Value ? "" : dt.Rows[i]["latitude"].ToString());
-                        listRoutes.longitude = (dt.Rows[i]["longitude"] == DBNull.Value ? "" : dt.Rows[i]["longitude"].ToString());
-                        listRoutes.country = (dt.Rows[i]["country"] == DBNull.Value ? "" : dt.Rows[i]["country"].ToString());
-                        listRoutes.state = (dt.Rows[i]["state"] == DBNull.Value ? "" : dt.Rows[i]["state"].ToString());
-                        listRoutes.cityName = (dt.Rows[i]["cityName"] == DBNull.Value ? "" : dt.Rows[i]["cityName"].ToString());
-                        listRoutes.address = (dt.Rows[i]["address"] == DBNull.Value ? "" : dt.Rows[i]["address"].ToString());
+                        listRoutes.startingPointId = (dt.Rows[i]["startingPointId"] == DBNull.Value ? 0 : (int)dt.Rows[i]["startingPointId"]);
+                        listRoutes.startingPointlatitude = (dt.Rows[i]["startingPointlatitude"] == DBNull.Value ? "" : dt.Rows[i]["startingPointlatitude"].ToString());
+                        listRoutes.startingPointlongitude = (dt.Rows[i]["startingPointlongitude"] == DBNull.Value ? "" : dt.Rows[i]["startingPointlongitude"].ToString());
+                        listRoutes.startingPointcountry = (dt.Rows[i]["startingPointcountry"] == DBNull.Value ? "" : dt.Rows[i]["startingPointcountry"].ToString());
+                        listRoutes.startingPointstate = (dt.Rows[i]["startingPointstate"] == DBNull.Value ? "" : dt.Rows[i]["startingPointstate"].ToString());
+                        listRoutes.startingPointcityName = (dt.Rows[i]["startingPointcityName"] == DBNull.Value ? "" : dt.Rows[i]["startingPointcityName"].ToString());
+                        listRoutes.startingPointaddress = (dt.Rows[i]["startingPointaddress"] == DBNull.Value ? "" : dt.Rows[i]["startingPointaddress"].ToString());
+                        listRoutes.endPointId = (dt.Rows[i]["endPointId"] == DBNull.Value ? 0 : (int)dt.Rows[i]["endPointId"]);
+                        listRoutes.endPointlatitude = (dt.Rows[i]["endPointlatitude"] == DBNull.Value ? "" : dt.Rows[i]["endPointlatitude"].ToString());
+                        listRoutes.endPointlongitude = (dt.Rows[i]["endPointlongitude"] == DBNull.Value ? "" : dt.Rows[i]["endPointlongitude"].ToString());
+                        listRoutes.endPointcountry = (dt.Rows[i]["endPointcountry"] == DBNull.Value ? "" : dt.Rows[i]["endPointcountry"].ToString());
+                        listRoutes.endPointstate = (dt.Rows[i]["endPointstate"] == DBNull.Value ? "" : dt.Rows[i]["endPointstate"].ToString());
+                        listRoutes.endPointcityName = (dt.Rows[i]["endPointcityName"] == DBNull.Value ? "" : dt.Rows[i]["endPointcityName"].ToString());
+                        listRoutes.endPointaddress = (dt.Rows[i]["endPointaddress"] == DBNull.Value ? "" : dt.Rows[i]["endPointaddress"].ToString());
                         listRoutes.routePoints = (dt.Rows[i]["routePoints"] == DBNull.Value ? "" : dt.Rows[i]["routePoints"].ToString());
                         listRoutes.routePointNames = (dt.Rows[i]["routePointNames"] == DBNull.Value ? "" : dt.Rows[i]["routePointNames"].ToString());
                         listRoutes.totalMiles = (dt.Rows[i]["totalMiles"] == DBNull.Value ? "" : String.Concat(dt.Rows[i]["totalMiles"], "mi").ToString());
@@ -573,13 +605,20 @@ namespace SpiritMeter.Controllers
                         listRoutes.designatedCharityName = (dt.Rows[i]["designatedCharityName"] == DBNull.Value ? "" : dt.Rows[i]["designatedCharityName"].ToString());
                         listRoutes.isPrivate = (dt.Rows[i]["isPrivate"] == DBNull.Value ? false : (bool)dt.Rows[i]["isPrivate"]);
                         listRoutes.createdDate = (dt.Rows[i]["createdDate"] == DBNull.Value ? "" : dt.Rows[i]["createdDate"].ToString());
-                        listRoutes.startingPoint = (dt.Rows[i]["startingPoint"] == DBNull.Value ? 0 : (int)dt.Rows[i]["startingPoint"]);
-                        listRoutes.latitude = (dt.Rows[i]["latitude"] == DBNull.Value ? "" : dt.Rows[i]["latitude"].ToString());
-                        listRoutes.longitude = (dt.Rows[i]["longitude"] == DBNull.Value ? "" : dt.Rows[i]["longitude"].ToString());
-                        listRoutes.country = (dt.Rows[i]["country"] == DBNull.Value ? "" : dt.Rows[i]["country"].ToString());
-                        listRoutes.state = (dt.Rows[i]["state"] == DBNull.Value ? "" : dt.Rows[i]["state"].ToString());
-                        listRoutes.cityName = (dt.Rows[i]["cityName"] == DBNull.Value ? "" : dt.Rows[i]["cityName"].ToString());
-                        listRoutes.address = (dt.Rows[i]["address"] == DBNull.Value ? "" : dt.Rows[i]["address"].ToString());
+                        listRoutes.startingPointId = (dt.Rows[i]["startingPointId"] == DBNull.Value ? 0 : (int)dt.Rows[i]["startingPointId"]);
+                        listRoutes.startingPointlatitude = (dt.Rows[i]["startingPointlatitude"] == DBNull.Value ? "" : dt.Rows[i]["startingPointlatitude"].ToString());
+                        listRoutes.startingPointlongitude = (dt.Rows[i]["startingPointlongitude"] == DBNull.Value ? "" : dt.Rows[i]["startingPointlongitude"].ToString());
+                        listRoutes.startingPointcountry = (dt.Rows[i]["startingPointcountry"] == DBNull.Value ? "" : dt.Rows[i]["startingPointcountry"].ToString());
+                        listRoutes.startingPointstate = (dt.Rows[i]["startingPointstate"] == DBNull.Value ? "" : dt.Rows[i]["startingPointstate"].ToString());
+                        listRoutes.startingPointcityName = (dt.Rows[i]["startingPointcityName"] == DBNull.Value ? "" : dt.Rows[i]["startingPointcityName"].ToString());
+                        listRoutes.startingPointaddress = (dt.Rows[i]["startingPointaddress"] == DBNull.Value ? "" : dt.Rows[i]["startingPointaddress"].ToString());
+                        listRoutes.endPointId = (dt.Rows[i]["endPointId"] == DBNull.Value ? 0 : (int)dt.Rows[i]["endPointId"]);
+                        listRoutes.endPointlatitude = (dt.Rows[i]["endPointlatitude"] == DBNull.Value ? "" : dt.Rows[i]["endPointlatitude"].ToString());
+                        listRoutes.endPointlongitude = (dt.Rows[i]["endPointlongitude"] == DBNull.Value ? "" : dt.Rows[i]["endPointlongitude"].ToString());
+                        listRoutes.endPointcountry = (dt.Rows[i]["endPointcountry"] == DBNull.Value ? "" : dt.Rows[i]["endPointcountry"].ToString());
+                        listRoutes.endPointstate = (dt.Rows[i]["endPointstate"] == DBNull.Value ? "" : dt.Rows[i]["endPointstate"].ToString());
+                        listRoutes.endPointcityName = (dt.Rows[i]["endPointcityName"] == DBNull.Value ? "" : dt.Rows[i]["endPointcityName"].ToString());
+                        listRoutes.endPointaddress = (dt.Rows[i]["endPointaddress"] == DBNull.Value ? "" : dt.Rows[i]["endPointaddress"].ToString());
                         listRoutes.routePoints = (dt.Rows[i]["routePoints"] == DBNull.Value ? "" : dt.Rows[i]["routePoints"].ToString());
                         listRoutes.routePointNames = (dt.Rows[i]["routePointNames"] == DBNull.Value ? "" : dt.Rows[i]["routePointNames"].ToString());
                         listRoutes.totalMiles = (dt.Rows[i]["totalMiles"] == DBNull.Value ? "" : String.Concat(dt.Rows[i]["totalMiles"], "mi").ToString());
@@ -624,8 +663,8 @@ namespace SpiritMeter.Controllers
                         listRoutes.createdDate = (ds.Tables[0].Rows[0]["createdDate"] == DBNull.Value ? "" : ds.Tables[0].Rows[0]["createdDate"].ToString());
                         listRoutes.image = (ds.Tables[0].Rows[0]["path"] == DBNull.Value ? "" : ds.Tables[0].Rows[0]["path"].ToString());
                         listRoutes.routePoints = (ds.Tables[0].Rows[0]["routePoints"] == DBNull.Value ? "" : ds.Tables[0].Rows[0]["routePoints"].ToString());
-                    listRoutes.routePointNames = (ds.Tables[0].Rows[0]["routePointNames"] == DBNull.Value ? "" : ds.Tables[0].Rows[0]["routePointNames"].ToString());
-                    listRoutes.totalMiles = (ds.Tables[0].Rows[0]["totalMiles"] == DBNull.Value ? "" : String.Concat(ds.Tables[0].Rows[0]["totalMiles"], "mi").ToString());
+                        listRoutes.routePointNames = (ds.Tables[0].Rows[0]["routePointNames"] == DBNull.Value ? "" : ds.Tables[0].Rows[0]["routePointNames"].ToString());
+                        listRoutes.totalMiles = (ds.Tables[0].Rows[0]["totalMiles"] == DBNull.Value ? "" : String.Concat(ds.Tables[0].Rows[0]["totalMiles"], "mi").ToString());
                     //listRoutes.startingPoint = (ds.Tables[0].Rows[0]["startingPoint"] == DBNull.Value ? 0 : (int)ds.Tables[0].Rows[0]["startingPoint"]);
                     //listRoutes.filePath = (ds.Tables[0].Rows[0]["filePath"] == DBNull.Value ? "" : ds.Tables[0].Rows[0]["filePath"].ToString());
                     //listRoutes.name = (ds.Tables[0].Rows[0]["displayName"] == DBNull.Value ? "" : ds.Tables[0].Rows[0]["displayName"].ToString());

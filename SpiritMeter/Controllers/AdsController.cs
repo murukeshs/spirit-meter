@@ -214,5 +214,51 @@ namespace SpiritMeter.Controllers
         }
         #endregion
 
+        #region GetPublishedAds
+        /// <summary>
+        /// To  GetPublishedAds
+        /// </summary>
+        [HttpGet, Route("GetPublishedAds")]
+        public IActionResult GetPublishedAds()
+        {
+            List<dynamic> listAd = new List<dynamic>();
+            try
+            {
+                DataTable dt = Data.Ads.GetPublishedAds();
+
+                if (dt.Rows.Count > 0)
+                {
+                    for (int i = 0; i < dt.Rows.Count; i++)
+                    {
+                        dynamic Ad = new System.Dynamic.ExpandoObject();
+                        Ad.adId = (int)dt.Rows[i]["adId"];
+                        Ad.name = (dt.Rows[i]["name"] == DBNull.Value ? "" : dt.Rows[i]["name"].ToString());
+                        Ad.description = (dt.Rows[i]["description"] == DBNull.Value ? "" : dt.Rows[i]["description"].ToString());
+                        Ad.navigationURL = (dt.Rows[i]["navigatioURL"] == DBNull.Value ? "" : dt.Rows[i]["navigatioURL"].ToString());
+                        Ad.image = (dt.Rows[i]["image"] == DBNull.Value ? "" : dt.Rows[i]["image"].ToString());
+                        Ad.priority = (dt.Rows[i]["priority"] == DBNull.Value ? "" : dt.Rows[i]["priority"].ToString());
+                        Ad.expiryDate = (dt.Rows[i]["expiryDate"] == DBNull.Value ? "" : dt.Rows[i]["expiryDate"].ToString());
+                        Ad.createddate = (dt.Rows[i]["createddate"] == DBNull.Value ? "" : dt.Rows[i]["createddate"].ToString());
+                        Ad.publishedDate = (dt.Rows[i]["publishedDate"] == DBNull.Value ? "" : dt.Rows[i]["publishedDate"].ToString());
+                        Ad.adStatus = (dt.Rows[i]["adStatus"] == DBNull.Value ? false : (bool)dt.Rows[i]["adStatus"]);
+                        listAd.Add(Ad);
+                    }
+                    return StatusCode((int)HttpStatusCode.OK, listAd);
+                }
+                else
+                {
+                    return StatusCode((int)HttpStatusCode.OK, listAd);
+                }
+
+            }
+            catch (Exception e)
+            {
+                string SaveErrorLog = Data.Common.SaveErrorLog("GetPublishedAds", e.Message);
+
+                return StatusCode((int)HttpStatusCode.InternalServerError, new { ErrorMessage = e.Message });
+            }
+        }
+        #endregion
+
     }
 }

@@ -14,6 +14,7 @@ namespace SpiritMeter.Models
         public string comments { get; set; }
         public int? designatedCharityId { get; set; }
         public int? startingPoint { get; set; }
+        public int? endPoint { get; set; }
         [DefaultValue(false)]
         public bool? isPrivate { get; set; }
     }
@@ -24,6 +25,7 @@ namespace SpiritMeter.Models
         public int? routeId { get; set; }
         public string displayId { get; set; }
         public int startingPoint { get; set; }
+        public int endPoint { get; set; }
         public string image { get; set; }
         public string routePointNames { get; set; }
         public string totalMiles { get; set; }
@@ -46,6 +48,7 @@ namespace SpiritMeter.Models
     {
         public string displayId { get; set; }
         public int startingPoint { get; set; }
+        public int endPoint { get; set; }
     }
     public class nearBySearch
     {

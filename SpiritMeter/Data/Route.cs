@@ -50,6 +50,7 @@ namespace SpiritMeter.Data
                 parameters.Add(new SqlParameter("@comments", updateRoute.comments));
                 parameters.Add(new SqlParameter("@designatedCharityId", updateRoute.designatedCharityId));
                 parameters.Add(new SqlParameter("@startingPoint", updateRoute.startingPoint));
+                parameters.Add(new SqlParameter("@endPoint", updateRoute.endPoint));
                 parameters.Add(new SqlParameter("@isPrivate", updateRoute.isPrivate));
 
                 using (DataTable dt = SqlHelper.ExecuteDataset(ConnectionString, CommandType.StoredProcedure, "spupdateRoute", parameters.ToArray()).Tables[0])
@@ -74,6 +75,7 @@ namespace SpiritMeter.Data
                 List<SqlParameter> parameters = new List<SqlParameter>();
                 parameters.Add(new SqlParameter("@displayId", routePoints.displayId));
                 parameters.Add(new SqlParameter("@startingPoint", routePoints.startingPoint));
+                parameters.Add(new SqlParameter("@endPoint", routePoints.endPoint));
 
                 using (DataTable dt = SqlHelper.ExecuteDataset(ConnectionString, CommandType.StoredProcedure, "spselectcoordinates", parameters.ToArray()).Tables[0])
                 {
@@ -100,7 +102,8 @@ namespace SpiritMeter.Data
                 parameters.Add(new SqlParameter("@displayId", routePoints.displayId));
                 parameters.Add(new SqlParameter("@path", routePoints.image));
                 parameters.Add(new SqlParameter("@startingPoint", routePoints.startingPoint));
-                parameters.Add(new SqlParameter("@mapRequest", routePoint));
+                parameters.Add(new SqlParameter("@endPoint", routePoints.endPoint));
+                parameters.Add(new SqlParameter("@routePoint", routePoint));
                 parameters.Add(new SqlParameter("@routePointNames", routePoints.routePointNames));
                 parameters.Add(new SqlParameter("@totalMiles", routePoints.totalMiles));
 

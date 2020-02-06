@@ -137,5 +137,24 @@ namespace SpiritMeter.Data
             }
         }
         #endregion
+
+        #region GetPublishedAds
+        public static DataTable GetPublishedAds()
+        {
+           
+            try
+            {
+                string ConnectionString = Common.GetConnectionString();
+                using (DataTable dt = SqlHelper.ExecuteDataset(ConnectionString, CommandType.StoredProcedure, "spGetPublishedAds").Tables[0])
+                {
+                    return dt;
+                }
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+        }
+        #endregion
     }
 }

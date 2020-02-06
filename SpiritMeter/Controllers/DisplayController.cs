@@ -249,6 +249,7 @@ namespace SpiritMeter.Controllers
                 {  
                         display.displayId = (int)ds.Tables[0].Rows[0]["displayId"];
                         display.name = (ds.Tables[0].Rows[0]["name"] == DBNull.Value ? "" : ds.Tables[0].Rows[0]["name"].ToString());
+                        display.displayCharityId = (ds.Tables[0].Rows[0]["displayCharityId"] == DBNull.Value ? 0 : (int)ds.Tables[0].Rows[0]["displayCharityId"]);
                         display.charityId =(ds.Tables[0].Rows[0]["charityId"] == DBNull.Value ? 0 : (int)ds.Tables[0].Rows[0]["charityId"]);
                         display.charityName = (ds.Tables[0].Rows[0]["charityName"] == DBNull.Value ? "" : ds.Tables[0].Rows[0]["charityName"].ToString());
                         display.notes = (ds.Tables[0].Rows[0]["notes"] == DBNull.Value ? "" : ds.Tables[0].Rows[0]["notes"].ToString());
@@ -402,6 +403,7 @@ namespace SpiritMeter.Controllers
                         dynamic listDisplay = new System.Dynamic.ExpandoObject();
                         listDisplay.displayId = (int)dt.Rows[i]["displayId"];
                         listDisplay.name = (dt.Rows[i]["name"] == DBNull.Value ? "" : dt.Rows[i]["name"].ToString());
+                        listDisplay.displayCharityId = (dt.Rows[i]["displayCharityId"] == DBNull.Value ? 0 : (int)dt.Rows[i]["displayCharityId"]);
                         listDisplay.charityId = (dt.Rows[i]["charityId"] == DBNull.Value ? 0 : (int)dt.Rows[i]["charityId"]);
                         listDisplay.charityName = (dt.Rows[i]["charityName"] == DBNull.Value ? "" : dt.Rows[i]["charityName"].ToString());
                         listDisplay.notes = (dt.Rows[i]["notes"] == DBNull.Value ? "" : dt.Rows[i]["notes"].ToString());
@@ -558,6 +560,11 @@ namespace SpiritMeter.Controllers
             catch (Exception e)
             {
                 string SaveErrorLog = Data.Common.SaveErrorLog("updateDisplayCharity", e.Message);
+
+                if (e.Message.Contains("UQ__tblDispl__D56AC42A36439730") == true)
+                {
+                    return StatusCode((int)HttpStatusCode.InternalServerError, new { ErrorMessage = "Display already created for another Charity" });
+                }
 
                 return StatusCode((int)HttpStatusCode.InternalServerError, new { ErrorMessage = e.Message });
             }

@@ -13,10 +13,11 @@ namespace SpiritMeter.Models
             public string name { get; set; }
             public string notes { get; set; }
             public string markerType { get; set; }
-           [DefaultValue(false)]
-           public bool? isPrivate { get; set; }
+            [DefaultValue(false)]
+            public bool? isPrivate { get; set; }
             public int createdBy { get; set; }
-        }
+            public string markerUrl { get; set; }
+    }
 
     public class updateDisplay: createDisplay
     {

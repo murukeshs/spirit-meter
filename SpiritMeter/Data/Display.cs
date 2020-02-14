@@ -45,6 +45,7 @@ namespace SpiritMeter.Data
                 parameters.Add(new SqlParameter("@markerType", createDisplay.markerType));
                 parameters.Add(new SqlParameter("@isPrivate", createDisplay.isPrivate));
                 parameters.Add(new SqlParameter("@createdBy", createDisplay.createdBy));
+                parameters.Add(new SqlParameter("@markerUrl", createDisplay.markerUrl));
                 parameters.Add(new SqlParameter("@action", "add"));
                 string ConnectionString = Common.GetConnectionString();
 
@@ -109,6 +110,7 @@ namespace SpiritMeter.Data
                 parameters.Add(new SqlParameter("@cityName", createDisplay.cityName));
                 parameters.Add(new SqlParameter("@address", createDisplay.address));
                 parameters.Add(new SqlParameter("@filePath", createDisplay.filePath));
+                parameters.Add(new SqlParameter("@markerUrl", createDisplay.markerUrl));
 
                 string ConnectionString = Common.GetConnectionString();
 

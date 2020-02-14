@@ -260,6 +260,7 @@ namespace SpiritMeter.Controllers
                         display.cityName = (ds.Tables[0].Rows[0]["cityName"] == DBNull.Value ? "" : ds.Tables[0].Rows[0]["cityName"].ToString());
                         display.address = (ds.Tables[0].Rows[0]["address"] == DBNull.Value ? "" : ds.Tables[0].Rows[0]["address"].ToString());
                         display.markerType = (ds.Tables[0].Rows[0]["markerType"] == DBNull.Value ?"": ds.Tables[0].Rows[0]["markerType"].ToString());
+                        display.markerUrl = (ds.Tables[0].Rows[0]["markerUrl"] == DBNull.Value ? "" : ds.Tables[0].Rows[0]["markerUrl"].ToString());
                         display.isPrivate = (ds.Tables[0].Rows[0]["isPrivate"] == DBNull.Value ? false : (bool)ds.Tables[0].Rows[0]["isPrivate"]);
                         display.createdDate = (ds.Tables[0].Rows[0]["createdDate"] == DBNull.Value ? "" : ds.Tables[0].Rows[0]["createdDate"].ToString());
                         display.createdBy = (ds.Tables[0].Rows[0]["createdBy"] == DBNull.Value ? 0 : (int)ds.Tables[0].Rows[0]["createdBy"]);
@@ -360,6 +361,7 @@ namespace SpiritMeter.Controllers
                         listDisplay.cityName = (dt.Rows[i]["cityName"] == DBNull.Value ? "" : dt.Rows[i]["cityName"].ToString());
                         listDisplay.address = (dt.Rows[i]["address"] == DBNull.Value ? "" : dt.Rows[i]["address"].ToString());
                         listDisplay.markerType = (dt.Rows[i]["markerType"] == DBNull.Value ? "" : dt.Rows[i]["markerType"].ToString());
+                        listDisplay.markerUrl = (dt.Rows[i]["markerUrl"] == DBNull.Value ? "" : dt.Rows[i]["markerUrl"].ToString());  
                         listDisplay.viewCount    = (dt.Rows[i]["viewCount"] == DBNull.Value ? 0 : (int)dt.Rows[i]["viewCount"]);
                         listDisplay.isPrivate = (dt.Rows[i]["isPrivate"] == DBNull.Value ? false :(bool) dt.Rows[i]["isPrivate"]);
                         listDisplay.createdDate = (dt.Rows[i]["createdDate"] == DBNull.Value ? "" : dt.Rows[i]["createdDate"].ToString());
@@ -414,6 +416,7 @@ namespace SpiritMeter.Controllers
                         listDisplay.cityName = (dt.Rows[i]["cityName"] == DBNull.Value ? "" : dt.Rows[i]["cityName"].ToString());
                         listDisplay.address = (dt.Rows[i]["address"] == DBNull.Value ? "" : dt.Rows[i]["address"].ToString());
                         listDisplay.markerType = (dt.Rows[i]["markerType"] == DBNull.Value ? "" : dt.Rows[i]["markerType"].ToString());
+                        listDisplay.markerUrl = (dt.Rows[i]["markerUrl"] == DBNull.Value ? "" : dt.Rows[i]["markerUrl"].ToString());
                         listDisplay.viewCount = (dt.Rows[i]["viewCount"] == DBNull.Value ? 0 : (int)dt.Rows[i]["viewCount"]);
                         listDisplay.isPrivate = (dt.Rows[i]["isPrivate"] == DBNull.Value ? false : (bool)dt.Rows[i]["isPrivate"]);
                         listDisplay.createdDate = (dt.Rows[i]["createdDate"] == DBNull.Value ? "" : dt.Rows[i]["createdDate"].ToString());
@@ -467,6 +470,7 @@ namespace SpiritMeter.Controllers
                         listDisplay.cityName = (dt.Rows[i]["cityName"] == DBNull.Value ? "" : dt.Rows[i]["cityName"].ToString());
                         listDisplay.address = (dt.Rows[i]["address"] == DBNull.Value ? "" : dt.Rows[i]["address"].ToString());
                         listDisplay.markerType = (dt.Rows[i]["markerType"] == DBNull.Value ? "" : dt.Rows[i]["markerType"].ToString());
+                        listDisplay.markerUrl = (dt.Rows[i]["markerUrl"] == DBNull.Value ? "" : dt.Rows[i]["markerUrl"].ToString());
                         listDisplay.isPrivate = (dt.Rows[i]["isPrivate"] == DBNull.Value ? false : (bool)dt.Rows[i]["isPrivate"]);
                         listDisplay.createdDate = (dt.Rows[i]["createdDate"] == DBNull.Value ? "" : dt.Rows[i]["createdDate"].ToString());
                         listDisplay.createdBy = (dt.Rows[i]["createdBy"] == DBNull.Value ? 0 : (int)dt.Rows[i]["createdBy"]);

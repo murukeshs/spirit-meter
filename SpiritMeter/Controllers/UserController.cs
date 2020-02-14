@@ -6,6 +6,7 @@ using System.Linq;
 using System.Net;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using HolidayApp.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
@@ -704,7 +705,106 @@ namespace SpiritMeter.Controllers
             }
         }
         #endregion
+        #region saveDeviceId
+        /// <summary>
+        /// To saveDeviceId
+        /// </summary>
+        [HttpPost, Route("saveDeviceId")]
+        [AllowAnonymous]
+        public IActionResult CreateUserDeviceDetails(UserDevice userDevice)
+        {
+            try
+            {
+                   DataTable dt = Data.User.CreateUserDeviceDetails(userDevice);
 
 
+                    string Response = dt.Rows[0][0].ToString();
+
+                    if (Response == "Success")
+                    {
+                        return StatusCode((int)HttpStatusCode.OK, "Saved Successfully");
+                    }
+                    else
+                    {
+                        return StatusCode((int)HttpStatusCode.Forbidden, new { ErrorMessage = Response });
+                    }
+              
+            }
+            catch (Exception e)
+            {
+                string SaveErrorLog = Data.Common.SaveErrorLog("CreateUserDeviceDetails", e.Message);
+               
+                    return StatusCode((int)HttpStatusCode.InternalServerError, new { ErrorMessage = e.Message });
+              
+            }
+        }
+        #endregion createUser
+        #region GetRouteNotification
+        /// <summary>
+        /// To GetRouteNotification by userId
+        /// </summary>
+        [HttpPost, Route("GetRouteNotification")]
+        public IActionResult GetRouteNotification(RouteNotification routeNotification)
+        {
+            List<dynamic> listDisplayDetails = new List<dynamic>();
+            List<dynamic> listUserDevice = new List<dynamic>();
+            List<dynamic> listNotification = new List<dynamic>();
+            dynamic notification = new System.Dynamic.ExpandoObject();
+
+            try
+            {
+                DataSet ds = Data.User.GetRouteNotification(routeNotification);
+
+                if (ds.Tables[0].Rows.Count > 0)
+                {  //displayInfo
+                    for (int i = 0; i < ds.Tables[0].Rows.Count; i++)
+                    {
+                        dynamic listDisplay = new System.Dynamic.ExpandoObject();
+                      
+                        listDisplay.displayId = (int)ds.Tables[0].Rows[i]["displayId"];
+                        listDisplay.name = (ds.Tables[0].Rows[i]["name"] == DBNull.Value ? "" : ds.Tables[0].Rows[i]["name"].ToString());
+                        listDisplay.latitude = (ds.Tables[0].Rows[i]["latitude"] == DBNull.Value ? "" : ds.Tables[0].Rows[i]["latitude"].ToString());
+                        listDisplay.longitude = (ds.Tables[0].Rows[i]["longitude"] == DBNull.Value ? "" : ds.Tables[0].Rows[i]["longitude"].ToString());
+                        listDisplay.country = (ds.Tables[0].Rows[i]["country"] == DBNull.Value ? "" : ds.Tables[0].Rows[i]["country"].ToString());
+                        listDisplay.state = (ds.Tables[0].Rows[i]["state"] == DBNull.Value ? "" : ds.Tables[0].Rows[i]["state"].ToString());
+                        listDisplay.cityName = (ds.Tables[0].Rows[i]["cityName"] == DBNull.Value ? "" : ds.Tables[0].Rows[i]["cityName"].ToString());
+                        listDisplay.address = (ds.Tables[0].Rows[i]["address"] == DBNull.Value ? "" : ds.Tables[0].Rows[i]["address"].ToString());
+                        listDisplay.markerType = (ds.Tables[0].Rows[i]["markerType"] == DBNull.Value ? "" : ds.Tables[0].Rows[i]["markerType"].ToString());
+                        listDisplay.markerUrl = (ds.Tables[0].Rows[i]["markerUrl"] == DBNull.Value ? "" : ds.Tables[0].Rows[i]["markerUrl"].ToString());
+                        listDisplay.distance = (ds.Tables[0].Rows[i]["distance"] == DBNull.Value ? "" : ds.Tables[0].Rows[i]["distance"].ToString());
+                        listDisplayDetails.Add(listDisplay);
+
+
+                        //notificationInfo
+                        notification.displayId = (int)ds.Tables[0].Rows[i]["displayId"];
+                        notification.body = "you are near by " + ds.Tables[0].Rows[i]["name"] + " in "+ ds.Tables[0].Rows[i]["distance"] + " km distance";
+                        notification.title = "Near By Display";
+                        notification.icon = "";
+                        listNotification.Add(notification);
+                    }
+                    //userInfo
+                    for (int i = 0; i < ds.Tables[1].Rows.Count; i++)
+                    { 
+                        dynamic user = new System.Dynamic.ExpandoObject();
+                        user.firebaseRegID = (ds.Tables[1].Rows[0]["firebaseRegID"] == DBNull.Value ? "" : ds.Tables[1].Rows[0]["firebaseRegID"].ToString());
+                        listUserDevice.Add(user);
+                    }
+
+
+                    return StatusCode((int)HttpStatusCode.OK, new { data = listDisplayDetails, to = listUserDevice, listNotification });
+                }
+                else
+                {
+                    return StatusCode((int)HttpStatusCode.OK, new { data = listDisplayDetails, to = listUserDevice, listNotification });
+                }
+
+            }
+            catch (Exception e)
+            {
+                string SaveErrorLog = Data.Common.SaveErrorLog("GetRouteNotification", e.Message);
+                return StatusCode((int)HttpStatusCode.InternalServerError, new { ErrorMessage = e.Message });
+            }
+        }
+        #endregion
     }
 }

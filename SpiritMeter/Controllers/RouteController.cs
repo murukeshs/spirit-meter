@@ -690,7 +690,8 @@ namespace SpiritMeter.Controllers
                             ridePoints.notes = (ds.Tables[1].Rows[j]["notes"] == DBNull.Value ? "" : ds.Tables[1].Rows[j]["notes"].ToString());
                             ridePoints.isPrivate = (ds.Tables[1].Rows[j]["isPrivate"] == DBNull.Value ? false : (bool)ds.Tables[1].Rows[j]["isPrivate"]);
                             ridePoints.markerType = (ds.Tables[1].Rows[j]["markerType"] == DBNull.Value ? "" : ds.Tables[1].Rows[j]["markerType"].ToString());
-                            ridePoints.latitude  = (ds.Tables[1].Rows[j]["latitude"] == DBNull.Value ? "" : ds.Tables[1].Rows[j]["latitude"].ToString());
+                        ridePoints.markerUrl = (ds.Tables[1].Rows[j]["markerUrl"] == DBNull.Value ? "" : ds.Tables[1].Rows[j]["markerUrl"].ToString());
+                        ridePoints.latitude  = (ds.Tables[1].Rows[j]["latitude"] == DBNull.Value ? "" : ds.Tables[1].Rows[j]["latitude"].ToString());
                             ridePoints.longitude = (ds.Tables[1].Rows[j]["longitude"] == DBNull.Value ? "" : ds.Tables[1].Rows[j]["longitude"].ToString());
                             ridePoints.country = (ds.Tables[1].Rows[j]["country"] == DBNull.Value ? "" : ds.Tables[1].Rows[j]["country"].ToString());
                             ridePoints.state = (ds.Tables[1].Rows[j]["state"] == DBNull.Value ? "" : ds.Tables[1].Rows[j]["state"].ToString());

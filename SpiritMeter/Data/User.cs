@@ -7,6 +7,7 @@ using System.Data.SqlClient;
 using System.Linq;
 using System.Threading.Tasks;
 using SpiritMeter.Models;
+using HolidayApp.Models;
 
 namespace SpiritMeter.Data
 {
@@ -363,5 +364,58 @@ namespace SpiritMeter.Data
         }
         #endregion
 
+        #region CreateUserDeviceDetails
+        public static DataTable CreateUserDeviceDetails([FromBody] UserDevice userDevice)
+        {
+            try
+            {
+                string ConnectionString = Common.GetConnectionString();
+
+                List<SqlParameter> parameters = new List<SqlParameter>();
+                parameters.Add(new SqlParameter("@userId", userDevice.userId));
+                parameters.Add(new SqlParameter("@firebaseRegID", userDevice.firebaseRegID));
+               
+
+                using (DataTable dt = SqlHelper.ExecuteDataset(ConnectionString, CommandType.StoredProcedure, "spSaveUserDeviceDetails", parameters.ToArray()).Tables[0])
+                {
+                    return dt;
+                }
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+
+        }
+        #endregion
+        #region getProfile
+        public static DataSet GetRouteNotification(RouteNotification routeNotification)
+        {
+
+
+            List<SqlParameter> parameters = new List<SqlParameter>();
+            parameters.Add(new SqlParameter("@userId", routeNotification.userId));
+            parameters.Add(new SqlParameter("@routeId", routeNotification.routeId));
+            parameters.Add(new SqlParameter("@lat", routeNotification.latitude));
+            parameters.Add(new SqlParameter("@long", routeNotification.longitude));
+            try
+            {
+                string ConnectionString = Common.GetConnectionString();
+
+                using (DataSet ds = SqlHelper.ExecuteDataset(ConnectionString, CommandType.StoredProcedure, "spSendRouteNotification", parameters.ToArray()))
+                {
+                    return ds;
+                }
+
+            }
+            catch (Exception e)
+            {
+
+                throw e;
+            }
+
+        }
+        #endregion
     }
+
 }

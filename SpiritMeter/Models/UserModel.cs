@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -121,8 +122,16 @@ namespace SpiritMeter.Models
         public string refreshToken { get; set; }
     }
     public class RefreshRequest
-{
+    {
         public string token { get; set; }
         public string refreshToken { get; set; }
+    }
+
+    public class UserDevice
+    {
+        [Required]
+        public int userId { get; set; }
+        [Required]
+        public string firebaseRegID { get; set; }
     }
 }

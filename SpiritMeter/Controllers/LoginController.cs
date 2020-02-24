@@ -110,7 +110,7 @@ namespace SpiritMeter.Controllers
                 }
                 else
                 {
-                    return StatusCode((int)HttpStatusCode.BadRequest, new { ErrorMessage = "Phone number and password combination not found" });
+                    return StatusCode((int)HttpStatusCode.BadRequest, new { ErrorMessage = "Invalid Username or Password" });
                 }
             }
 

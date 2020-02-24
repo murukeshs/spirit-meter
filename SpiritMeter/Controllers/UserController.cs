@@ -78,7 +78,7 @@ namespace SpiritMeter.Controllers
                 string SaveErrorLog = Data.Common.SaveErrorLog("createUser", e.Message);
                 if (e.Message.Contains("UQ__tblUser__4849DA01F0AAFB4B"))   // Check Duplicate Key for PhoneNumber
                 {
-                    return StatusCode((int)HttpStatusCode.InternalServerError, new { ErrorMessage = "PhoneNo is already registered" });
+                    return StatusCode((int)HttpStatusCode.InternalServerError, new { ErrorMessage = "Phone Number is already exist" });
                 }
                 else
                 {
@@ -125,7 +125,7 @@ namespace SpiritMeter.Controllers
                     {
                         if (Response.Contains("UQ__tblUser__4849DA01F0AAFB4B") == true)
                         {
-                            return StatusCode((int)HttpStatusCode.InternalServerError, new { ErrorMessage = "Phone No is already taken" });
+                            return StatusCode((int)HttpStatusCode.InternalServerError, new { ErrorMessage = "Phone Number is already exist" });
                         }
                         else
                         {
@@ -139,7 +139,7 @@ namespace SpiritMeter.Controllers
                 string SaveErrorLog = Data.Common.SaveErrorLog("updateUser", e.Message);
                 if (e.Message.Contains("UQ__tblUser__4849DA01F0AAFB4B") == true)
                 {
-                    return StatusCode((int)HttpStatusCode.InternalServerError, new { ErrorMessage = "Phone No is already taken" });
+                    return StatusCode((int)HttpStatusCode.InternalServerError, new { ErrorMessage = "Phone Number is already exist" });
                 }
                 else
                 {
@@ -492,7 +492,7 @@ namespace SpiritMeter.Controllers
 
                 else
                 {
-                    return StatusCode((int)HttpStatusCode.Forbidden, new { ErrorMessage = "Phone number not available" });
+                    return StatusCode((int)HttpStatusCode.InternalServerError, new { ErrorMessage = SaveOtpValue });
                 }
 
             }
@@ -732,18 +732,21 @@ namespace SpiritMeter.Controllers
             }
             catch (Exception e)
             {
+
                 string SaveErrorLog = Data.Common.SaveErrorLog("CreateUserDeviceDetails", e.Message);
                
-                    return StatusCode((int)HttpStatusCode.InternalServerError, new { ErrorMessage = e.Message });
+                return StatusCode((int)HttpStatusCode.InternalServerError, new { ErrorMessage = e.Message });
               
             }
         }
-        #endregion createUser
+        #endregion 
+           
+        
         #region GetRouteNotification
         /// <summary>
         /// To GetRouteNotification by userId
         /// </summary>
-        [HttpPost, Route("GetRouteNotification")]
+        [HttpPost, Route("RouteNotification")]
         public IActionResult GetRouteNotification(RouteNotification routeNotification)
         {
             List<dynamic> listDisplayDetails = new List<dynamic>();
@@ -756,7 +759,8 @@ namespace SpiritMeter.Controllers
                 DataSet ds = Data.User.GetRouteNotification(routeNotification);
 
                 if (ds.Tables[0].Rows.Count > 0)
-                {  //displayInfo
+                {  
+                    //displayInfo
                     for (int i = 0; i < ds.Tables[0].Rows.Count; i++)
                     {
                         dynamic listDisplay = new System.Dynamic.ExpandoObject();

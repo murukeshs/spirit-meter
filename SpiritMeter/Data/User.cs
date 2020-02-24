@@ -204,7 +204,9 @@ namespace SpiritMeter.Data
             List<SqlParameter> parameters = new List<SqlParameter>();
             parameters.Add(new SqlParameter("@OTPValue", OTPValue));
             parameters.Add(new SqlParameter("@phone", otp.phone));
-            parameters.Add(new SqlParameter("@otpType", otp.otpType)); try
+            parameters.Add(new SqlParameter("@otpType", otp.otpType));
+            parameters.Add(new SqlParameter("@role", otp.role));
+            try
             {
                 string ConnectionString = Common.GetConnectionString();
 
@@ -374,7 +376,7 @@ namespace SpiritMeter.Data
                 List<SqlParameter> parameters = new List<SqlParameter>();
                 parameters.Add(new SqlParameter("@userId", userDevice.userId));
                 parameters.Add(new SqlParameter("@firebaseRegID", userDevice.firebaseRegID));
-               
+
 
                 using (DataTable dt = SqlHelper.ExecuteDataset(ConnectionString, CommandType.StoredProcedure, "spSaveUserDeviceDetails", parameters.ToArray()).Tables[0])
                 {
@@ -388,6 +390,7 @@ namespace SpiritMeter.Data
 
         }
         #endregion
+         
         #region getProfile
         public static DataSet GetRouteNotification(RouteNotification routeNotification)
         {
@@ -403,6 +406,33 @@ namespace SpiritMeter.Data
                 string ConnectionString = Common.GetConnectionString();
 
                 using (DataSet ds = SqlHelper.ExecuteDataset(ConnectionString, CommandType.StoredProcedure, "spSendRouteNotification", parameters.ToArray()))
+                {
+                    return ds;
+                }
+
+            }
+            catch (Exception e)
+            {
+
+                throw e;
+            }
+
+        }
+        #endregion
+        #region getProfile
+        public static DataSet SaveUserNotification(int userId, int routeId, int displayId)
+        {
+
+
+            List<SqlParameter> parameters = new List<SqlParameter>();
+            parameters.Add(new SqlParameter("@userId", userId));
+            parameters.Add(new SqlParameter("@routeId", routeId));
+            parameters.Add(new SqlParameter("@displayId", displayId));
+            try
+            {
+                string ConnectionString = Common.GetConnectionString();
+
+                using (DataSet ds = SqlHelper.ExecuteDataset(ConnectionString, CommandType.StoredProcedure, "saveUserNotification", parameters.ToArray()))
                 {
                     return ds;
                 }

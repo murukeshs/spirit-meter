@@ -281,7 +281,7 @@ namespace SpiritMeter.Controllers
 
 
 
-                    return StatusCode((int)HttpStatusCode.OK, display);  
+                    return StatusCode((int)HttpStatusCode.OK, display);     
                 }
                 else
                 {

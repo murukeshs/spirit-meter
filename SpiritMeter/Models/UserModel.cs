@@ -34,6 +34,7 @@ namespace SpiritMeter.Models
     {
         public string phone { get; set; }
         public string otpType { get; set; }
+        public string role { get; set; }
     }
 
     public class forgotPassword : phoneVerify

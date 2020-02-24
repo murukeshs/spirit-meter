@@ -41,10 +41,6 @@ namespace SpiritMeter.Controllers
                 {
                     return StatusCode((int)HttpStatusCode.BadRequest, new { ErrorMessage = "Please enter First Name" });
                 }
-                else if (createCharity.lastName == "" || createCharity.lastName == null)
-                {
-                    return StatusCode((int)HttpStatusCode.BadRequest, new { ErrorMessage = "Please enter lastName" });
-                }
                 else if (createCharity.email == "" || createCharity.email == null)
                 {
                     return StatusCode((int)HttpStatusCode.BadRequest, new { ErrorMessage = "Please enter Email" });
@@ -81,11 +77,11 @@ namespace SpiritMeter.Controllers
                 string SaveErrorLog = Data.Common.SaveErrorLog("createCharity", e.Message);
                 if (e.Message.Contains("UQ__tblChari__4849DA01906D6338"))   // Check Duplicate Key for PhoneNumber
                 {
-                    return StatusCode((int)HttpStatusCode.InternalServerError, new { ErrorMessage = "PhoneNo is already registered" });
+                    return StatusCode((int)HttpStatusCode.InternalServerError, new { ErrorMessage = "Phone Number is already exist" });
                 }
                 if (e.Message.Contains("UQ__tblChari__AB6E6164E0E77029"))   // Check Duplicate Key for PhoneNumber
                 {
-                    return StatusCode((int)HttpStatusCode.InternalServerError, new { ErrorMessage = "Email is already registered" });
+                    return StatusCode((int)HttpStatusCode.InternalServerError, new { ErrorMessage = "Email is already exist" });
                 }
                 else
                 {
@@ -122,11 +118,11 @@ namespace SpiritMeter.Controllers
                 {
                     if (Response.Contains("UQ__tblChari__4849DA01906D6338") == true)
                     {
-                        return StatusCode((int)HttpStatusCode.InternalServerError, new { ErrorMessage = "Phone No is already taken" });
+                        return StatusCode((int)HttpStatusCode.InternalServerError, new { ErrorMessage = "Phone Number is already exist" });
                     }
                     else if (Response.Contains("UQ__tblChari__AB6E6164E0E77029") == true)
                     {
-                        return StatusCode((int)HttpStatusCode.InternalServerError, new { ErrorMessage = "Email is already taken" });
+                        return StatusCode((int)HttpStatusCode.InternalServerError, new { ErrorMessage = "Email is already exist" });
                     }
                     else
                     {

@@ -164,7 +164,7 @@ namespace SpiritMeter.Data
 
                 string Filename = strFilename[0] + "_" + DateTime.Now.ToString("dd'-'MM'-'yyyy'-'HH'-'mm'-'ss") + "." + strFilename[1];
 
-                var FileURL = AzureStorage.UploadImage(imageFile, Filename, "spiritmeterimages").Result; 
+                var FileURL = AzureStorage.UploadImage(imageFile, Filename, "holidaydrive").Result; 
                 return FileURL;
             }
             catch (Exception e)

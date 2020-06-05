@@ -35,13 +35,9 @@ namespace SpiritMeter.Controllers
 
                 if (ds.Tables[0].Rows.Count > 0)
                 {
-                    for (int i = 0; i < ds.Tables[1].Rows.Count; i++)
-                    {
-                       
                         user.firebaseRegID = (ds.Tables[1].Rows[0]["firebaseRegID"] == DBNull.Value ? "" : ds.Tables[1].Rows[0]["firebaseRegID"].ToString());
 
                         //listUserDevice.Add(user);
-                    }
 
                     //displayInfo
                     for (int i = 0; i < ds.Tables[0].Rows.Count; i++)
@@ -147,7 +143,6 @@ namespace SpiritMeter.Controllers
                         }
                         else
                         {
-                            
                             return StatusCode((int)HttpStatusCode.InternalServerError, sResponseFromServer);
                         }
 

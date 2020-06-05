@@ -114,8 +114,6 @@ namespace SpiritMeter.Controllers
                 {
                     return StatusCode((int)HttpStatusCode.BadRequest, new { ErrorMessage = "Please enter routeId" });
                 }
-                
-
 
                 DataTable dt1 = Data.Route.selectcoordinates(route);
 
@@ -133,7 +131,7 @@ namespace SpiritMeter.Controllers
                 }
                 else
                 {
-                    if (Response.Contains("UQ__tblRoute__179688842B0C597E") == true)
+                    if (Response.Contains("FK__tblRouteP__displ__6D0D32F4") == true || Response.Contains("FK__tblRouteP__route__6E01572D") == true)
                     {
                         return StatusCode((int)HttpStatusCode.InternalServerError, new { ErrorMessage = "routeId/displayId are already taken" });
                     }
@@ -652,7 +650,7 @@ namespace SpiritMeter.Controllers
         /// </summary>
         [HttpGet, Route("selectRouteById")]
         public IActionResult selectRouteById(int routeId)
-        {
+         {
             dynamic listRoutes = new System.Dynamic.ExpandoObject();
 
             try
@@ -671,7 +669,7 @@ namespace SpiritMeter.Controllers
                         listRoutes.routePoints = (ds.Tables[0].Rows[0]["routePoints"] == DBNull.Value ? "" : ds.Tables[0].Rows[0]["routePoints"].ToString());
                         listRoutes.routePointNames = (ds.Tables[0].Rows[0]["routePointNames"] == DBNull.Value ? "" : ds.Tables[0].Rows[0]["routePointNames"].ToString());
                         listRoutes.totalMiles = (ds.Tables[0].Rows[0]["totalMiles"] == DBNull.Value ? "" : String.Concat(ds.Tables[0].Rows[0]["totalMiles"], "mi").ToString());
-                    listRoutes.markerUrlForDisplays = (ds.Tables[0].Rows[0]["markerUrlForDisplays"] == DBNull.Value ? "" : ds.Tables[0].Rows[0]["markerUrlForDisplays"].ToString());
+                        listRoutes.markerUrlForDisplays = (ds.Tables[0].Rows[0]["markerUrlForDisplays"] == DBNull.Value ? "" : ds.Tables[0].Rows[0]["markerUrlForDisplays"].ToString());
 
                     //listRoutes.startingPoint = (ds.Tables[0].Rows[0]["startingPoint"] == DBNull.Value ? 0 : (int)ds.Tables[0].Rows[0]["startingPoint"]);
                     //listRoutes.filePath = (ds.Tables[0].Rows[0]["filePath"] == DBNull.Value ? "" : ds.Tables[0].Rows[0]["filePath"].ToString());
@@ -698,8 +696,8 @@ namespace SpiritMeter.Controllers
                             ridePoints.notes = (ds.Tables[1].Rows[j]["notes"] == DBNull.Value ? "" : ds.Tables[1].Rows[j]["notes"].ToString());
                             ridePoints.isPrivate = (ds.Tables[1].Rows[j]["isPrivate"] == DBNull.Value ? false : (bool)ds.Tables[1].Rows[j]["isPrivate"]);
                             ridePoints.markerType = (ds.Tables[1].Rows[j]["markerType"] == DBNull.Value ? "" : ds.Tables[1].Rows[j]["markerType"].ToString());
-                        ridePoints.markerUrl = (ds.Tables[1].Rows[j]["markerUrl"] == DBNull.Value ? "" : ds.Tables[1].Rows[j]["markerUrl"].ToString());
-                        ridePoints.latitude  = (ds.Tables[1].Rows[j]["latitude"] == DBNull.Value ? "" : ds.Tables[1].Rows[j]["latitude"].ToString());
+                            ridePoints.markerUrl = (ds.Tables[1].Rows[j]["markerUrl"] == DBNull.Value ? "" : ds.Tables[1].Rows[j]["markerUrl"].ToString());
+                            ridePoints.latitude  = (ds.Tables[1].Rows[j]["latitude"] == DBNull.Value ? "" : ds.Tables[1].Rows[j]["latitude"].ToString());
                             ridePoints.longitude = (ds.Tables[1].Rows[j]["longitude"] == DBNull.Value ? "" : ds.Tables[1].Rows[j]["longitude"].ToString());
                             ridePoints.country = (ds.Tables[1].Rows[j]["country"] == DBNull.Value ? "" : ds.Tables[1].Rows[j]["country"].ToString());
                             ridePoints.state = (ds.Tables[1].Rows[j]["state"] == DBNull.Value ? "" : ds.Tables[1].Rows[j]["state"].ToString());

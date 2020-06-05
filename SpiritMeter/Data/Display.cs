@@ -249,7 +249,7 @@ namespace SpiritMeter.Data
                 parameters.Add(new SqlParameter("@userId", userId));
                 string ConnectionString = Common.GetConnectionString();
 
-                using (DataTable dt = SqlHelper.ExecuteDataset(ConnectionString, CommandType.StoredProcedure, "spPopularDisplayUser", parameters.ToArray()).Tables[0])
+                using (DataTable dt = SqlHelper.ExecuteDataset(ConnectionString, CommandType.StoredProcedure, "spPopularDisplay", parameters.ToArray()).Tables[0])
                 {
                     return dt;
                 }

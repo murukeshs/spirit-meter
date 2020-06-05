@@ -75,11 +75,11 @@ namespace SpiritMeter.Controllers
             catch (Exception e)
             {
                 string SaveErrorLog = Data.Common.SaveErrorLog("createCharity", e.Message);
-                if (e.Message.Contains("UQ__tblChari__4849DA01906D6338"))   // Check Duplicate Key for PhoneNumber
+                if (e.Message.Contains("UQ__tblChari__4849DA019F375FD8"))   // Check Duplicate Key for PhoneNumber
                 {
                     return StatusCode((int)HttpStatusCode.InternalServerError, new { ErrorMessage = "Phone Number is already exist" });
                 }
-                if (e.Message.Contains("UQ__tblChari__AB6E6164E0E77029"))   // Check Duplicate Key for PhoneNumber
+                if (e.Message.Contains("UQ__tblChari__AB6E61640FFFF0AF"))   // Check Duplicate Key for PhoneNumber
                 {
                     return StatusCode((int)HttpStatusCode.InternalServerError, new { ErrorMessage = "Email is already exist" });
                 }
@@ -116,11 +116,11 @@ namespace SpiritMeter.Controllers
                 }
                 else
                 {
-                    if (Response.Contains("UQ__tblChari__4849DA01906D6338") == true)
+                    if (Response.Contains("UQ__tblChari__4849DA019F375FD8") == true)
                     {
                         return StatusCode((int)HttpStatusCode.InternalServerError, new { ErrorMessage = "Phone Number is already exist" });
                     }
-                    else if (Response.Contains("UQ__tblChari__AB6E6164E0E77029") == true)
+                    else if (Response.Contains("UQ__tblChari__AB6E61640FFFF0AF") == true)
                     {
                         return StatusCode((int)HttpStatusCode.InternalServerError, new { ErrorMessage = "Email is already exist" });
                     }

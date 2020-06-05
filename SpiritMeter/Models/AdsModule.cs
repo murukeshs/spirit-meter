@@ -16,7 +16,7 @@ namespace SpiritMeter.Models
             public string image { get; set; }
             public string priority { get; set; }
             public string expiryDate { get; set; }
-            public bool adStatus { get; set; }
+            public bool? adStatus { get; set; }
         }
 
         public class UpdateAd: CreateAd

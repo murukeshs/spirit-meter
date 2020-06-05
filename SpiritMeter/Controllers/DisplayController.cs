@@ -265,18 +265,21 @@ namespace SpiritMeter.Controllers
                         display.createdDate = (ds.Tables[0].Rows[0]["createdDate"] == DBNull.Value ? "" : ds.Tables[0].Rows[0]["createdDate"].ToString());
                         display.createdBy = (ds.Tables[0].Rows[0]["createdBy"] == DBNull.Value ? 0 : (int)ds.Tables[0].Rows[0]["createdBy"]);
                         display.createdByName = (ds.Tables[0].Rows[0]["createdByName"] == DBNull.Value ? "" : ds.Tables[0].Rows[0]["createdByName"].ToString());
-                        
-                        List<dynamic> listFilePaths = new List<dynamic>();
-                       
-                        for (int j = 0; j < ds.Tables[1].Rows.Count; j++)
-                        {
-                            dynamic filePath = new System.Dynamic.ExpandoObject();
-                            filePath.displayFileId = (ds.Tables[1].Rows[j]["displayFileId"] == DBNull.Value ? 0 : (int)ds.Tables[1].Rows[j]["displayFileId"]);
-                            filePath.FilePath = (ds.Tables[1].Rows[j]["filePath"] == DBNull.Value ? "" : ds.Tables[1].Rows[j]["filePath"].ToString());
-                            listFilePaths.Add(filePath);
-                        }
-                        display.filePath = listFilePaths;
+
+                    //List<dynamic> listFilePaths = new List<dynamic>();
+
+                    //for (int j = 0; j < ds.Tables[1].Rows.Count; j++)
+                    //{
+                    //    dynamic filePath = new System.Dynamic.ExpandoObject();
+                    //    filePath.displayFileId = (ds.Tables[1].Rows[j]["displayFileId"] == DBNull.Value ? 0 : (int)ds.Tables[1].Rows[j]["displayFileId"]);
+                    //    filePath.FilePath = (ds.Tables[1].Rows[j]["filePath"] == DBNull.Value ? "" : ds.Tables[1].Rows[j]["filePath"].ToString());
+                    //    listFilePaths.Add(filePath);
+                    //}
+                    //display.filePath = listFilePaths;
+
                     //display.path = (ds.Tables[0].Rows[0]["path"] == DBNull.Value ? "" : ds.Tables[0].Rows[0]["path"].ToString());
+                    display.filePath = (ds.Tables[0].Rows[0]["filePath"] == DBNull.Value ? "" : ds.Tables[0].Rows[0]["filePath"].ToString());
+
                     display.routes = (ds.Tables[0].Rows[0]["routes"] == DBNull.Value ? "" : ds.Tables[0].Rows[0]["routes"].ToString());
 
 
@@ -366,7 +369,7 @@ namespace SpiritMeter.Controllers
                         listDisplay.isPrivate = (dt.Rows[i]["isPrivate"] == DBNull.Value ? false :(bool) dt.Rows[i]["isPrivate"]);
                         listDisplay.createdDate = (dt.Rows[i]["createdDate"] == DBNull.Value ? "" : dt.Rows[i]["createdDate"].ToString());
                         listDisplay.createdBy = (dt.Rows[i]["createdBy"] == DBNull.Value ? 0 : (int)dt.Rows[i]["createdBy"]);
-                        listDisplay.createdByName = (dt.Rows[i]["createdName"] == DBNull.Value ? "" : dt.Rows[i]["createdName"].ToString());
+                        listDisplay.createdByName = (dt.Rows[i]["createdByName"] == DBNull.Value ? "" : dt.Rows[i]["createdByName"].ToString());
                         listDisplay.filePath = (dt.Rows[i]["filePath"] == DBNull.Value ? "" : dt.Rows[i]["filePath"].ToString());
 
                         listDisplayDetails.Add(listDisplay);
@@ -421,7 +424,7 @@ namespace SpiritMeter.Controllers
                         listDisplay.isPrivate = (dt.Rows[i]["isPrivate"] == DBNull.Value ? false : (bool)dt.Rows[i]["isPrivate"]);
                         listDisplay.createdDate = (dt.Rows[i]["createdDate"] == DBNull.Value ? "" : dt.Rows[i]["createdDate"].ToString());
                         listDisplay.createdBy = (dt.Rows[i]["createdBy"] == DBNull.Value ? 0 : (int)dt.Rows[i]["createdBy"]);
-                        listDisplay.createdByName = (dt.Rows[i]["createdName"] == DBNull.Value ? "" : dt.Rows[i]["createdName"].ToString());
+                        listDisplay.createdByName = (dt.Rows[i]["createdByName"] == DBNull.Value ? "" : dt.Rows[i]["createdByName"].ToString());
                         listDisplay.filePath = (dt.Rows[i]["filePath"] == DBNull.Value ? "" : dt.Rows[i]["filePath"].ToString());
                         listDisplayDetails.Add(listDisplay);
                     }

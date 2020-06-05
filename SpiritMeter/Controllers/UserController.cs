@@ -76,7 +76,7 @@ namespace SpiritMeter.Controllers
             catch (Exception e)
             {
                 string SaveErrorLog = Data.Common.SaveErrorLog("createUser", e.Message);
-                if (e.Message.Contains("UQ__tblUser__4849DA01F0AAFB4B"))   // Check Duplicate Key for PhoneNumber
+                if (e.Message.Contains("UQ__tblUser__4849DA012EFB7F6C"))   // Check Duplicate Key for PhoneNumber
                 {
                     return StatusCode((int)HttpStatusCode.InternalServerError, new { ErrorMessage = "Phone Number is already exist" });
                 }
@@ -123,7 +123,7 @@ namespace SpiritMeter.Controllers
                     }
                     else
                     {
-                        if (Response.Contains("UQ__tblUser__4849DA01F0AAFB4B") == true)
+                        if (Response.Contains("UQ__tblUser__4849DA012EFB7F6C") == true)
                         {
                             return StatusCode((int)HttpStatusCode.InternalServerError, new { ErrorMessage = "Phone Number is already exist" });
                         }
@@ -137,7 +137,7 @@ namespace SpiritMeter.Controllers
             catch (Exception e)
             {
                 string SaveErrorLog = Data.Common.SaveErrorLog("updateUser", e.Message);
-                if (e.Message.Contains("UQ__tblUser__4849DA01F0AAFB4B") == true)
+                if (e.Message.Contains("UQ__tblUser__4849DA012EFB7F6C") == true)
                 {
                     return StatusCode((int)HttpStatusCode.InternalServerError, new { ErrorMessage = "Phone Number is already exist" });
                 }
